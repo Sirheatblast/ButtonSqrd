@@ -1,0 +1,5 @@
+bin/
+bin-init/
+.vs/
+.gitmodules
+ButtonEditor/Assets/
