@@ -1,0 +1,29 @@
+# Ensure all build folders are ignored everywhere
+[Bb]in/
+[Oo]bj/
+[Bb]in-int/
+.vs/
+
+# Ignore local user settings that change every time you open VS
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Ignore all library and linker files
+*.lib
+*.ilk
+*.exp
+# Specifically ignore all Debug and Release build folders
+[Dd]ebug/
+[Rr]elease/
+
+
+# Your specific vendor/test folders
+.gitmodules
+ButtonEditor/Assets/
+ButtonSqrd/ButtonEditor/EngineAssets/Scripts/.vs/
+
+ButtonSqrd/vendor/assimp/assimp/test/
+ButtonSqrd/vendor/yaml/test/
+ButtonSqrd/vendor/stb-master/tests/
