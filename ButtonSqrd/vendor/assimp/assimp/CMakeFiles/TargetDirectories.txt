@@ -1,0 +1,17 @@
+C:/Users/tyjam/Desktop/PersonalProjects/ButtonSqrd/ButtonSqrd/vendor/assimp/assimp/CMakeFiles/uninstall.dir
+C:/Users/tyjam/Desktop/PersonalProjects/ButtonSqrd/ButtonSqrd/vendor/assimp/assimp/CMakeFiles/UpdateAssimpLibsDebugSymbolsAndDLLs.dir
+C:/Users/tyjam/Desktop/PersonalProjects/ButtonSqrd/ButtonSqrd/vendor/assimp/assimp/CMakeFiles/INSTALL.dir
+C:/Users/tyjam/Desktop/PersonalProjects/ButtonSqrd/ButtonSqrd/vendor/assimp/assimp/CMakeFiles/ALL_BUILD.dir
+C:/Users/tyjam/Desktop/PersonalProjects/ButtonSqrd/ButtonSqrd/vendor/assimp/assimp/CMakeFiles/ZERO_CHECK.dir
+C:/Users/tyjam/Desktop/PersonalProjects/ButtonSqrd/ButtonSqrd/vendor/assimp/assimp/contrib/zlib/CMakeFiles/zlibstatic.dir
+C:/Users/tyjam/Desktop/PersonalProjects/ButtonSqrd/ButtonSqrd/vendor/assimp/assimp/contrib/zlib/CMakeFiles/INSTALL.dir
+C:/Users/tyjam/Desktop/PersonalProjects/ButtonSqrd/ButtonSqrd/vendor/assimp/assimp/contrib/zlib/CMakeFiles/ALL_BUILD.dir
+C:/Users/tyjam/Desktop/PersonalProjects/ButtonSqrd/ButtonSqrd/vendor/assimp/assimp/code/CMakeFiles/assimp.dir
+C:/Users/tyjam/Desktop/PersonalProjects/ButtonSqrd/ButtonSqrd/vendor/assimp/assimp/code/CMakeFiles/INSTALL.dir
+C:/Users/tyjam/Desktop/PersonalProjects/ButtonSqrd/ButtonSqrd/vendor/assimp/assimp/tools/assimp_view/CMakeFiles/assimp_viewer.dir
+C:/Users/tyjam/Desktop/PersonalProjects/ButtonSqrd/ButtonSqrd/vendor/assimp/assimp/tools/assimp_view/CMakeFiles/INSTALL.dir
+C:/Users/tyjam/Desktop/PersonalProjects/ButtonSqrd/ButtonSqrd/vendor/assimp/assimp/tools/assimp_cmd/CMakeFiles/assimp_cmd.dir
+C:/Users/tyjam/Desktop/PersonalProjects/ButtonSqrd/ButtonSqrd/vendor/assimp/assimp/tools/assimp_cmd/CMakeFiles/INSTALL.dir
+C:/Users/tyjam/Desktop/PersonalProjects/ButtonSqrd/ButtonSqrd/vendor/assimp/assimp/test/CMakeFiles/unit.dir
+C:/Users/tyjam/Desktop/PersonalProjects/ButtonSqrd/ButtonSqrd/vendor/assimp/assimp/test/CMakeFiles/INSTALL.dir
+C:/Users/tyjam/Desktop/PersonalProjects/ButtonSqrd/ButtonSqrd/vendor/assimp/assimp/test/headercheck/CMakeFiles/INSTALL.dir

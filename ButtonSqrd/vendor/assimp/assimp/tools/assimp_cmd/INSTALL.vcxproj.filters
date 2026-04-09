@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\tyjam\Desktop\PersonalProjects\ButtonSqrd\ButtonSqrd\vendor\assimp\assimp\CMakeFiles\ca8e469d3d44a85b69db9dd9c8ba6a04\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{741687E8-FBAD-378F-A77D-3B69BAF8F31F}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

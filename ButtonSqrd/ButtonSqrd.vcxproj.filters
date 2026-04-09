@@ -1,0 +1,367 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ButtonSqrd">
+      <UniqueIdentifier>{1B856177-073D-A3C4-7044-7C205C1B3EB5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ButtonSqrd\Audio">
+      <UniqueIdentifier>{5C3B924E-4834-B1A0-7166-96255DBE90AC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ButtonSqrd\Core">
+      <UniqueIdentifier>{531291BC-BF9D-FE80-C8AE-817534B95A81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ButtonSqrd\Event">
+      <UniqueIdentifier>{AC2EDB4E-9827-FAA0-C159-DF25ADB1D9AC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ButtonSqrd\Gui">
+      <UniqueIdentifier>{EF9D9FA8-DB6B-93AE-C4FF-03D5B06C6F13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ButtonSqrd\Gui\Widgets">
+      <UniqueIdentifier>{554C746E-4146-9DC0-2AB3-33D1164C032D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ButtonSqrd\Physics">
+      <UniqueIdentifier>{8D73E6A1-7957-A7F7-E2B7-A14ACEBA9179}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ButtonSqrd\Platform">
+      <UniqueIdentifier>{CFAFB2DA-3B11-90E8-C47E-D69A30DFC6A7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ButtonSqrd\Platform\OpenGL">
+      <UniqueIdentifier>{239A8F8A-0FAA-3B5B-7863-A07964922AF4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ButtonSqrd\Platform\Windows">
+      <UniqueIdentifier>{09B99E34-75C6-CC1A-FEAC-C8056AB998D1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ButtonSqrd\Render">
+      <UniqueIdentifier>{2A376547-964D-63DD-DFC4-EEFE4B1A3465}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ButtonSqrd\Scripting">
+      <UniqueIdentifier>{DD57DA43-C9E6-630D-7205-78085E7374B3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\ButtonSqrd.h" />
+    <ClInclude Include="src\ButtonSqrd\Audio\AudioDevice.h">
+      <Filter>ButtonSqrd\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Audio\AudioListener.h">
+      <Filter>ButtonSqrd\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Audio\AudioLoader.h">
+      <Filter>ButtonSqrd\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Audio\AudioSource.h">
+      <Filter>ButtonSqrd\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Audio\SoundBuffer.h">
+      <Filter>ButtonSqrd\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Core\Application.h">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Core\BtnTime.h">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Core\BtnTransform.h">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Core\CoreComponents.h">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Core\EntrePoint.h">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Core\GameObject.h">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Core\GameObjectRegister.h">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Core\Input.h">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Core\KeyCodes.h">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Core\Layer.h">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Core\LayerStack.h">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Core\Logger.h">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Core\MouseButtonCodes.h">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Core\RayCaster.h">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Core\ResourceManager.h">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Core\Scene.h">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Core\SceneSerializer.h">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Core\SuperGameObject.h">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Core\Window.h">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Core\core.h">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Event\CameraEvent.h">
+      <Filter>ButtonSqrd\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Event\Event.h">
+      <Filter>ButtonSqrd\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Event\GuiEvent.h">
+      <Filter>ButtonSqrd\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Event\KeyEvent.h">
+      <Filter>ButtonSqrd\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Event\MouseEvent.h">
+      <Filter>ButtonSqrd\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Event\SceneEvent.h">
+      <Filter>ButtonSqrd\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Event\WindowEvent.h">
+      <Filter>ButtonSqrd\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Gui\BtnGuiLayer.h">
+      <Filter>ButtonSqrd\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Gui\BtnWidget.h">
+      <Filter>ButtonSqrd\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Gui\Widgets\BtnTextBox.h">
+      <Filter>ButtonSqrd\Gui\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Physics\BtnPhysics.h">
+      <Filter>ButtonSqrd\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Platform\OpenGL\OpenGLBuffers.h">
+      <Filter>ButtonSqrd\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Platform\OpenGL\OpenGLContext.h">
+      <Filter>ButtonSqrd\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Platform\OpenGL\OpenGLFrameBuffer.h">
+      <Filter>ButtonSqrd\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Platform\OpenGL\OpenGLRendererApi.h">
+      <Filter>ButtonSqrd\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Platform\OpenGL\OpenGLShader.h">
+      <Filter>ButtonSqrd\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Platform\OpenGL\OpenGLTexture.h">
+      <Filter>ButtonSqrd\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Platform\OpenGL\OpenGLVertexArray.h">
+      <Filter>ButtonSqrd\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Platform\Windows\WindowsWindowImpl.h">
+      <Filter>ButtonSqrd\Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Render\BtnAnimation.h">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Render\BtnArmature.h">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Render\BtnParticle.h">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Render\Buffers.h">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Render\Camera.h">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Render\FrameBuffer.h">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Render\GraphicsContext.h">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Render\Light.h">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Render\Mesh.h">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Render\Model.h">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Render\ParticleQueue.h">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Render\Renderer.h">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Render\RendererApi.h">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Render\RendererCommand.h">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Render\Shader.h">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Render\Texture.h">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Render\VertexArray.h">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Scripting\BtnScript.h">
+      <Filter>ButtonSqrd\Scripting</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\ButtonSqrd\Audio\AudioDevice.cpp">
+      <Filter>ButtonSqrd\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Audio\AudioListener.cpp">
+      <Filter>ButtonSqrd\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Audio\AudioLoader.cpp">
+      <Filter>ButtonSqrd\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Audio\AudioSource.cpp">
+      <Filter>ButtonSqrd\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Audio\SoundBuffer.cpp">
+      <Filter>ButtonSqrd\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Core\Application.cpp">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Core\BtnTime.cpp">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Core\CoreComponents.cpp">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Core\GameObject.cpp">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Core\GameObjectRegister.cpp">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Core\Layer.cpp">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Core\LayerStack.cpp">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Core\Logger.cpp">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Core\RayCaster.cpp">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Core\ResourceManager.cpp">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Core\Scene.cpp">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Core\SceneSerializer.cpp">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Core\SuperGameObject.cpp">
+      <Filter>ButtonSqrd\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Gui\BtnGuiLayer.cpp">
+      <Filter>ButtonSqrd\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Gui\Widgets\BtnTextBox.cpp">
+      <Filter>ButtonSqrd\Gui\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Physics\BtnPhysics.cpp">
+      <Filter>ButtonSqrd\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Platform\OpenGL\OpenGLBuffers.cpp">
+      <Filter>ButtonSqrd\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Platform\OpenGL\OpenGLContext.cpp">
+      <Filter>ButtonSqrd\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Platform\OpenGL\OpenGLFrameBuffer.cpp">
+      <Filter>ButtonSqrd\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Platform\OpenGL\OpenGLRendererApi.cpp">
+      <Filter>ButtonSqrd\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Platform\OpenGL\OpenGLShader.cpp">
+      <Filter>ButtonSqrd\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Platform\OpenGL\OpenGLTexture.cpp">
+      <Filter>ButtonSqrd\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Platform\OpenGL\OpenGLVertexArray.cpp">
+      <Filter>ButtonSqrd\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Platform\Windows\WindowWindowImpl.cpp">
+      <Filter>ButtonSqrd\Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Platform\Windows\WindowsInput.cpp">
+      <Filter>ButtonSqrd\Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Render\BtnAnimation.cpp">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Render\BtnArmature.cpp">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Render\Buffers.cpp">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Render\Camera.cpp">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Render\FrameBuffer.cpp">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Render\Mesh.cpp">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Render\Model.cpp">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Render\ParticleQueue.cpp">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Render\Renderer.cpp">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Render\RendererApi.cpp">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Render\RendererCommand.cpp">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Render\Shader.cpp">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Render\Texture.cpp">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Render\VertexArray.cpp">
+      <Filter>ButtonSqrd\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Scripting\BtnScript.cpp">
+      <Filter>ButtonSqrd\Scripting</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
