@@ -1,0 +1,184 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Dist|x64">
+      <Configuration>Dist</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{25CADA4C-918A-5683-5AC5-9F00C6449B5F}</ProjectGuid>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>ButtonRuntime</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v145</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v145</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v145</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(ProjectDir)..\bin\Debug-windows-x86_64\ButtonRuntime\</OutDir>
+    <IntDir>$(ProjectDir)..\bin-int\Debug-windows-x86_64\ButtonRuntime\</IntDir>
+    <TargetName>ButtonRuntime</TargetName>
+    <TargetExt>.exe</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)..\bin\Release-windows-x86_64\ButtonRuntime\</OutDir>
+    <IntDir>$(ProjectDir)..\bin-int\Release-windows-x86_64\ButtonRuntime\</IntDir>
+    <TargetName>ButtonRuntime</TargetName>
+    <TargetExt>.exe</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)..\bin\Dist-windows-x86_64\ButtonRuntime\</OutDir>
+    <IntDir>$(ProjectDir)..\bin-int\Dist-windows-x86_64\ButtonRuntime\</IntDir>
+    <TargetName>ButtonRuntime</TargetName>
+    <TargetExt>.exe</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>GLFW_DLL;YAML_CPP_STATIC_DEFINE;PX_PHYSX_STATIC_LIB;_CRT_SECURE_NO_WARNINGS;BTN_PLATFORM_WINDOWS;BTN_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\ButtonSqrd\vendor\spdlog\include;..\ButtonSqrd\vendor\GLFW\include;..\ButtonSqrd\vendor\glad\include;..\ButtonSqrd\vendor\glm;..\ButtonSqrd\vendor\entt\include;..\ButtonSqrd\vendor\stb-master;..\ButtonSqrd\vendor\assimp\assimp\include;..\ButtonSqrd\vendor\imgui\imgui;..\ButtonSqrd\vendor\imgui\backends;..\ButtonSqrd\vendor\ImGuizmo;..\ButtonSqrd\vendor\imnodes;..\ButtonSqrd\vendor\yaml\include;..\ButtonSqrd\vendor\PhysX\physx\include;..\ButtonSqrd\vendor\OpenAL\include;..\ButtonSqrd\vendor\MiniAudio;..\ButtonSqrd\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>assimp-vc143-mt.lib;glfw3dll.lib;OpenAL32.lib;PhysX_static_64.lib;PhysXCommon_static_64.lib;PhysXFoundation_static_64.lib;PhysXExtensions_static_64.lib;PhysXPvdSDK_static_64.lib;PhysXCooking_static_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\ButtonSqrd\vendor\assimp\assimp\lib\Release;..\ButtonSqrd\vendor\GLFW\bin;..\ButtonSqrd\vendor\OpenAL\bin;..\ButtonSqrd\vendor\PhysX\bin\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ENTRY:mainCRTStartup %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <ProjectReference>
+    </ProjectReference>
+    <PostBuildEvent>
+      <Command>IF EXIST ..\ButtonSqrd\vendor\assimp\assimp\bin\Release\assimp-vc143-mt.dll\ (xcopy /Q /E /Y /I ..\ButtonSqrd\vendor\assimp\assimp\bin\Release\assimp-vc143-mt.dll ..\bin\Debug-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\ButtonSqrd\vendor\assimp\assimp\bin\Release\assimp-vc143-mt.dll ..\bin\Debug-windows-x86_64\$(ProjectName) &gt; nul)
+IF EXIST ..\ButtonSqrd\vendor\GLFW\bin\glfw3.dll\ (xcopy /Q /E /Y /I ..\ButtonSqrd\vendor\GLFW\bin\glfw3.dll ..\bin\Debug-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\ButtonSqrd\vendor\GLFW\bin\glfw3.dll ..\bin\Debug-windows-x86_64\$(ProjectName) &gt; nul)
+IF EXIST ..\ButtonSqrd\vendor\OpenAL\bin\OpenAL32.dll\ (xcopy /Q /E /Y /I ..\ButtonSqrd\vendor\OpenAL\bin\OpenAL32.dll ..\bin\Debug-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\ButtonSqrd\vendor\OpenAL\bin\OpenAL32.dll ..\bin\Debug-windows-x86_64\$(ProjectName) &gt; nul)
+IF EXIST ..\$(ProjectName)\Assets\ (xcopy /Q /E /Y /I ..\$(ProjectName)\Assets ..\bin\Debug-windows-x86_64\$(ProjectName)\Assets &gt; nul) ELSE (xcopy /Q /Y /I ..\$(ProjectName)\Assets ..\bin\Debug-windows-x86_64\$(ProjectName)\Assets &gt; nul)
+IF EXIST ..\$(ProjectName)\EngineAssets\ (xcopy /Q /E /Y /I ..\$(ProjectName)\EngineAssets ..\bin\Debug-windows-x86_64\$(ProjectName)\EngineAssets &gt; nul) ELSE (xcopy /Q /Y /I ..\$(ProjectName)\EngineAssets ..\bin\Debug-windows-x86_64\$(ProjectName)\EngineAssets &gt; nul)
+IF EXIST ..\$(ProjectName)\imgui.ini\ (xcopy /Q /E /Y /I ..\$(ProjectName)\imgui.ini ..\bin\Debug-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\$(ProjectName)\imgui.ini ..\bin\Debug-windows-x86_64\$(ProjectName) &gt; nul)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>GLFW_DLL;YAML_CPP_STATIC_DEFINE;PX_PHYSX_STATIC_LIB;_CRT_SECURE_NO_WARNINGS;BTN_PLATFORM_WINDOWS;BTN_REALEASE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\ButtonSqrd\vendor\spdlog\include;..\ButtonSqrd\vendor\GLFW\include;..\ButtonSqrd\vendor\glad\include;..\ButtonSqrd\vendor\glm;..\ButtonSqrd\vendor\entt\include;..\ButtonSqrd\vendor\stb-master;..\ButtonSqrd\vendor\assimp\assimp\include;..\ButtonSqrd\vendor\imgui\imgui;..\ButtonSqrd\vendor\imgui\backends;..\ButtonSqrd\vendor\ImGuizmo;..\ButtonSqrd\vendor\imnodes;..\ButtonSqrd\vendor\yaml\include;..\ButtonSqrd\vendor\PhysX\physx\include;..\ButtonSqrd\vendor\OpenAL\include;..\ButtonSqrd\vendor\MiniAudio;..\ButtonSqrd\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>assimp-vc143-mt.lib;glfw3dll.lib;OpenAL32.lib;PhysX_static_64.lib;PhysXCommon_static_64.lib;PhysXFoundation_static_64.lib;PhysXExtensions_static_64.lib;PhysXPvdSDK_static_64.lib;PhysXCooking_static_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\ButtonSqrd\vendor\assimp\assimp\lib\Release;..\ButtonSqrd\vendor\GLFW\bin;..\ButtonSqrd\vendor\OpenAL\bin;..\ButtonSqrd\vendor\PhysX\bin\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ENTRY:mainCRTStartup %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <ProjectReference>
+    </ProjectReference>
+    <PostBuildEvent>
+      <Command>IF EXIST ..\ButtonSqrd\vendor\assimp\assimp\bin\Release\assimp-vc143-mt.dll\ (xcopy /Q /E /Y /I ..\ButtonSqrd\vendor\assimp\assimp\bin\Release\assimp-vc143-mt.dll ..\bin\Release-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\ButtonSqrd\vendor\assimp\assimp\bin\Release\assimp-vc143-mt.dll ..\bin\Release-windows-x86_64\$(ProjectName) &gt; nul)
+IF EXIST ..\ButtonSqrd\vendor\GLFW\bin\glfw3.dll\ (xcopy /Q /E /Y /I ..\ButtonSqrd\vendor\GLFW\bin\glfw3.dll ..\bin\Release-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\ButtonSqrd\vendor\GLFW\bin\glfw3.dll ..\bin\Release-windows-x86_64\$(ProjectName) &gt; nul)
+IF EXIST ..\ButtonSqrd\vendor\OpenAL\bin\OpenAL32.dll\ (xcopy /Q /E /Y /I ..\ButtonSqrd\vendor\OpenAL\bin\OpenAL32.dll ..\bin\Release-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\ButtonSqrd\vendor\OpenAL\bin\OpenAL32.dll ..\bin\Release-windows-x86_64\$(ProjectName) &gt; nul)
+IF EXIST ..\$(ProjectName)\Assets\ (xcopy /Q /E /Y /I ..\$(ProjectName)\Assets ..\bin\Release-windows-x86_64\$(ProjectName)\Assets &gt; nul) ELSE (xcopy /Q /Y /I ..\$(ProjectName)\Assets ..\bin\Release-windows-x86_64\$(ProjectName)\Assets &gt; nul)
+IF EXIST ..\$(ProjectName)\EngineAssets\ (xcopy /Q /E /Y /I ..\$(ProjectName)\EngineAssets ..\bin\Release-windows-x86_64\$(ProjectName)\EngineAssets &gt; nul) ELSE (xcopy /Q /Y /I ..\$(ProjectName)\EngineAssets ..\bin\Release-windows-x86_64\$(ProjectName)\EngineAssets &gt; nul)
+IF EXIST ..\$(ProjectName)\imgui.ini\ (xcopy /Q /E /Y /I ..\$(ProjectName)\imgui.ini ..\bin\Release-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\$(ProjectName)\imgui.ini ..\bin\Release-windows-x86_64\$(ProjectName) &gt; nul)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>GLFW_DLL;YAML_CPP_STATIC_DEFINE;PX_PHYSX_STATIC_LIB;_CRT_SECURE_NO_WARNINGS;BTN_PLATFORM_WINDOWS;BTN_DIST;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\ButtonSqrd\vendor\spdlog\include;..\ButtonSqrd\vendor\GLFW\include;..\ButtonSqrd\vendor\glad\include;..\ButtonSqrd\vendor\glm;..\ButtonSqrd\vendor\entt\include;..\ButtonSqrd\vendor\stb-master;..\ButtonSqrd\vendor\assimp\assimp\include;..\ButtonSqrd\vendor\imgui\imgui;..\ButtonSqrd\vendor\imgui\backends;..\ButtonSqrd\vendor\ImGuizmo;..\ButtonSqrd\vendor\imnodes;..\ButtonSqrd\vendor\yaml\include;..\ButtonSqrd\vendor\PhysX\physx\include;..\ButtonSqrd\vendor\OpenAL\include;..\ButtonSqrd\vendor\MiniAudio;..\ButtonSqrd\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>assimp-vc143-mt.lib;glfw3dll.lib;OpenAL32.lib;PhysX_static_64.lib;PhysXCommon_static_64.lib;PhysXFoundation_static_64.lib;PhysXExtensions_static_64.lib;PhysXPvdSDK_static_64.lib;PhysXCooking_static_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\ButtonSqrd\vendor\assimp\assimp\lib\Release;..\ButtonSqrd\vendor\GLFW\bin;..\ButtonSqrd\vendor\OpenAL\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ENTRY:mainCRTStartup %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <ProjectReference>
+    </ProjectReference>
+    <PostBuildEvent>
+      <Command>IF EXIST ..\ButtonSqrd\vendor\assimp\assimp\bin\Release\assimp-vc143-mt.dll\ (xcopy /Q /E /Y /I ..\ButtonSqrd\vendor\assimp\assimp\bin\Release\assimp-vc143-mt.dll ..\bin\Dist-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\ButtonSqrd\vendor\assimp\assimp\bin\Release\assimp-vc143-mt.dll ..\bin\Dist-windows-x86_64\$(ProjectName) &gt; nul)
+IF EXIST ..\ButtonSqrd\vendor\GLFW\bin\glfw3.dll\ (xcopy /Q /E /Y /I ..\ButtonSqrd\vendor\GLFW\bin\glfw3.dll ..\bin\Dist-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\ButtonSqrd\vendor\GLFW\bin\glfw3.dll ..\bin\Dist-windows-x86_64\$(ProjectName) &gt; nul)
+IF EXIST ..\ButtonSqrd\vendor\OpenAL\bin\OpenAL32.dll\ (xcopy /Q /E /Y /I ..\ButtonSqrd\vendor\OpenAL\bin\OpenAL32.dll ..\bin\Dist-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\ButtonSqrd\vendor\OpenAL\bin\OpenAL32.dll ..\bin\Dist-windows-x86_64\$(ProjectName) &gt; nul)
+IF EXIST ..\$(ProjectName)\Assets\ (xcopy /Q /E /Y /I ..\$(ProjectName)\Assets ..\bin\Dist-windows-x86_64\$(ProjectName)\Assets &gt; nul) ELSE (xcopy /Q /Y /I ..\$(ProjectName)\Assets ..\bin\Dist-windows-x86_64\$(ProjectName)\Assets &gt; nul)
+IF EXIST ..\$(ProjectName)\EngineAssets\ (xcopy /Q /E /Y /I ..\$(ProjectName)\EngineAssets ..\bin\Dist-windows-x86_64\$(ProjectName)\EngineAssets &gt; nul) ELSE (xcopy /Q /Y /I ..\$(ProjectName)\EngineAssets ..\bin\Dist-windows-x86_64\$(ProjectName)\EngineAssets &gt; nul)
+IF EXIST ..\$(ProjectName)\imgui.ini\ (xcopy /Q /E /Y /I ..\$(ProjectName)\imgui.ini ..\bin\Dist-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\$(ProjectName)\imgui.ini ..\bin\Dist-windows-x86_64\$(ProjectName) &gt; nul)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ButtonSqrd\ButtonSqrd.vcxproj">
+      <Project>{1B856177-073D-A3C4-7044-7C205C1B3EB5}</Project>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
