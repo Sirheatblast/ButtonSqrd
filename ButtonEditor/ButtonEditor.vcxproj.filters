@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ImGuiWindowComponents">
+      <UniqueIdentifier>{B515EB80-21D8-1E0B-6A88-AD97D689F7E8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ImGuiWindowComponents\EditorWindowLayers">
+      <UniqueIdentifier>{930C352E-7F1F-3587-2809-127414FBD1D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ImGuiWindowComponents\GameWindowLayers">
+      <UniqueIdentifier>{46448A40-32AC-500E-9B17-6524879E67FA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Scripting">
+      <UniqueIdentifier>{6FBC2D98-DB7C-A9CE-A4B7-F24B1037EEAA}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="src\EditorEvents.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorFlags.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorInterface.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEditLayer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiWindowComponents\AnimatorController.h">
+      <Filter>src\ImGuiWindowComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiWindowComponents\AssetDirectory.h">
+      <Filter>src\ImGuiWindowComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiWindowComponents\BtnConsole.h">
+      <Filter>src\ImGuiWindowComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiWindowComponents\BtnCurve.h">
+      <Filter>src\ImGuiWindowComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiWindowComponents\EditorWindow.h">
+      <Filter>src\ImGuiWindowComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiWindowComponents\EditorWindowLayers\GuiLayer.h">
+      <Filter>src\ImGuiWindowComponents\EditorWindowLayers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiWindowComponents\EditorWindowLayers\RenderLayer.h">
+      <Filter>src\ImGuiWindowComponents\EditorWindowLayers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiWindowComponents\GameWindow.h">
+      <Filter>src\ImGuiWindowComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiWindowComponents\GameWindowLayers\GameLayer.h">
+      <Filter>src\ImGuiWindowComponents\GameWindowLayers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiWindowComponents\PropertiesMenue.h">
+      <Filter>src\ImGuiWindowComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiWindowComponents\SceneDirectory.h">
+      <Filter>src\ImGuiWindowComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scripting\ScriptManager.h">
+      <Filter>src\Scripting</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\EditorEvents.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditorInterface.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEditLayer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGuiWindowComponents\AnimatorController.cpp">
+      <Filter>src\ImGuiWindowComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGuiWindowComponents\AssetDirectory.cpp">
+      <Filter>src\ImGuiWindowComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGuiWindowComponents\BtnConsole.cpp">
+      <Filter>src\ImGuiWindowComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGuiWindowComponents\BtnCurve.cpp">
+      <Filter>src\ImGuiWindowComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGuiWindowComponents\EditorWindow.cpp">
+      <Filter>src\ImGuiWindowComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGuiWindowComponents\EditorWindowLayers\GuiLayer.cpp">
+      <Filter>src\ImGuiWindowComponents\EditorWindowLayers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGuiWindowComponents\EditorWindowLayers\RenderLayer.cpp">
+      <Filter>src\ImGuiWindowComponents\EditorWindowLayers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGuiWindowComponents\GameWindow.cpp">
+      <Filter>src\ImGuiWindowComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGuiWindowComponents\GameWindowLayers\GameLayer.cpp">
+      <Filter>src\ImGuiWindowComponents\GameWindowLayers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGuiWindowComponents\PropertiesMenue.cpp">
+      <Filter>src\ImGuiWindowComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGuiWindowComponents\SceneDirectory.cpp">
+      <Filter>src\ImGuiWindowComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scripting\ScriptManager.cpp">
+      <Filter>src\Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\buttonEditor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ButtonEditor.rc" />
+  </ItemGroup>
+</Project>

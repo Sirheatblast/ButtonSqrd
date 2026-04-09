@@ -1,0 +1,19 @@
+#pragma once 
+#include"ScriptRegistry.h"
+#include<ButtonSqrd.h>
+
+class [NewScriptNameGoesHere] :public BtnSqd::BtnScript { 
+public:
+
+protected:
+	~[NewScriptNameGoesHere]() override{}
+	void OnCreate() override{}
+	void OnStart() override{}
+	void OnAwake() override{}
+	void OnUpdate(float deltaTime) override{}
+	void OnPhyUpdate(float deltaTime) override{}
+	void OnDestroy() override{}
+private:
+
+};
+REGISTER_SCRIPT([NewScriptNameGoesHere]);
