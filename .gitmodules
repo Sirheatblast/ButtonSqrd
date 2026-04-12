@@ -1,0 +1,9 @@
+[submodule "ButtonSqrd/vendor/spdlog"]
+	path = ButtonSqrd/vendor/spdlog
+	url = https://github.com/gabime/spdlog
+[submodule "ButtonSqrd/vendor/msdf-atlas-gen"]
+	path = ButtonSqrd/vendor/msdf-atlas-gen
+	url = https://github.com/Chlumsky/msdf-atlas-gen.git
+[submodule "ButtonSqrd/vendor/freetype"]
+	path = ButtonSqrd/vendor/freetype
+	url = https://github.com/freetype/freetype.git
