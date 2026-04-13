@@ -24,12 +24,16 @@ workspace "BtnSqrd"
 	IncludeDir["PhysX"] = "ButtonSqrd/vendor/PhysX"
 	IncludeDir["OpenAL"] = "ButtonSqrd/vendor/OpenAL"
 	IncludeDir["MiniAudio"]="ButtonSqrd/vendor/MiniAudio"
+	IncludeDir["msdfgen"] = "ButtonSqrd/vendor/msdf-atlas-gen"
+	IncludeDir["freetype"] = "ButtonSqrd/vendor/freetype"
 
 	include ("ButtonSqrd/vendor/glad")
 	include ("ButtonSqrd/vendor/ImGui")
 	include ("ButtonSqrd/vendor/ImGuizmo")
 	include ("ButtonSqrd/vendor/ImNodes")
 	include ("ButtonSqrd/vendor/yaml")
+	include ("ButtonSqrd/vendor/msdf-atlas-gen")
+	include ("ButtonSqrd/vendor/freetype")
 	
 	project "ButtonSqrd"
 		location "ButtonSqrd"
@@ -47,7 +51,7 @@ workspace "BtnSqrd"
 		}
 
 		includedirs {
-			"%{prj.name}/vendor/spdlog/include",
+			"ButtonSqrd/vendor/spdlog/include",
 			"%{IncludeDir.GLFW}",
 			"%{IncludeDir.GLAD}",
 			"%{IncludeDir.glm}",
@@ -62,6 +66,8 @@ workspace "BtnSqrd"
 			"%{IncludeDir.PhysX}/physx/include",
 			"%{IncludeDir.OpenAL}/include",
 			"%{IncludeDir.MiniAudio}",
+			"%{IncludeDir.msdfgen}",
+			"%{IncludeDir.freetype}",
 			"ButtonSqrd/src"
 		}
 
@@ -71,6 +77,8 @@ workspace "BtnSqrd"
 			"ImGuizmo",
 			"ImNodes",
 			"yaml",
+			"msdf-atlas-gen",
+			"freetype",
 		}
 
 		libdirs {"%{IncludeDir.assimp}/lib/Release","ButtonSqrd/vendor/GLFW/bin","ButtonSqrd/vendor/OpenAL/bin" }
@@ -158,7 +166,7 @@ workspace "BtnSqrd"
 			"_CRT_SECURE_NO_WARNINGS",
 		}
 
-		includedirs	{
+		includedirs {
 			"ButtonSqrd/vendor/spdlog/include",
 			"%{IncludeDir.GLFW}",
 			"%{IncludeDir.GLAD}",
@@ -174,6 +182,8 @@ workspace "BtnSqrd"
 			"%{IncludeDir.PhysX}/physx/include",
 			"%{IncludeDir.OpenAL}/include",
 			"%{IncludeDir.MiniAudio}",
+			"%{IncludeDir.msdfgen}",
+			"%{IncludeDir.freetype}",
 			"ButtonSqrd/src"
 		}
 
@@ -269,7 +279,7 @@ workspace "BtnSqrd"
 			"_CRT_SECURE_NO_WARNINGS",
 		}
 
-		includedirs	{
+		includedirs {
 			"ButtonSqrd/vendor/spdlog/include",
 			"%{IncludeDir.GLFW}",
 			"%{IncludeDir.GLAD}",
@@ -285,6 +295,8 @@ workspace "BtnSqrd"
 			"%{IncludeDir.PhysX}/physx/include",
 			"%{IncludeDir.OpenAL}/include",
 			"%{IncludeDir.MiniAudio}",
+			"%{IncludeDir.msdfgen}",
+			"%{IncludeDir.freetype}",
 			"ButtonSqrd/src"
 		}
 

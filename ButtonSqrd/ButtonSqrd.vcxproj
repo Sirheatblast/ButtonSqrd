@@ -76,7 +76,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>BTN_PLATFORM_WINDOWS;USE_GLFW;GLFW_DLL;GLFW_INCLUDE_NONE;YAML_CPP_STATIC_DEFINE;_CRT_SECURE_NO_WARNINGS;PX_PHYSX_STATIC_LIB;BTN_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;vendor\GLFW\include;vendor\glad\include;vendor\glm;vendor\entt\include;vendor\stb-master;vendor\assimp\assimp\include;vendor\imgui\imgui;vendor\imgui\backends;vendor\ImGuizmo;vendor\imnodes;vendor\yaml\include;vendor\PhysX\physx\include;vendor\OpenAL\include;vendor\MiniAudio;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;vendor\GLFW\include;vendor\glad\include;vendor\glm;vendor\entt\include;vendor\stb-master;vendor\assimp\assimp\include;vendor\imgui\imgui;vendor\imgui\backends;vendor\ImGuizmo;vendor\imnodes;vendor\yaml\include;vendor\PhysX\physx\include;vendor\OpenAL\include;vendor\MiniAudio;vendor\msdf-atlas-gen;vendor\freetype;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -99,7 +99,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>BTN_PLATFORM_WINDOWS;USE_GLFW;GLFW_DLL;GLFW_INCLUDE_NONE;YAML_CPP_STATIC_DEFINE;_CRT_SECURE_NO_WARNINGS;PX_PHYSX_STATIC_LIB;BTN_REALEASE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;vendor\GLFW\include;vendor\glad\include;vendor\glm;vendor\entt\include;vendor\stb-master;vendor\assimp\assimp\include;vendor\imgui\imgui;vendor\imgui\backends;vendor\ImGuizmo;vendor\imnodes;vendor\yaml\include;vendor\PhysX\physx\include;vendor\OpenAL\include;vendor\MiniAudio;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;vendor\GLFW\include;vendor\glad\include;vendor\glm;vendor\entt\include;vendor\stb-master;vendor\assimp\assimp\include;vendor\imgui\imgui;vendor\imgui\backends;vendor\ImGuizmo;vendor\imnodes;vendor\yaml\include;vendor\PhysX\physx\include;vendor\OpenAL\include;vendor\MiniAudio;vendor\msdf-atlas-gen;vendor\freetype;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -126,7 +126,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>BTN_PLATFORM_WINDOWS;USE_GLFW;GLFW_DLL;GLFW_INCLUDE_NONE;YAML_CPP_STATIC_DEFINE;_CRT_SECURE_NO_WARNINGS;PX_PHYSX_STATIC_LIB;BTN_DIST;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;vendor\GLFW\include;vendor\glad\include;vendor\glm;vendor\entt\include;vendor\stb-master;vendor\assimp\assimp\include;vendor\imgui\imgui;vendor\imgui\backends;vendor\ImGuizmo;vendor\imnodes;vendor\yaml\include;vendor\PhysX\physx\include;vendor\OpenAL\include;vendor\MiniAudio;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;vendor\GLFW\include;vendor\glad\include;vendor\glm;vendor\entt\include;vendor\stb-master;vendor\assimp\assimp\include;vendor\imgui\imgui;vendor\imgui\backends;vendor\ImGuizmo;vendor\imnodes;vendor\yaml\include;vendor\PhysX\physx\include;vendor\OpenAL\include;vendor\MiniAudio;vendor\msdf-atlas-gen;vendor\freetype;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -279,6 +279,14 @@
     </ProjectReference>
     <ProjectReference Include="vendor\yaml\yaml.vcxproj">
       <Project>{7814A17C-644B-A20D-0D38-8810F94D1E0F}</Project>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="vendor\msdf-atlas-gen\msdf-atlas-gen.vcxproj">
+      <Project>{38BD587B-248B-4C81-0D1F-BDA7F98B28E6}</Project>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="vendor\freetype\freetype.vcxproj">
+      <Project>{89895BD8-7556-B6E3-9E6F-A48B8A9BEB71}</Project>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
     </ProjectReference>
   </ItemGroup>
