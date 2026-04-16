@@ -136,6 +136,9 @@
     <ClInclude Include="src\ButtonSqrd\Event\WindowEvent.h">
       <Filter>ButtonSqrd\Event</Filter>
     </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Gui\BtnFontLoader.h">
+      <Filter>ButtonSqrd\Gui</Filter>
+    </ClInclude>
     <ClInclude Include="src\ButtonSqrd\Gui\BtnGuiLayer.h">
       <Filter>ButtonSqrd\Gui</Filter>
     </ClInclude>
@@ -281,6 +284,9 @@
     </ClCompile>
     <ClCompile Include="src\ButtonSqrd\Core\SuperGameObject.cpp">
       <Filter>ButtonSqrd\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Gui\BtnFontLoader.cpp">
+      <Filter>ButtonSqrd\Gui</Filter>
     </ClCompile>
     <ClCompile Include="src\ButtonSqrd\Gui\BtnGuiLayer.cpp">
       <Filter>ButtonSqrd\Gui</Filter>

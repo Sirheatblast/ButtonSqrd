@@ -76,7 +76,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>BTN_PLATFORM_WINDOWS;USE_GLFW;GLFW_DLL;GLFW_INCLUDE_NONE;YAML_CPP_STATIC_DEFINE;_CRT_SECURE_NO_WARNINGS;PX_PHYSX_STATIC_LIB;BTN_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;vendor\GLFW\include;vendor\glad\include;vendor\glm;vendor\entt\include;vendor\stb-master;vendor\assimp\assimp\include;vendor\imgui\imgui;vendor\imgui\backends;vendor\ImGuizmo;vendor\imnodes;vendor\yaml\include;vendor\PhysX\physx\include;vendor\OpenAL\include;vendor\MiniAudio;vendor\msdf-atlas-gen;vendor\freetype;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;vendor\GLFW\include;vendor\glad\include;vendor\glm;vendor\entt\include;vendor\stb-master;vendor\assimp\assimp\include;vendor\imgui\imgui;vendor\imgui\backends;vendor\ImGuizmo;vendor\imnodes;vendor\yaml\include;vendor\PhysX\physx\include;vendor\OpenAL\include;vendor\MiniAudio;vendor\msdf-atlas-gen;vendor\msdf-atlas-gen\msdfgen;vendor\freetype;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -99,7 +99,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>BTN_PLATFORM_WINDOWS;USE_GLFW;GLFW_DLL;GLFW_INCLUDE_NONE;YAML_CPP_STATIC_DEFINE;_CRT_SECURE_NO_WARNINGS;PX_PHYSX_STATIC_LIB;BTN_REALEASE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;vendor\GLFW\include;vendor\glad\include;vendor\glm;vendor\entt\include;vendor\stb-master;vendor\assimp\assimp\include;vendor\imgui\imgui;vendor\imgui\backends;vendor\ImGuizmo;vendor\imnodes;vendor\yaml\include;vendor\PhysX\physx\include;vendor\OpenAL\include;vendor\MiniAudio;vendor\msdf-atlas-gen;vendor\freetype;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;vendor\GLFW\include;vendor\glad\include;vendor\glm;vendor\entt\include;vendor\stb-master;vendor\assimp\assimp\include;vendor\imgui\imgui;vendor\imgui\backends;vendor\ImGuizmo;vendor\imnodes;vendor\yaml\include;vendor\PhysX\physx\include;vendor\OpenAL\include;vendor\MiniAudio;vendor\msdf-atlas-gen;vendor\msdf-atlas-gen\msdfgen;vendor\freetype;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -126,7 +126,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>BTN_PLATFORM_WINDOWS;USE_GLFW;GLFW_DLL;GLFW_INCLUDE_NONE;YAML_CPP_STATIC_DEFINE;_CRT_SECURE_NO_WARNINGS;PX_PHYSX_STATIC_LIB;BTN_DIST;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;vendor\GLFW\include;vendor\glad\include;vendor\glm;vendor\entt\include;vendor\stb-master;vendor\assimp\assimp\include;vendor\imgui\imgui;vendor\imgui\backends;vendor\ImGuizmo;vendor\imnodes;vendor\yaml\include;vendor\PhysX\physx\include;vendor\OpenAL\include;vendor\MiniAudio;vendor\msdf-atlas-gen;vendor\freetype;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;vendor\GLFW\include;vendor\glad\include;vendor\glm;vendor\entt\include;vendor\stb-master;vendor\assimp\assimp\include;vendor\imgui\imgui;vendor\imgui\backends;vendor\ImGuizmo;vendor\imnodes;vendor\yaml\include;vendor\PhysX\physx\include;vendor\OpenAL\include;vendor\MiniAudio;vendor\msdf-atlas-gen;vendor\msdf-atlas-gen\msdfgen;vendor\freetype;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -182,6 +182,7 @@
     <ClInclude Include="src\ButtonSqrd\Event\MouseEvent.h" />
     <ClInclude Include="src\ButtonSqrd\Event\SceneEvent.h" />
     <ClInclude Include="src\ButtonSqrd\Event\WindowEvent.h" />
+    <ClInclude Include="src\ButtonSqrd\Gui\BtnFontLoader.h" />
     <ClInclude Include="src\ButtonSqrd\Gui\BtnGuiLayer.h" />
     <ClInclude Include="src\ButtonSqrd\Gui\BtnWidget.h" />
     <ClInclude Include="src\ButtonSqrd\Gui\Widgets\BtnTextBox.h" />
@@ -232,6 +233,7 @@
     <ClCompile Include="src\ButtonSqrd\Core\Scene.cpp" />
     <ClCompile Include="src\ButtonSqrd\Core\SceneSerializer.cpp" />
     <ClCompile Include="src\ButtonSqrd\Core\SuperGameObject.cpp" />
+    <ClCompile Include="src\ButtonSqrd\Gui\BtnFontLoader.cpp" />
     <ClCompile Include="src\ButtonSqrd\Gui\BtnGuiLayer.cpp" />
     <ClCompile Include="src\ButtonSqrd\Gui\Widgets\BtnTextBox.cpp" />
     <ClCompile Include="src\ButtonSqrd\Physics\BtnPhysics.cpp" />

@@ -24,7 +24,8 @@ workspace "BtnSqrd"
 	IncludeDir["PhysX"] = "ButtonSqrd/vendor/PhysX"
 	IncludeDir["OpenAL"] = "ButtonSqrd/vendor/OpenAL"
 	IncludeDir["MiniAudio"]="ButtonSqrd/vendor/MiniAudio"
-	IncludeDir["msdfgen"] = "ButtonSqrd/vendor/msdf-atlas-gen"
+	IncludeDir["msdfgenAtlas"] = "ButtonSqrd/vendor/msdf-atlas-gen"
+	IncludeDir["msdfgen"] = "ButtonSqrd/vendor/msdf-atlas-gen/msdfgen"
 	IncludeDir["freetype"] = "ButtonSqrd/vendor/freetype"
 
 	include ("ButtonSqrd/vendor/glad")
@@ -66,6 +67,7 @@ workspace "BtnSqrd"
 			"%{IncludeDir.PhysX}/physx/include",
 			"%{IncludeDir.OpenAL}/include",
 			"%{IncludeDir.MiniAudio}",
+			"%{IncludeDir.msdfgenAtlas}",
 			"%{IncludeDir.msdfgen}",
 			"%{IncludeDir.freetype}",
 			"ButtonSqrd/src"
@@ -182,6 +184,7 @@ workspace "BtnSqrd"
 			"%{IncludeDir.PhysX}/physx/include",
 			"%{IncludeDir.OpenAL}/include",
 			"%{IncludeDir.MiniAudio}",
+			"%{IncludeDir.msdfgenAtlas}",
 			"%{IncludeDir.msdfgen}",
 			"%{IncludeDir.freetype}",
 			"ButtonSqrd/src"
@@ -295,6 +298,7 @@ workspace "BtnSqrd"
 			"%{IncludeDir.PhysX}/physx/include",
 			"%{IncludeDir.OpenAL}/include",
 			"%{IncludeDir.MiniAudio}",
+			"%{IncludeDir.msdfgenAtlas}",
 			"%{IncludeDir.msdfgen}",
 			"%{IncludeDir.freetype}",
 			"ButtonSqrd/src"
