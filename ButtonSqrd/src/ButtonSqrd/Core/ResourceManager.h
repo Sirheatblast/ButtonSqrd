@@ -14,8 +14,8 @@ namespace BtnSqd {
 	class SuperGameObject;
 	class ResourceManager {
 	public:
-		static void AddTexture(std::shared_ptr<Texture> newTexture){
-			instance->loadedTextures.insert({newTexture->GetPath(),newTexture});
+		static void AddTexture(std::shared_ptr<Texture> newTexture) {
+			instance->loadedTextures.insert({ newTexture->GetPath(),newTexture });
 		}
 
 		static void AddParticleTexture(std::shared_ptr<Texture> newTexture) {
@@ -26,16 +26,16 @@ namespace BtnSqd {
 			instance->loadedSkyBoxes.insert({ newSkybox->GetPath(),newSkybox });
 		}
 
-		static void AddModel(std::string name,Model newModel){
+		static void AddModel(std::string name, Model newModel) {
 			instance->loadedModels.insert({ name,newModel });
 		}
 
-		static void AddSuperGameObject(std::string name,std::shared_ptr<SuperGameObject> newSuper) {
-			instance->loadedSupers.insert({name,newSuper});
+		static void AddSuperGameObject(std::string name, std::shared_ptr<SuperGameObject> newSuper) {
+			instance->loadedSupers.insert({ name,newSuper });
 		}
 
 		static void AddArmature(std::string name, BtnArmature newArmature) {
-			instance->loadedArmatures.insert({name,newArmature});
+			instance->loadedArmatures.insert({ name,newArmature });
 		}
 
 		static void AddAnimation(std::string name, BtnAnimation newAnimation) {
@@ -51,6 +51,7 @@ namespace BtnSqd {
 		static bool LoadAllSuperGameObjects() { return instance->LoadSuperGameObjects(); }
 		static bool LoadAllSounds() { return instance->LoadSounds(); }
 		static bool LoadAllParticleTextures() { return instance->LoadParticleTextures(); }
+		static bool LoadAllFonts() { return instance->LoadFonts(); }
 
 		static std::map<std::string, std::shared_ptr<Texture>>& GetLoadedTextures() { return instance->loadedTextures; }
 		static std::map<std::string, std::shared_ptr<Texture>>& GetLoadedParticleTextures() { return instance->loadedParticleTextures; }
@@ -59,8 +60,9 @@ namespace BtnSqd {
 		static std::map<std::string, Model> GetLoadedModels() { return instance->loadedModels; }
 		static std::map<std::string, BtnAnimation> GetLoadedAnimations() { return instance->loadedAnimations; }
 		static std::map<std::string, BtnArmature>& GetLoadedArmatures() { return instance->loadedArmatures; }
-		static std::map < std::string, std::shared_ptr<SuperGameObject>>& GetLoadedSuperGameObjects() { return instance->loadedSupers; }
-		static std::map < std::string, std::shared_ptr<SoundBuffer>>& GetLoadedSounds() { return instance->loadedSounds; }
+		static std::map<std::string, std::shared_ptr<SuperGameObject>>& GetLoadedSuperGameObjects() { return instance->loadedSupers; }
+		static std::map<std::string, std::shared_ptr<SoundBuffer>>& GetLoadedSounds() { return instance->loadedSounds; }
+		static std::map<std::string, std::shared_ptr<Texture>>GetLoadedFonts() { return instance->loadedFonts; }
 
 	private:
 		bool LoadSkyBoxes();
@@ -69,9 +71,9 @@ namespace BtnSqd {
 		bool LoadModels() {
 			std::string modelDirectory = "./Assets/Models/";
 			for (auto& p : std::filesystem::directory_iterator(modelDirectory)) {
-				std::string directory =modelDirectory+ p.path().filename().string();
+				std::string directory = modelDirectory + p.path().filename().string();
 				if (!loadedShaders.contains(directory)) {
-					Model newModel(directory,loadedShaders["PbrShader"].get());
+					Model newModel(directory, loadedShaders["PbrShader"].get());
 					loadedModels.insert({ directory,newModel });
 				}
 			}
@@ -106,20 +108,22 @@ namespace BtnSqd {
 		bool LoadSuperGameObjects();
 		bool LoadSounds();
 		bool LoadParticleTextures();
+		bool LoadFonts();
 
 		ResourceManager();
 		~ResourceManager();
 		static ResourceManager* instance;
 
-		std::map<std::string,std::shared_ptr<Texture>> loadedTextures;
+		std::map<std::string, std::shared_ptr<Texture>> loadedTextures;
 		std::map<std::string, std::shared_ptr<Texture>> loadedParticleTextures;
-		std::map<std::string,std::shared_ptr<Texture>> loadedSkyBoxes;
-		std::map<std::string,Model>loadedModels;
+		std::map<std::string, std::shared_ptr<Texture>> loadedSkyBoxes;
+		std::map<std::string, Model>loadedModels;
 		std::map<std::string, BtnArmature>loadedArmatures;
 		std::map<std::string, std::shared_ptr<Shader>>loadedShaders;
 		std::map <std::string, std::shared_ptr<SuperGameObject>>loadedSupers;
 		std::map<std::string, BtnAnimation>loadedAnimations;
 		std::map<std::string, std::shared_ptr<SoundBuffer>> loadedSounds;
+		std::map < std::string, std::shared_ptr<Texture>> loadedFonts;
 	};
 }
 

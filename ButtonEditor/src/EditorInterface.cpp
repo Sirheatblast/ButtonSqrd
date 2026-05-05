@@ -15,6 +15,7 @@ namespace BtnSqd {
 		ResourceManager::LoadAllModels();
 		ResourceManager::LoadAllSuperGameObjects();
 		ResourceManager::LoadAllSounds();
+		ResourceManager::LoadAllFonts();
 
 		ImGui::StyleColorsDark();
 		std::filesystem::path path = std::filesystem::current_path();

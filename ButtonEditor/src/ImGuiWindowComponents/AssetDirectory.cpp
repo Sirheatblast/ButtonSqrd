@@ -60,6 +60,10 @@ namespace BtnSqd {
 				ImGui::SameLine();
 			}
 			else {
+				if (p.path().extension().string()==".txt") {
+					continue;
+				}
+
 				ImGui::BeginGroup();
 				if (ImGui::ImageButton(uniqueId.c_str(), fileTexture->GetId(), ImVec2(iconImageSize, iconImageSize), ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f))) {
 
@@ -82,6 +86,9 @@ namespace BtnSqd {
 					}
 					else if (dirType == "SuperGameObjects") {
 						payload.assetType = AssetRawType::SuperGameObjectRaw;
+					}
+					else if (dirType == "Fonts") {
+						payload.assetType = AssetRawType::FontRaw;
 					}
 
 					ImGui::PushTextWrapPos(ImGui::GetCursorPosX() + 100.0f);

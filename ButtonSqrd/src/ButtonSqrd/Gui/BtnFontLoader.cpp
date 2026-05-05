@@ -33,10 +33,12 @@ namespace BtnSqd {
 				generator.generate(glyphs.data(), glyphs.size());
 
 				msdfgen::BitmapConstRef<msdfgen::byte, 4> bitmap = generator.atlasStorage();
-				TextureSettings texSet;
-				texSet.texDataType = TextureDataType::Color;
-				texSet.texFormat = TexFormat::RGBA;
-				fontTexture.reset(Texture::Create(bitmap.width, bitmap.width, texSet, (void*)bitmap.pixels));
+				if (bitmap.pixels) {
+					TextureSettings texSet;
+					texSet.texDataType = TextureDataType::Color;
+					texSet.texFormat = TexFormat::RGBA;
+					fontTexture.reset(Texture::Create(bitmap.width, bitmap.height, texSet, (void*)bitmap.pixels));
+				}
 			}
 
 			msdfgen::deinitializeFreetype(ftHandle);

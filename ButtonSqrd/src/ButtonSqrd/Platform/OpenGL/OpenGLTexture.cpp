@@ -24,17 +24,17 @@ namespace BtnSqd {
 
 		if (texSettings.texType == TextureType::Texture_2D) {
 			if (texSettings.texFormat == TexFormat::RGBA) {
-				glTexImage2D(GetTextureType(), 0, GetTextureDataType(), width, height, 0, GetTextureDataType(), GL_FLOAT, data);
+				glTexImage2D(GetTextureType(), 0, GetTextureDataType(), width, height, 0, GetTextureDataType(), GetTextureDataInternalType(), data);
 			}
 			else if (texSettings.texFormat == TexFormat::RGB_INT) {
-				glTexImage2D(GetTextureType(), 0, GL_RGB32UI, width, height, 0, GL_RGB_INTEGER, GL_UNSIGNED_INT, data);
+				glTexImage2D(GetTextureType(), 0, GL_RGB32UI, width, height, 0, GL_RGB_INTEGER, GetTextureDataInternalType(), data);
 			}
 		}
 		else if (texSettings.texType == TextureType::Texture_2D_Array) {
 			glTexImage3D(GetTextureType(), 0, GetTextureInternal(), width, height, texSettings.maxLayers,0,GetTextureFormat(),GetTextureDataInternalType(),data);
 		}
 		else if (texSettings.texType == TextureType::Texture_1D) {
-			glTexImage1D(GetTextureType(), 0, GetTextureDataType(), width, 0, GetTextureDataType(), GL_FLOAT, data);
+			glTexImage1D(GetTextureType(), 0, GetTextureDataType(), width, 0, GetTextureDataType(), GetTextureDataInternalType(), data);
 		}
 
 		// set the texture wrapping/filtering options (on the currently bound texture object)

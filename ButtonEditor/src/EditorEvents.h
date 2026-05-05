@@ -7,18 +7,18 @@
 namespace BtnSqd {
 
 	enum AssetRawType {
-		ModelRaw=0,TextureRaw,ShaderRaw, GameObjectRaw,SuperGameObjectRaw
+		ModelRaw=0,TextureRaw,ShaderRaw, GameObjectRaw,SuperGameObjectRaw,FontRaw
 	};
 
 	//This is used in drag and drop operations to store information about the asset in question
 	struct AssetPayloadType {
-		char name[26];
-		char path [100];
+		char name[128];
+		char path [256];
 		AssetRawType assetType;
 	};
 
 	struct GameObjectPayload {
-		char name[26];
+		char name[128];
 		std::shared_ptr<GameObject> gameObject;
 		AssetRawType assetType;
 	};

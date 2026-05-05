@@ -1,5 +1,6 @@
 #include "ResourceManager.h"
 #include"ButtonSqrd/Core/SuperGameObject.h"
+#include"ButtonSqrd/Gui/BtnFontLoader.h"
 
 namespace BtnSqd {
 	bool ResourceManager::LoadSkyBoxes() {
@@ -52,6 +53,23 @@ namespace BtnSqd {
 		}
 		return true;
 	}
+
+	bool ResourceManager::LoadFonts() {
+		BtnFontLoader fLoader;
+		std::string fontDirectory = "./Assets/Fonts/";
+		for (auto& p:std::filesystem::recursive_directory_iterator(fontDirectory)) {
+			std::string extension = p.path().extension().string();
+			if (extension == ".ttf") {
+				std::string fontEntry = p.path().string();
+				auto fontTexture = fLoader.LoadFont(fontEntry);
+				if (fontTexture) {
+					loadedFonts[p.path().filename().stem().string()] = fontTexture;
+				}
+			}
+		}
+		return false;
+	}
+
 	ResourceManager::ResourceManager(){
 		if (instance != nullptr)
 			return;
