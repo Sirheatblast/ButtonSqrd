@@ -182,6 +182,7 @@
     <ClInclude Include="src\ButtonSqrd\Event\MouseEvent.h" />
     <ClInclude Include="src\ButtonSqrd\Event\SceneEvent.h" />
     <ClInclude Include="src\ButtonSqrd\Event\WindowEvent.h" />
+    <ClInclude Include="src\ButtonSqrd\Gui\BtnFont.h" />
     <ClInclude Include="src\ButtonSqrd\Gui\BtnFontLoader.h" />
     <ClInclude Include="src\ButtonSqrd\Gui\BtnGuiLayer.h" />
     <ClInclude Include="src\ButtonSqrd\Gui\BtnWidget.h" />
@@ -233,6 +234,7 @@
     <ClCompile Include="src\ButtonSqrd\Core\Scene.cpp" />
     <ClCompile Include="src\ButtonSqrd\Core\SceneSerializer.cpp" />
     <ClCompile Include="src\ButtonSqrd\Core\SuperGameObject.cpp" />
+    <ClCompile Include="src\ButtonSqrd\Gui\BtnFont.cpp" />
     <ClCompile Include="src\ButtonSqrd\Gui\BtnFontLoader.cpp" />
     <ClCompile Include="src\ButtonSqrd\Gui\BtnGuiLayer.cpp" />
     <ClCompile Include="src\ButtonSqrd\Gui\Widgets\BtnTextBox.cpp" />

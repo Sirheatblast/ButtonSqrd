@@ -6,6 +6,8 @@
 
 #include"ButtonSqrd/Audio/SoundBuffer.h"
 
+#include"ButtonSqrd/Gui/BtnFont.h"
+
 #include<map>
 #include<memory>
 #include<filesystem>
@@ -62,7 +64,7 @@ namespace BtnSqd {
 		static std::map<std::string, BtnArmature>& GetLoadedArmatures() { return instance->loadedArmatures; }
 		static std::map<std::string, std::shared_ptr<SuperGameObject>>& GetLoadedSuperGameObjects() { return instance->loadedSupers; }
 		static std::map<std::string, std::shared_ptr<SoundBuffer>>& GetLoadedSounds() { return instance->loadedSounds; }
-		static std::map<std::string, std::shared_ptr<Texture>>GetLoadedFonts() { return instance->loadedFonts; }
+		static std::map<std::string, BtnFont>&GetLoadedFonts() { return instance->loadedFonts; }
 
 	private:
 		bool LoadSkyBoxes();
@@ -123,7 +125,7 @@ namespace BtnSqd {
 		std::map <std::string, std::shared_ptr<SuperGameObject>>loadedSupers;
 		std::map<std::string, BtnAnimation>loadedAnimations;
 		std::map<std::string, std::shared_ptr<SoundBuffer>> loadedSounds;
-		std::map < std::string, std::shared_ptr<Texture>> loadedFonts;
+		std::map < std::string, BtnFont> loadedFonts;
 	};
 }
 

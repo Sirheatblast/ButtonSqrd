@@ -229,6 +229,7 @@
     <ClInclude Include="src\ButtonSqrd\Scripting\BtnScript.h">
       <Filter>ButtonSqrd\Scripting</Filter>
     </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Gui\BtnFont.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ButtonSqrd\Audio\AudioDevice.cpp">
@@ -369,5 +370,6 @@
     <ClCompile Include="src\ButtonSqrd\Scripting\BtnScript.cpp">
       <Filter>ButtonSqrd\Scripting</Filter>
     </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Gui\BtnFont.cpp" />
   </ItemGroup>
 </Project>

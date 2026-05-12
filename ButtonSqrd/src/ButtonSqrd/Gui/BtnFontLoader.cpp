@@ -1,6 +1,6 @@
 #include "BtnFontLoader.h"
 namespace BtnSqd {
-	std::shared_ptr<Texture> BtnFontLoader::LoadFont(std::string path) {
+	std::shared_ptr<Texture> BtnFontLoader::LoadFont(std::string path, std::map<int, BtnGlyph>& btnGlyphs) {
 		std::shared_ptr<Texture> fontTexture;
 
 		if (msdfgen::FreetypeHandle* ftHandle = msdfgen::initializeFreetype()) {
@@ -38,6 +38,32 @@ namespace BtnSqd {
 					texSet.texDataType = TextureDataType::Color;
 					texSet.texFormat = TexFormat::RGBA;
 					fontTexture.reset(Texture::Create(bitmap.width, bitmap.height, texSet, (void*)bitmap.pixels));
+				}
+
+				for (const auto& glyph : glyphs) {
+					double al,ab,ar,at;
+					double pl, pb, pr, pt;
+
+					glyph.getQuadAtlasBounds(al,ab,ar,at);
+					glyph.getQuadPlaneBounds(pl, pb, pr, pt);
+
+					BtnGlyph bGlyph;
+					bGlyph.uvAxis = glm::vec4(
+						(float)al/width,			
+						(float)ab/height,		
+						(float)ar/width,		
+						(float)at/height					
+					);
+					
+					bGlyph.glyphSize = glm::vec4(
+						(float)pl,
+						(float)pb,
+						(float)pr,
+						(float)pt
+					);
+
+					bGlyph.advance = (float)glyph.getAdvance();
+					btnGlyphs[glyph.getCodepoint()] = bGlyph;
 				}
 			}
 

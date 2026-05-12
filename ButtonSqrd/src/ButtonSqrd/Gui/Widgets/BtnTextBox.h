@@ -1,5 +1,7 @@
 #pragma once
 #include"ButtonSqrd/Gui/BtnWidget.h"
+#include"ButtonSqrd/Gui/BtnFont.h"
+#include"ButtonSqrd/Core/ResourceManager.h"
 
 #include<string>
 
@@ -14,14 +16,19 @@ namespace BtnSqd {
 		void SetVerts();
 
 	private:
-		static std::vector<unsigned int>indices;
+		std::vector<Vertices> UpdateTextVerts();
+		std::vector<unsigned int>indices;
 		
 		unsigned int lastWidth=0;
 		unsigned int lastHeight=0;
+		float fontSize;
+		float border;
+		float leterSpacing;
+		std::string text;
 
 		std::vector<Vertices> verts;
 		std::shared_ptr<Mesh> textMesh;
+		BtnFont& font;
 
-		std::string text;
 	};
 }
