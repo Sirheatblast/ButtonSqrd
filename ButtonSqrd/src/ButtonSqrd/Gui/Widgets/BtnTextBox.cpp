@@ -9,6 +9,8 @@ namespace BtnSqd {
 		height = 100.0f;
 		border = 0.0f;
 		fontSize = 35.0f;
+		maxPerc = 0.95f;
+		autoFontSize = false;
 		leterSpacing = 0.0f;
 		wType = BtnWidgetType::Text;
 		SetVerts();
@@ -85,7 +87,56 @@ namespace BtnSqd {
 					continue;
 			}
 		}
+
+		if (autoFontSize) {
+			fontSize = UpdateFontSize();
+		}
+
 		return textVerts;
+	}
+	float BtnTextBox::UpdateFontSize() {
+
+		float min = fontSize / 2.0f;
+		float max = fontSize * 2.0f;
+		float currentSize = GetMaxWidthGivenSize(fontSize);
+		float best = fontSize;
+		float perc = (currentSize / width);
+		while (perc < maxPerc || perc > 1.0f) {
+			float mid = min + (max - min) / 2.0f;
+			currentSize = GetMaxWidthGivenSize(mid);
+			if (currentSize<=width) {
+				best = mid;
+				min = mid;
+			}
+			else {
+				max = mid;
+			}
+			perc = (currentSize / width);
+		}
+		
+		return best;
+	}
+	float BtnTextBox::GetMaxWidthGivenSize(float desiredSize) {
+		float maxLineWidth = 0.0f;
+		float currentX = 0.0f;
+
+		for (const auto& c : text) {
+			if (c == '\n') {
+				if (currentX > maxLineWidth) maxLineWidth = currentX;
+				currentX = 0.0f;
+				continue;
+			}
+
+			const auto& glyph = font.GetGlyph(c);
+			if (glyph) {
+				currentX += (glyph->advance + leterSpacing) * desiredSize;
+			}
+		}
+
+		if (currentX > maxLineWidth) {
+			maxLineWidth = currentX;
+		}
+		return maxLineWidth + (border * 2.0f);
 	}
 }
 

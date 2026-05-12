@@ -17,6 +17,9 @@ namespace BtnSqd {
 
 	private:
 		std::vector<Vertices> UpdateTextVerts();
+		float UpdateFontSize();
+		float GetMaxWidthGivenSize(float desiredSize);
+
 		std::vector<unsigned int>indices;
 		
 		unsigned int lastWidth=0;
@@ -24,7 +27,9 @@ namespace BtnSqd {
 		float fontSize;
 		float border;
 		float leterSpacing;
+		float maxPerc;
 		std::string text;
+		bool autoFontSize;
 
 		std::vector<Vertices> verts;
 		std::shared_ptr<Mesh> textMesh;
