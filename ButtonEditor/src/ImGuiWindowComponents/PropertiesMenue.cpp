@@ -168,7 +168,7 @@ void BtnSqd::PropertiesMenue::ShowVariableData(EditableData& data) {
 	}
 	case DataType::GameObject: {
 		GameObject* asGameObject = static_cast<GameObject*>(data.data);
-		ImVec2 recSize{ 150.0f,21.0f };
+		ImVec2 recSize{ 150.0f,25.0f };
 
 		std::string tag;
 		if (asGameObject->IsValid()) {
@@ -189,7 +189,7 @@ void BtnSqd::PropertiesMenue::ShowVariableData(EditableData& data) {
 		return;
 	}
 	case DataType::SuperGameObject: {
-		ImVec2 recSize{ 150.0f,21.0f };
+		ImVec2 recSize{ 150.0f,25.0f };
 		SuperGameObject* asSuper = static_cast<SuperGameObject*>(data.data);
 		std::string tag;
 		if (asSuper->IsValid()) {
@@ -1567,11 +1567,82 @@ void BtnSqd::PropertiesMenue::TexturePicker(std::shared_ptr<Texture>& texture, s
 }
 
 void BtnSqd::PropertiesMenue::DrawBtnTextBoxData(std::shared_ptr<BtnWidget> widget) {
-	BtnTextBox& text = *static_cast<BtnTextBox*>(widget.get());
-	ImGui::BeginChild("DisplayWidgetTypePropertiesWindow",ImVec2(0.0f,0.0f),
-					  ImGuiChildFlags_AlwaysAutoResize|ImGuiChildFlags_AutoResizeY|ImGuiChildFlags_Border);
+	std::shared_ptr<BtnTextBox> text = std::dynamic_pointer_cast<BtnTextBox>(widget);
+	ImGui::BeginChild("DisplayWidgetTypePropertiesWindow", ImVec2(0.0f, 0.0f),
+					  ImGuiChildFlags_AlwaysAutoResize | ImGuiChildFlags_AutoResizeY | ImGuiChildFlags_Border);
 	ImGui::Text("TextBox:");
 
+	ImGui::Text("Font: ");
+	ImGui::SameLine();
+	ImGui::Button((text->GetFont().GetName()+"##FontNameDragTarget").c_str(), ImVec2(150.0f, 25.0f));
+	ProcessFontDropTarget(text);
+
+	char buf[512];
+	strcpy_s(buf, 512, text->GetText().c_str());
+	if (ImGui::InputTextMultiline("##EnterTextBoxText", buf, 512)) {
+		text->SetText(std::string(buf));
+	}
+
+	ImGui::Text("Auto Font Size: ");
+	ImGui::SameLine();
+	if (ImGui::Checkbox("##CheckUseAutoFormat", &text->GetAutoSize())) {
+		text->SetVerts();
+	}
+	if (!text->GetAutoSize()) {
+		ImGui::Text("Font Size: ");
+		ImGui::SameLine();
+		if (ImGui::DragFloat("##SetTextBoxFontSizeDrag", &text->GetFontSize(), 0.5f, 8.0f, FLT_MAX)) {
+			text->SetVerts();
+		}
+	}
+
+	ImGui::Text("Border:");
+	ImGui::SameLine();
+	if (ImGui::DragFloat("##TextBorderDragFloat", &text->GetBorderRef(), 1.0f, 0.0f, FLT_MAX)) {
+		text->SetVerts();
+	}
+
+	ImGui::Text("Letter Spacing:");
+	ImGui::SameLine();
+	if (ImGui::DragFloat("##TextLetterSpacingDragFloat", &text->GetLetterSpacing(), 0.1f, 0.0f, FLT_MAX)) {
+		text->SetVerts();
+	}
+
+	ImGui::Text("Text Color:");
+	ImGui::SameLine();
+	glm::vec4 textColor = text->GetColor();
+	if(ImGui::ColorButton("##TextColorShowPickerButton", ImVec4(textColor.r,textColor.g,textColor.b,textColor.a))){
+		showTextColorPicker = !showTextColorPicker;
+	}
+	if (showTextColorPicker) {
+		ShowColorPicker(text->GetColorRef(), "##SetTextColor");
+	}
+
+	ImGui::Text("Background Color:");
+	ImGui::SameLine();
+	glm::vec4 backColor = text->GetBackgroundColor();
+	if (ImGui::ColorButton("##TextBackColorShowPickerButton", ImVec4(backColor.r,backColor.g,backColor.b,backColor.a))) {
+		showTextBackgroundColorPicker = !showTextBackgroundColorPicker;
+	}
+	if (showTextBackgroundColorPicker) {
+		ShowColorPicker(text->GetBackgroundColor(), "##SetBackgroundTextColor");
+	}
 
 	ImGui::EndChild();
+}
+
+void BtnSqd::PropertiesMenue::ProcessFontDropTarget(std::shared_ptr<BtnTextBox>& text) {
+	if (ImGui::BeginDragDropTarget()) {
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_INFO")) {
+			AssetPayloadType* pData = static_cast<AssetPayloadType*>(payload->Data);
+			if (pData->assetType == AssetRawType::FontRaw) {
+				std::string nFontName = pData->name;
+				if (ResourceManager::GetLoadedFonts().contains(nFontName)) {
+					text->GetFont() = ResourceManager::GetLoadedFonts()[nFontName];
+					text->SetVerts();
+				}
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
 }

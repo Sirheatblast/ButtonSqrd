@@ -1,8 +1,9 @@
 #include"BtnGuiLayer.h"
 #include"ButtonSqrd.h"
+#include"ButtonSqrd/Gui/Widgets/BtnTextBox.h"
 
 namespace BtnSqd {
-	BtnGuiLayer::BtnGuiLayer(std::shared_ptr<BtnScene> currentScene,glm::vec2 viewPortSize, std::string name):currentScene(currentScene), viewPortSize(viewPortSize), name(name) {
+	BtnGuiLayer::BtnGuiLayer(std::shared_ptr<BtnScene> currentScene, glm::vec2 viewPortSize, std::string name) :currentScene(currentScene), viewPortSize(viewPortSize), name(name) {
 		camera.fov = 80.0f;
 		camera.nearPlain = -1.0f;
 		camera.farPlain = 1.0f;
@@ -15,7 +16,7 @@ namespace BtnSqd {
 
 	}
 	void BtnGuiLayer::OnAttach() {
-		
+
 	}
 	void BtnGuiLayer::OnDetach() {
 
@@ -28,17 +29,17 @@ namespace BtnSqd {
 	void BtnGuiLayer::OnEvent(Event* e) {
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<OnEnableGuiEvent>([this](OnEnableGuiEvent* e)->bool {
-			if (e->GetDest()==name) {
+			if (e->GetDest() == name) {
 				SetEnabled(true);
 			}
-			return true; 
-		});
-		dispatcher.Dispatch<OnDisableGuiEvent>([this](OnDisableGuiEvent* e)->bool{
+			return true;
+											  });
+		dispatcher.Dispatch<OnDisableGuiEvent>([this](OnDisableGuiEvent* e)->bool {
 			if (e->GetDest() == name) {
 				SetEnabled(false);
 			}
 			return true;
-		});
+											   });
 	}
 	void BtnGuiLayer::SetViewPortSize(glm::vec2 nViewPortSize) {
 		viewPortSize = nViewPortSize;
@@ -54,7 +55,7 @@ namespace BtnSqd {
 			glm::vec2 startPos = widget->GetPos();
 			glm::vec2 endPos = startPos + widget->GetDimensions();
 
-			if (mousePos.x>startPos.x&&mousePos.x<endPos.x &&
+			if (mousePos.x > startPos.x && mousePos.x<endPos.x &&
 				mousePos.y>startPos.y && mousePos.y < endPos.y) {
 
 				selected = widget;
@@ -66,22 +67,22 @@ namespace BtnSqd {
 		}
 		return selected;
 	}
-		void BtnGuiLayer::RenderWidgets() {
+	void BtnGuiLayer::RenderWidgets() {
 		if (!widgetShader) {
 			widgetShader = ResourceManager::GetLoadedShaders()["BasicShader"];
+		}
+		if (!textShader) {
+			textShader = ResourceManager::GetLoadedShaders()["TextShader"];
 		}
 
 		if (frameBuffer) {
 			frameBuffer->ABind();
 		}
 
-		widgetShader->Use();
-		widgetShader->SetMat4("VP", camera.projectionMatrix*camera.viewMatrix);
-
 		while (!widgets.empty()) {
 			auto widget = widgets.top();
 			widgets.pop();
-			
+
 			if (widget->GetUseScreenDim()) {
 				float max = 100.0f;
 				glm::vec2 windSize = viewPortSize;
@@ -92,12 +93,14 @@ namespace BtnSqd {
 				widget->SetPos(newScreenPos);
 			}
 
-			glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(widget->GetPos(), 0.5f));
-			auto dimensions = widget->GetDimensions();
-
-			widgetShader->SetMat4("model", modelMat);
-			widgetShader->SetVec3("clearColor", widget->GetColor());
-			RenderCommand::DrawMesh(widget->Draw());
+			switch (widget->GetType()) {
+			case BtnWidgetType::Text:
+				RenderText(widget);
+				break;
+			default:
+				RenderNormal(widget);
+				break;
+			}
 		}
 		widgetShader->Detatch();
 
@@ -105,6 +108,39 @@ namespace BtnSqd {
 			frameBuffer->UnBind();
 		}
 	}
+
+	void BtnGuiLayer::RenderNormal(std::shared_ptr<BtnSqd::BtnWidget>& widget) {
+		widgetShader->Use();
+		widgetShader->SetMat4("VP", camera.projectionMatrix * camera.viewMatrix);
+
+		glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(widget->GetPos(), 0.5f));
+		auto dimensions = widget->GetDimensions();
+
+		widgetShader->SetMat4("model", modelMat);
+		widgetShader->SetVec3("clearColor", widget->GetColor());
+		RenderCommand::DrawMesh(widget->Draw());
+	}
+
+	void BtnGuiLayer::RenderText(std::shared_ptr<BtnSqd::BtnWidget>& widget) {
+		textShader->Use();
+
+		textShader->SetMat4("VP", camera.projectionMatrix * camera.viewMatrix);
+		glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(widget->GetPos(), 0.5f)); //fix this so that it could render widgets not from fixed world positions
+		auto dimensions = widget->GetDimensions();
+		textShader->SetMat4("model", modelMat);
+
+		std::shared_ptr<BtnTextBox> text = std::dynamic_pointer_cast<BtnTextBox>(widget);
+		textShader->SetUniform("fontAtlas", 0);
+		if (text->GetFont().GetFontTexture()) {
+			text->GetFont().GetFontTexture()->Bind();
+		}		
+
+		textShader->SetVec4("textColor", text->GetColor());
+		textShader->SetVec4("backColor", text->GetBackgroundColor());
+		textShader->SetFloat("pixelRange", 3.0f);
+		RenderCommand::DrawMesh(text->Draw());
+	}
+
 	void BtnGuiLayer::GenWidgetPQ() {
 		for (const auto& Widget : currentScene->GetWidgets()) {
 			widgets.push(Widget);
@@ -112,8 +148,9 @@ namespace BtnSqd {
 	}
 	void BtnGuiLayer::SetUpCamera() {
 		camera.viewMatrix = glm::mat4(1.0f);
-		camera.projectionMatrix = glm::ortho(0.0f,viewPortSize.x,viewPortSize.y,0.0f,camera.nearPlain,camera.farPlain);
+		camera.projectionMatrix = glm::ortho(0.0f, viewPortSize.x, viewPortSize.y, 0.0f, camera.nearPlain, camera.farPlain);
 	}
+
 	void BtnGuiLayer::PullInput() {
 
 	}

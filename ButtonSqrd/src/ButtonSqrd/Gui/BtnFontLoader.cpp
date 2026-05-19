@@ -19,7 +19,7 @@ namespace BtnSqd {
 
 				packer.setDimensionsConstraint(msdf_atlas::DimensionsConstraint::SQUARE);
 				packer.setMinimumScale(24.0);
-				packer.setPixelRange(2.0);
+				packer.setPixelRange(3.0);
 				packer.setMiterLimit(1.0);
 				packer.pack(glyphs.data(), glyphs.size());
 				packer.getDimensions(width, height);

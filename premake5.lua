@@ -40,7 +40,7 @@ workspace "BtnSqrd"
 		location "ButtonSqrd"
 		kind "StaticLib"
 		language "C++"
-		cppdialect "C++20"
+		cppdialect "C++latest"
 		staticruntime "off"
 
 		targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -148,7 +148,7 @@ workspace "BtnSqrd"
 		location "ButtonEditor"
 		kind "WindowedApp"
 		language "C++"
-		cppdialect "C++20"
+		cppdialect "C++latest"
 		staticruntime "off"
 
 		targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -264,7 +264,7 @@ workspace "BtnSqrd"
 		location "ButtonRuntime"
 		kind "WindowedApp"
 		language "C++"
-		cppdialect "C++20"
+		cppdialect "C++latest"
 		staticruntime "off"
 
 		targetdir ("bin/" .. outputdir .. "/%{prj.name}")

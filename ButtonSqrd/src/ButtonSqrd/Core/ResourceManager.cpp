@@ -60,10 +60,11 @@ namespace BtnSqd {
 			std::string extension = p.path().extension().string();
 			if (extension == ".ttf") {
 				std::string fontEntry = p.path().string();
+				std::string fontName = p.path().filename().string();
 				bool didLoad;
-				BtnFont font(fontEntry,didLoad);
+				BtnFont font(fontEntry,fontName,didLoad);
 				if (didLoad) {
-					loadedFonts[p.path().filename().stem().string()] = font;
+					loadedFonts[fontName] = font;
 				}
 				else {
 					BTNLOG_ERROR("Unable to load font: {}", p.path().filename().stem().string());

@@ -1,7 +1,6 @@
 #include "ScriptManager.h"
 
 #include<string>
-#include<cstdlib>
 #include<fstream>
 #include <filesystem>
 
@@ -10,12 +9,16 @@
 namespace fs = std::filesystem;
 
 static bool ShouldRecompile(const fs::path& dllPath, const fs::path& sourceDir) {
-	if (!fs::exists(dllPath)) return true;
+	std::error_code ec;
+	if (!fs::exists(dllPath,ec)||ec) {
+		return true;
+	}
 
 	auto dllTime = fs::last_write_time(dllPath);
 	for (auto& p : fs::recursive_directory_iterator(sourceDir)) {
 		if (p.path().extension() == ".cpp" || p.path().extension() == ".h") {
-			if (fs::last_write_time(p.path()) > dllTime)
+			auto fileTime = fs::last_write_time(p.path());
+			if (fileTime > dllTime)
 				return true;
 		}
 	}
@@ -24,7 +27,7 @@ static bool ShouldRecompile(const fs::path& dllPath, const fs::path& sourceDir) 
 
 namespace BtnSqd {
 	bool ScriptManager::CompileScripts() {
-		const std::string MSBUILD_PATH = "\"C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe\"";
+		const std::string MSBUILD_PATH = "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe";
 		BTNLOG_INFO("Start Compliation of Scripts");
 		if (ShouldRecompile("EngineAssets/Scripts/bin/BtnScripts.dll", "Assets/Scripts")) {
 			system("src\\Scripting\\Premake\\premake5.exe vs2026");
@@ -34,9 +37,11 @@ namespace BtnSqd {
 				config = "Debug";
 			#endif
 
-			std::string cmd = MSBUILD_PATH + " EngineAssets\\Scripts\\ScriptBuild.sln /p:Configuration=" + config + " /p:Platform=x64 /p:WarningLevel=0";
+			std::string cmd = MSBUILD_PATH + " EngineAssets\\Scripts\\ScriptBuild.slnx /p:Configuration=" + config + " /p:Platform=x64 /p:WarningLevel=0";
 
 			FILE* pipe = _popen(cmd.c_str(), "r");
+			
+			
 			if (pipe) {
 				char buffer[512];
 				while (fgets(buffer, sizeof(buffer), pipe) != nullptr) {

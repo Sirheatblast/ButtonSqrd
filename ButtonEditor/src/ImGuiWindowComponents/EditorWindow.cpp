@@ -39,7 +39,7 @@ namespace BtnSqd {
 		}
 
 		HandleBtnGui();
-		ScaleWidget();
+		HandleSelectedWidget();
 		ImGui::End();
 		ImGui::PopStyleVar();
 	}
@@ -125,6 +125,9 @@ namespace BtnSqd {
 			return;
 		}
 		if (Input::IsMouseButtonPressed(MouseCode::Left) && !canDrag && !isResizeWidget) {
+			if (!ImGui::IsWindowHovered()) {
+				return;
+			}
 			auto [sX, sY] = Input::GetMousePosition();
 			glm::vec2 mousePos = { sX, sY };
 			selectedWidget = bGuiLayer->PickWidget(mousePos);
@@ -169,13 +172,18 @@ namespace BtnSqd {
 		}
 	}
 
-	void EditorWindow::ScaleWidget() {
+	void EditorWindow::HandleSelectedWidget() {
 		if (!selectedWidget) return;
 
 		glm::vec2 winPos = glm::vec2(windowPos.x, windowPos.y);
 		glm::vec2 pos = selectedWidget->GetPos();
 		glm::vec2 size = selectedWidget->GetDimensions();
 		glm::vec2 handlePos = winPos + pos + size;
+
+		ImGui::GetWindowDrawList()->AddRect(
+			ImVec2(pos.x+windowPos.x,pos.y+windowPos.y), 
+			ImVec2(handlePos.x, handlePos.y),
+			IM_COL32(50, 50, 50, 255),0.0f,0,3.0f);
 
 		float handleRadius = 8.0f;
 		ImVec2 mousePos = ImGui::GetIO().MousePos;

@@ -59,7 +59,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NDEBUG;BTN_PLATFORM_WINDOWS;USE_GLFW;GLFW_DLL;GLFW_INCLUDE_NONE;YAML_CPP_STATIC_DEFINE;_CRT_SECURE_NO_WARNINGS;STB_IMAGE_IMPLEMENTATION;PX_PHYSX_STATIC_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>include;..\..\..\ButtonSqrd\vendor\spdlog\include;..\..\..\ButtonSqrd\vendor\GLFW\include;..\..\..\ButtonSqrd\vendor\glad\include;..\..\..\ButtonSqrd\vendor\glm;..\..\..\ButtonSqrd\vendor\entt\include;..\..\..\ButtonSqrd\vendor\stb-master;..\..\..\ButtonSqrd\vendor\assimp\assimp\include;..\..\..\ButtonSqrd\vendor\imgui\imgui;..\..\..\ButtonSqrd\vendor\imgui\backends;..\..\..\ButtonSqrd\vendor\ImGuizmo;..\..\..\ButtonSqrd\vendor\yaml\include;..\..\..\ButtonSqrd\vendor\PhysX\physx\include;..\..\..\ButtonSqrd\vendor\OpenAL\include;..\..\..\ButtonSqrd\vendor\MiniAudio;..\..\..\ButtonSqrd\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;..\..\..\ButtonSqrd\vendor\GLFW\include;..\..\..\ButtonSqrd\vendor\glad\include;..\..\..\ButtonSqrd\vendor\spdlog\include;..\..\..\ButtonSqrd\vendor\glm;..\..\..\ButtonSqrd\vendor\entt\include;..\..\..\ButtonSqrd\vendor\stb-master;..\..\..\ButtonSqrd\vendor\assimp\assimp\include;..\..\..\ButtonSqrd\vendor\imgui\imgui;..\..\..\ButtonSqrd\vendor\imgui\backends;..\..\..\ButtonSqrd\vendor\ImGuizmo;..\..;..\..\..\ButtonSqrd\vendor\yaml\include;..\..\..\ButtonSqrd\vendor\PhysX\physx\include;..\..\..\ButtonSqrd\vendor\OpenAL\include;..\..\..\ButtonSqrd\vendor\MiniAudio;..\..\..\ButtonSqrd\vendor\msdf-atlas-gen;..\..\..\ButtonSqrd\vendor\msdf-atlas-gen\msdfgen;..\..\..\ButtonSqrd\vendor\freetype;..\..\..\ButtonSqrd\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>None</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -75,8 +75,8 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ButtonSqrd.lib;GLAD.lib;ImGui.lib;yaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\bin\Release-windows-x86_64\ButtonSqrd;..\..\..\ButtonSqrd;..\..\..\ButtonSqrd\vendor\GLFW\bin\Release-windows-x86_64\GLFW;..\..\..\ButtonSqrd\vendor\glad\bin\Release-windows-x86_64\GLAD;..\..\..\ButtonSqrd\vendor\imgui\bin\Release-windows-x86_64\ImGui;..\..\..\ButtonSqrd\vendor\yaml\bin\Release-windows-x86_64\yaml;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ButtonSqrd.lib;GLAD.lib;ImGui.lib;yaml.lib;msdf-atlas-gen.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\bin\Release-windows-x86_64\ButtonSqrd;..\..\..\ButtonSqrd;..\..\..\ButtonSqrd\vendor\GLFW\bin\Release-windows-x86_64\GLFW;..\..\..\ButtonSqrd\vendor\glad\bin\Release-windows-x86_64\GLAD;..\..\..\ButtonSqrd\vendor\imgui\bin\Release-windows-x86_64\ImGui;..\..\..\ButtonSqrd\vendor\yaml\bin\Release-windows-x86_64\yaml;..\..\..\ButtonSqrd\vendor\msdf-atlas-gen\bin\Release-windows-x86_64\msdf-atlas-gen;..\..\..\ButtonSqrd\vendor\freetype\bin\Release-windows-x86_64\freetype;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>bin\BtnScripts.lib</ImportLibrary>
     </Link>
     <ProjectReference>
@@ -87,7 +87,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>BTN_DEBUG;BTN_PLATFORM_WINDOWS;USE_GLFW;GLFW_DLL;GLFW_INCLUDE_NONE;YAML_CPP_STATIC_DEFINE;_CRT_SECURE_NO_WARNINGS;STB_IMAGE_IMPLEMENTATION;PX_PHYSX_STATIC_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>include;..\..\..\ButtonSqrd\vendor\spdlog\include;..\..\..\ButtonSqrd\vendor\GLFW\include;..\..\..\ButtonSqrd\vendor\glad\include;..\..\..\ButtonSqrd\vendor\glm;..\..\..\ButtonSqrd\vendor\entt\include;..\..\..\ButtonSqrd\vendor\stb-master;..\..\..\ButtonSqrd\vendor\assimp\assimp\include;..\..\..\ButtonSqrd\vendor\imgui\imgui;..\..\..\ButtonSqrd\vendor\imgui\backends;..\..\..\ButtonSqrd\vendor\ImGuizmo;..\..\..\ButtonSqrd\vendor\yaml\include;..\..\..\ButtonSqrd\vendor\PhysX\physx\include;..\..\..\ButtonSqrd\vendor\OpenAL\include;..\..\..\ButtonSqrd\vendor\MiniAudio;..\..\..\ButtonSqrd\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;..\..\..\ButtonSqrd\vendor\GLFW\include;..\..\..\ButtonSqrd\vendor\glad\include;..\..\..\ButtonSqrd\vendor\spdlog\include;..\..\..\ButtonSqrd\vendor\glm;..\..\..\ButtonSqrd\vendor\entt\include;..\..\..\ButtonSqrd\vendor\stb-master;..\..\..\ButtonSqrd\vendor\assimp\assimp\include;..\..\..\ButtonSqrd\vendor\imgui\imgui;..\..\..\ButtonSqrd\vendor\imgui\backends;..\..\..\ButtonSqrd\vendor\ImGuizmo;..\..;..\..\..\ButtonSqrd\vendor\yaml\include;..\..\..\ButtonSqrd\vendor\PhysX\physx\include;..\..\..\ButtonSqrd\vendor\OpenAL\include;..\..\..\ButtonSqrd\vendor\MiniAudio;..\..\..\ButtonSqrd\vendor\msdf-atlas-gen;..\..\..\ButtonSqrd\vendor\msdf-atlas-gen\msdfgen;..\..\..\ButtonSqrd\vendor\freetype;..\..\..\ButtonSqrd\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -97,8 +97,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ButtonSqrd.lib;GLAD.lib;ImGui.lib;yaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\bin\Debug-windows-x86_64\ButtonSqrd;..\..\..\ButtonSqrd;..\..\..\ButtonSqrd\vendor\GLFW\bin\Debug-windows-x86_64\GLFW\bin;..\..\..\ButtonSqrd\vendor\glad\bin\Debug-windows-x86_64\GLAD;..\..\..\ButtonSqrd\vendor\imgui\bin\Debug-windows-x86_64\ImGui;..\..\..\ButtonSqrd\vendor\yaml\bin\Debug-windows-x86_64\yaml;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ButtonSqrd.lib;GLAD.lib;ImGui.lib;yaml.lib;msdf-atlas-gen.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\bin\Debug-windows-x86_64\ButtonSqrd;..\..\..\ButtonSqrd;..\..\..\ButtonSqrd\vendor\GLFW\bin\Debug-windows-x86_64\GLFW\bin;..\..\..\ButtonSqrd\vendor\glad\bin\Debug-windows-x86_64\GLAD;..\..\..\ButtonSqrd\vendor\imgui\bin\Debug-windows-x86_64\ImGui;..\..\..\ButtonSqrd\vendor\yaml\bin\Debug-windows-x86_64\yaml;..\..\..\ButtonSqrd\vendor\msdf-atlas-gen\bin\Debug-windows-x86_64\msdf-atlas-gen;..\..\..\ButtonSqrd\vendor\freetype\bin\Debug-windows-x86_64\freetype;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>bin\BtnScripts.lib</ImportLibrary>
     </Link>
     <ProjectReference>

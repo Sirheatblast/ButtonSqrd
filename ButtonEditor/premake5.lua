@@ -17,6 +17,9 @@ workspace "ScriptBuild"
    IncludeDir["PhysX"] = "../ButtonSqrd/vendor/PhysX"
    IncludeDir["OpenAL"] = "../ButtonSqrd/vendor/OpenAL"
 	IncludeDir["MiniAudio"]="../ButtonSqrd/vendor/MiniAudio"
+   IncludeDir["msdfgenAtlas"] = "../ButtonSqrd/vendor/msdf-atlas-gen"
+	IncludeDir["msdfgen"] = "../ButtonSqrd/vendor/msdf-atlas-gen/msdfgen"
+	IncludeDir["freetype"] = "../ButtonSqrd/vendor/freetype"
 
 project "BtnScripts"
    kind "SharedLib"
@@ -36,9 +39,9 @@ project "BtnScripts"
 
    includedirs {
       "EngineAssets/Scripts/include",
-      "%{IncludeDir.spdlog}",
       "%{IncludeDir.GLFW}",
       "%{IncludeDir.GLAD}",
+      "%{IncludeDir.spdlog}",
       "%{IncludeDir.glm}",
       "%{IncludeDir.entt}",
       "%{IncludeDir.stb_image}",
@@ -46,10 +49,14 @@ project "BtnScripts"
       "%{IncludeDir.ImGui}/imgui",
       "%{IncludeDir.ImGui}/backends",
       "%{IncludeDir.ImGuizmo}",
+      "%{IncludeDir.ImNodes}",
       "%{IncludeDir.yaml}",
       "%{IncludeDir.PhysX}/physx/include",
       "%{IncludeDir.OpenAL}/include",
-		"%{IncludeDir.MiniAudio}",
+      "%{IncludeDir.MiniAudio}",
+      "%{IncludeDir.msdfgenAtlas}",
+      "%{IncludeDir.msdfgen}",
+      "%{IncludeDir.freetype}",
       "../ButtonSqrd/src"
    }
 
@@ -63,6 +70,8 @@ project "BtnScripts"
       "GLAD.lib",
       "ImGui.lib",
       "yaml.lib",
+      "msdf-atlas-gen.lib",
+      "freetype.lib",
    }
 
    filter "platforms:x64"
@@ -82,6 +91,8 @@ project "BtnScripts"
          "../ButtonSqrd/vendor/glad/bin/Release-windows-x86_64/GLAD",
          "../ButtonSqrd/vendor/imgui/bin/Release-windows-x86_64/ImGui",
          "../ButtonSqrd/vendor/yaml/bin/Release-windows-x86_64/yaml",
+         "../ButtonSqrd/vendor/msdf-atlas-gen/bin/Release-windows-x86_64/msdf-atlas-gen",
+         "../ButtonSqrd/vendor/freetype/bin/Release-windows-x86_64/freetype",
       }
 
    filter "configurations:Debug"
@@ -97,6 +108,8 @@ project "BtnScripts"
          "../ButtonSqrd/vendor/glad/bin/Debug-windows-x86_64/GLAD",
          "../ButtonSqrd/vendor/imgui/bin/Debug-windows-x86_64/ImGui",
          "../ButtonSqrd/vendor/yaml/bin/Debug-windows-x86_64/yaml",
+         "../ButtonSqrd/vendor/msdf-atlas-gen/bin/Debug-windows-x86_64/msdf-atlas-gen",
+         "../ButtonSqrd/vendor/freetype/bin/Debug-windows-x86_64/freetype",
       }
    filter "system:windows"
       systemversion "latest"

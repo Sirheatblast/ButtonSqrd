@@ -33,7 +33,7 @@ namespace BtnSqd {
 		void EditorWindowHotKeys();
 		void HandleBtnGui();
 		void DragWidget();
-		void ScaleWidget();
+		void HandleSelectedWidget();
 		bool mousePickRender = false;
 		bool firstClick = true;
 		bool canDrag = false;

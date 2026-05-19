@@ -48,7 +48,7 @@ namespace BtnSqd {
 
 			// In this simple program, we'll just leave
 			std::string info = infoLog.data();
-			BTN_CORE_LOG_ERROR("Vertex shader failed to compile "+ info);
+			BTNLOG_ERROR("Vertex shader failed to compile "+ info);
 			return;
 		}
 
@@ -82,7 +82,7 @@ namespace BtnSqd {
 
 			// In this simple program, we'll just leave
 			std::string info = infoLog.data();
-			BTN_CORE_LOG_ERROR("Fragment shader failed to compile "+ info);
+			BTNLOG_ERROR("Fragment shader failed to compile "+ info);
 			return;
 		}
 
@@ -118,7 +118,7 @@ namespace BtnSqd {
 			glDeleteShader(fragmentShader);
 
 			std::string error = infoLog.data();
-			BTN_CORE_LOG_ERROR("Shader program failed to link: " + error);
+			BTNLOG_ERROR("Shader program failed to link: " + error);
 			return;
 		}
 

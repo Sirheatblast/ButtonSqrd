@@ -11,8 +11,9 @@ namespace BtnSqd {
 		fontSize = 35.0f;
 		maxPerc = 0.95f;
 		autoFontSize = false;
-		leterSpacing = 0.0f;
+		letterSpacing = 0.1f;
 		wType = BtnWidgetType::Text;
+		backgroundColor = glm::vec4(0.0f);
 		SetVerts();
 	}
 
@@ -21,16 +22,20 @@ namespace BtnSqd {
 	}
 
 	Mesh& BtnSqd::BtnTextBox::Draw() {
-		SetVerts();
+		if (lastWidth != width || lastHeight != height) {
+			SetVerts();
+		}
 		return *textMesh;
 	}
 	void BtnTextBox::SetVerts() {
-		if (lastWidth != width || lastHeight != height) {
-			verts = UpdateTextVerts();
-			lastWidth = width;
-			lastHeight = height;
-			textMesh = std::make_shared<Mesh>(verts, indices, Material());
-		}
+		verts = UpdateTextVerts();
+		lastWidth = width;
+		lastHeight = height;
+		textMesh = std::make_shared<Mesh>(verts, indices, Material());
+	}
+	void BtnTextBox::SetText(std::string nText) {
+		text = nText;
+		SetVerts();
 	}
 	std::vector<Vertices> BtnTextBox::UpdateTextVerts() {
 		std::vector<Vertices> textVerts;
@@ -46,10 +51,10 @@ namespace BtnSqd {
 			}
 			const BtnGlyph* glyph = font.GetGlyph(c);
 			if (glyph) {
-				float x0 = cursor.x + glyph->glyphSize.x*fontSize;
-				float y0 = cursor.y + glyph->glyphSize.y*fontSize;
+				float x0 = cursor.x + glyph->glyphSize.x * fontSize;
+				float y0 = cursor.y - glyph->glyphSize.y * fontSize;
 				float x1 = cursor.x + glyph->glyphSize.z * fontSize;
-				float y1 = cursor.y + glyph->glyphSize.w * fontSize;
+				float y1 = cursor.y - glyph->glyphSize.w * fontSize;
 
 				if (x1>width) {
 					cursor.x = border;
@@ -72,15 +77,16 @@ namespace BtnSqd {
 				textVerts.push_back({{x0,y1,0.0f},{uvMin.x,uvMax.y}});
 
 				indices.push_back(vOffset + 0);
-				indices.push_back(vOffset + 2);
 				indices.push_back(vOffset + 1);
+				indices.push_back(vOffset + 2);
 
 				indices.push_back(vOffset + 0);
-				indices.push_back(vOffset + 3);
 				indices.push_back(vOffset + 2);
+				indices.push_back(vOffset + 3);
+
 
 				vOffset += 4;
-				cursor.x += (glyph->advance+leterSpacing) * fontSize;
+				cursor.x += (glyph->advance+letterSpacing) * fontSize;
 			}
 			else {
 				BTNLOG_WARN("Char: {} does not exist in font", c)
@@ -96,14 +102,23 @@ namespace BtnSqd {
 	}
 	float BtnTextBox::UpdateFontSize() {
 
-		float min = fontSize / 2.0f;
-		float max = fontSize * 2.0f;
+		float min = 8.0f;
+		float max = 500.0f;
 		float currentSize = GetMaxWidthGivenSize(fontSize);
 		float best = fontSize;
 		float perc = (currentSize / width);
 		while (perc < maxPerc || perc > 1.0f) {
+			if (max == min || min<8.0f||max<8.0f) {
+				break;
+			}
+
 			float mid = min + (max - min) / 2.0f;
+
 			currentSize = GetMaxWidthGivenSize(mid);
+			if (currentSize == 0.0f) {
+				break;
+			}
+
 			if (currentSize<=width) {
 				best = mid;
 				min = mid;
@@ -129,7 +144,7 @@ namespace BtnSqd {
 
 			const auto& glyph = font.GetGlyph(c);
 			if (glyph) {
-				currentX += (glyph->advance + leterSpacing) * desiredSize;
+				currentX += (glyph->advance + letterSpacing) * desiredSize;
 			}
 		}
 

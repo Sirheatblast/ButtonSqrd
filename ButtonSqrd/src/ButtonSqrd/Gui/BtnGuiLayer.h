@@ -42,9 +42,15 @@ namespace BtnSqd {
 		void SetUpCamera();
 		void PullInput();
 
+		void RenderNormal(std::shared_ptr<BtnSqd::BtnWidget>& widget);
+		void RenderText(std::shared_ptr<BtnSqd::BtnWidget>& widget);
+
 		std::shared_ptr<BtnScene> currentScene;
 		std::shared_ptr<FrameBuffer> frameBuffer;
+
 		std::shared_ptr<Shader> widgetShader;
+		std::shared_ptr<Shader> textShader;
+
 		std::priority_queue<std::shared_ptr<BtnWidget>,std::vector<std::shared_ptr<BtnWidget>>, CompareWidget> widgets;
 		CameraComponent camera;
 		glm::vec2 viewPortSize;

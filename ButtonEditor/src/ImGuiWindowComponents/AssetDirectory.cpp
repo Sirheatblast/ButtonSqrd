@@ -87,7 +87,7 @@ namespace BtnSqd {
 					else if (dirType == "SuperGameObjects") {
 						payload.assetType = AssetRawType::SuperGameObjectRaw;
 					}
-					else if (dirType == "Fonts") {
+					else if (dirType == "Fonts" || p.path().string().contains("Fonts")) {
 						payload.assetType = AssetRawType::FontRaw;
 					}
 

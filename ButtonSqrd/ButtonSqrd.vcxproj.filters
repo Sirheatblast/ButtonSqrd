@@ -136,6 +136,9 @@
     <ClInclude Include="src\ButtonSqrd\Event\WindowEvent.h">
       <Filter>ButtonSqrd\Event</Filter>
     </ClInclude>
+    <ClInclude Include="src\ButtonSqrd\Gui\BtnFont.h">
+      <Filter>ButtonSqrd\Gui</Filter>
+    </ClInclude>
     <ClInclude Include="src\ButtonSqrd\Gui\BtnFontLoader.h">
       <Filter>ButtonSqrd\Gui</Filter>
     </ClInclude>
@@ -229,7 +232,6 @@
     <ClInclude Include="src\ButtonSqrd\Scripting\BtnScript.h">
       <Filter>ButtonSqrd\Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="src\ButtonSqrd\Gui\BtnFont.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ButtonSqrd\Audio\AudioDevice.cpp">
@@ -285,6 +287,9 @@
     </ClCompile>
     <ClCompile Include="src\ButtonSqrd\Core\SuperGameObject.cpp">
       <Filter>ButtonSqrd\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonSqrd\Gui\BtnFont.cpp">
+      <Filter>ButtonSqrd\Gui</Filter>
     </ClCompile>
     <ClCompile Include="src\ButtonSqrd\Gui\BtnFontLoader.cpp">
       <Filter>ButtonSqrd\Gui</Filter>
@@ -370,6 +375,5 @@
     <ClCompile Include="src\ButtonSqrd\Scripting\BtnScript.cpp">
       <Filter>ButtonSqrd\Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="src\ButtonSqrd\Gui\BtnFont.cpp" />
   </ItemGroup>
 </Project>

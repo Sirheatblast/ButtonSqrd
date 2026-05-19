@@ -137,6 +137,7 @@ namespace BtnSqd {
 		void TexturePicker(std::shared_ptr<Texture>& texture, std::vector<bool>::reference flag, glm::vec3 clearColor = glm::vec3(), int index = 0);
 
 		void DrawBtnTextBoxData(std::shared_ptr<BtnWidget>widget);
+		void ProcessFontDropTarget(std::shared_ptr<BtnTextBox>& text);
 		bool OnGetWidget(BtnSqd::OnGetWidgetEvent* e);
 
 		bool showAddCompWindow = false;
@@ -147,6 +148,8 @@ namespace BtnSqd {
 		bool addSound = false;
 		bool showCurve = false;
 		bool showGui = false;
+		bool showTextColorPicker = false;
+		bool showTextBackgroundColorPicker = false;
 
 		std::shared_ptr<BtnScene>& currentScene;
 		std::vector<bool>showTexturePickerMain;

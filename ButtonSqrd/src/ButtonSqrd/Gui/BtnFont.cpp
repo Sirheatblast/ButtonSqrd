@@ -1,11 +1,12 @@
 #include"BtnFont.h"
 
 namespace BtnSqd {
-	BtnFont::BtnFont(std::string path,bool& didLoad) {
+	BtnFont::BtnFont(std::string path, std::string fName,bool& didLoad) {
 		didLoad = false;
+		name = fName;
 		BtnFontLoader fLoader;
-		std::shared_ptr<Texture>fontTex = fLoader.LoadFont(path, fontGlyphs);
-		if (!fontTex) {
+		fontTexture = fLoader.LoadFont(path, fontGlyphs);
+		if (!fontTexture) {
 			return;
 		}
 		didLoad = true;
