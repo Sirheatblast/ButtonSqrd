@@ -1641,6 +1641,40 @@ void BtnSqd::PropertiesMenue::DrawBtnImageData(std::shared_ptr<BtnWidget> widget
 					  ImGuiChildFlags_AlwaysAutoResize | ImGuiChildFlags_AutoResizeY | ImGuiChildFlags_Border);
 	ImGui::Text("Image:");
 
+	ImGui::Text("Selected Texture:");
+	ImGui::Indent(20.0f);
+	if (image->GetTexture()) {
+		if (ImGui::ImageButton("##CurrentWidgetImageTexture", image->GetTexture()->GetId(), ImVec2(150.0f, 150.0f)) && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
+			image->SetTexture("bin/null");
+		}
+	}
+	else {
+		ImGui::ImageButton("##CurrentWidgetImageTexture", 0, ImVec2(150.0f, 150.0f));
+	}
+	ImGui::Unindent(20.0f);
+
+	const auto& cColor = image->GetColor();
+
+	ImGui::Text("Clear Color: ");
+	ImGui::SameLine();
+	if(ImGui::ColorButton("##WidgetImageClearColor", ImVec4(cColor.x,cColor.y,cColor.z,1.0f))){
+		showImageClearColorPicker = !showImageClearColorPicker;
+	}
+	if (showImageClearColorPicker) {
+		glm::vec4 color = cColor;
+		ShowColorPicker(color,"##WidgetImagePickClearColor");
+		if (color != cColor) {
+			image->SetColor(color);
+		}
+	}
+
+	bool shouldMix = image->GetMix();
+	ImGui::Text("Mix: ");
+	ImGui::SameLine();
+	if (ImGui::Checkbox("##ShouldImageWidgetMixColor", &shouldMix)) {
+		image->SetMix(shouldMix);
+	}
+
 	ImGui::EndChild();
 }
 

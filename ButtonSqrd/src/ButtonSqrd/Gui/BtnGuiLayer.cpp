@@ -69,7 +69,7 @@ namespace BtnSqd {
 	}
 	void BtnGuiLayer::RenderWidgets() {
 		if (!widgetShader) {
-			widgetShader = ResourceManager::GetLoadedShaders()["BasicShader"];
+			widgetShader = ResourceManager::GetLoadedShaders()["WidgetShader"];
 		}
 		if (!textShader) {
 			textShader = ResourceManager::GetLoadedShaders()["TextShader"];
@@ -118,7 +118,8 @@ namespace BtnSqd {
 		auto dimensions = widget->GetDimensions();
 
 		widgetShader->SetMat4("model", modelMat);
-		widgetShader->SetVec3("clearColor", widget->GetColor());
+		widgetShader->SetVec4("clearColor", widget->GetColor());
+		widgetShader->SetBool("mixTex", widget->GetMix());
 		RenderCommand::DrawMesh(widget->Draw());
 		widgetShader->Detatch();
 	}

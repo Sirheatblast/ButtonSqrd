@@ -39,11 +39,12 @@ namespace BtnSqd {
 		inline void SetBorder(float nBorder) { border = nBorder; }
 		inline void SetUseScreenDim(bool useScreen) { useScreenDim = useScreen; }
 		inline void SetHover(bool hover) { isHovered = hover; }
+		inline bool GetMix() { return mix; }
+		inline void SetMix(bool nMix) { mix = nMix; }
 		void SetDimensions(glm::vec2 dimensions) {
 			width = dimensions.x;
 			height = dimensions.y;
 		}
-
 	protected:
 		unsigned int id =0;
 		unsigned int level=0;
@@ -57,6 +58,7 @@ namespace BtnSqd {
 		bool isEnabled = true;
 		bool isHovered = false;
 		bool useScreenDim = false;
+		bool mix = false;
 		std::string name = "widget";
 		BtnWidgetType wType= BtnWidgetType::None;
 	};

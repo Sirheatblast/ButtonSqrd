@@ -15,7 +15,7 @@ namespace BtnSqd {
 		Mesh& Draw() override;
 		void UpdateMesh();
 		void SetTexture(std::string path);
-
+		std::shared_ptr<Texture> GetTexture() { return imageTexture; }
 	private:
 		void InitIndices();
 		std::vector<Vertices> GenerateVerts();
@@ -26,8 +26,6 @@ namespace BtnSqd {
 		std::shared_ptr<Mesh>imageMesh;
 		std::shared_ptr<Texture>imageTexture;
 		glm::vec2 lastDimensions;
-		glm::vec4 color;
-		bool mix;
 		float margin;
 	};
 }
