@@ -4,6 +4,9 @@ BtnSqd::PropertiesMenue::PropertiesMenue(std::shared_ptr<BtnScene>& scene, BtnPh
 	widgetTypeDrawCallbacks[BtnWidgetType::Text] = [this](std::shared_ptr<BtnWidget> widget) {
 		this->DrawBtnTextBoxData(widget);
 		};
+	widgetTypeDrawCallbacks[BtnWidgetType::BtnImage] = [this](std::shared_ptr<BtnWidget> widget) {
+		this->DrawBtnImageData(widget);
+		};
 }
 
 void BtnSqd::PropertiesMenue::OnUpdate(GameObject& selectedObj) {
@@ -115,7 +118,7 @@ void BtnSqd::PropertiesMenue::SendEvent(Event* e) {
 	EventDispatcher dispatcher(e);
 	dispatcher.Dispatch<OnGetWidgetEvent>([this](OnGetWidgetEvent* e)->bool {
 		return OnGetWidget(e);
-	});
+										  });
 }
 
 bool BtnSqd::PropertiesMenue::OnGetWidget(BtnSqd::OnGetWidgetEvent* e) {
@@ -1118,7 +1121,7 @@ void BtnSqd::PropertiesMenue::WidgetCanvasComp(GameObject& selectedObj) {
 			showGui = false;
 		}
 	}
-	
+
 	ImGui::BeginChild("##WidgetCanvasShowWidgetsWindow", ImVec2(0.0f, 0.0f), ImGuiChildFlags_AlwaysAutoResize | ImGuiChildFlags_AutoResizeY | ImGuiChildFlags_Border);
 	float addWidgetButtonWidth = 100.0f;
 	float buttonOffset = (ImGui::GetContentRegionAvail().x - addWidgetButtonWidth) * 0.5f;
@@ -1155,7 +1158,7 @@ void BtnSqd::PropertiesMenue::WidgetCanvasComp(GameObject& selectedObj) {
 		bool useDim = wCanvas.selectedWidget->GetUseScreenDim();
 		ImGui::Text("Use Screen Dimensions ");
 		ImGui::SameLine();
-		if (ImGui::Checkbox("##WidgetCanvasSelectedWidgetUseScreenDim",&useDim)) {
+		if (ImGui::Checkbox("##WidgetCanvasSelectedWidgetUseScreenDim", &useDim)) {
 			wCanvas.selectedWidget->SetUseScreenDim(useDim);
 		}
 
@@ -1168,7 +1171,7 @@ void BtnSqd::PropertiesMenue::WidgetCanvasComp(GameObject& selectedObj) {
 			windSize = { ImGui::GetContentRegionAvail().x,ImGui::GetContentRegionAvail().y };
 			ImGui::End();
 			glm::vec2 wPos = wCanvas.selectedWidget->GetPercentPos();
-			ImGui::DragFloat2("##SelectedWidgetDragPosition", glm::value_ptr(wPos),1.0f,0.0f,max);
+			ImGui::DragFloat2("##SelectedWidgetDragPosition", glm::value_ptr(wPos), 1.0f, 0.0f, max);
 			glm::vec2 wPercent = wPos / max;
 			wCanvas.selectedWidget->SetPosPercent(wPos);
 		}
@@ -1178,12 +1181,12 @@ void BtnSqd::PropertiesMenue::WidgetCanvasComp(GameObject& selectedObj) {
 				wCanvas.selectedWidget->SetPos(wPos);
 			}
 		}
-		
+
 
 		ImGui::Text("Dimensions: ");
 		ImGui::SameLine();
 		glm::vec2 dimension = wCanvas.selectedWidget->GetDimensions();
-		if(ImGui::DragFloat2("##SelectedWidgetDragDimensions", glm::value_ptr(dimension))){
+		if (ImGui::DragFloat2("##SelectedWidgetDragDimensions", glm::value_ptr(dimension))) {
 			wCanvas.selectedWidget->SetDimensions(dimension);
 		}
 	}
@@ -1220,7 +1223,7 @@ void BtnSqd::PropertiesMenue::CreateWidgetPopup(WidgetCanvasComponent& wCanvas) 
 
 		}
 		if (ImGui::Selectable("Image")) {
-
+			wCanvas.Widgets.push_back(std::make_shared<BtnImage>());
 		}
 		if (ImGui::Selectable("Slider")) {
 
@@ -1574,7 +1577,7 @@ void BtnSqd::PropertiesMenue::DrawBtnTextBoxData(std::shared_ptr<BtnWidget> widg
 
 	ImGui::Text("Font: ");
 	ImGui::SameLine();
-	ImGui::Button((text->GetFont().GetName()+"##FontNameDragTarget").c_str(), ImVec2(150.0f, 25.0f));
+	ImGui::Button((text->GetFont().GetName() + "##FontNameDragTarget").c_str(), ImVec2(150.0f, 25.0f));
 	ProcessFontDropTarget(text);
 
 	char buf[512];
@@ -1596,12 +1599,6 @@ void BtnSqd::PropertiesMenue::DrawBtnTextBoxData(std::shared_ptr<BtnWidget> widg
 		}
 	}
 
-	ImGui::Text("Border:");
-	ImGui::SameLine();
-	if (ImGui::DragFloat("##TextBorderDragFloat", &text->GetBorderRef(), 1.0f, 0.0f, FLT_MAX)) {
-		text->SetVerts();
-	}
-
 	ImGui::Text("Letter Spacing:");
 	ImGui::SameLine();
 	if (ImGui::DragFloat("##TextLetterSpacingDragFloat", &text->GetLetterSpacing(), 0.1f, 0.0f, FLT_MAX)) {
@@ -1611,7 +1608,7 @@ void BtnSqd::PropertiesMenue::DrawBtnTextBoxData(std::shared_ptr<BtnWidget> widg
 	ImGui::Text("Text Color:");
 	ImGui::SameLine();
 	glm::vec4 textColor = text->GetColor();
-	if(ImGui::ColorButton("##TextColorShowPickerButton", ImVec4(textColor.r,textColor.g,textColor.b,textColor.a))){
+	if (ImGui::ColorButton("##TextColorShowPickerButton", ImVec4(textColor.r, textColor.g, textColor.b, textColor.a))) {
 		showTextColorPicker = !showTextColorPicker;
 	}
 	if (showTextColorPicker) {
@@ -1621,12 +1618,21 @@ void BtnSqd::PropertiesMenue::DrawBtnTextBoxData(std::shared_ptr<BtnWidget> widg
 	ImGui::Text("Background Color:");
 	ImGui::SameLine();
 	glm::vec4 backColor = text->GetBackgroundColor();
-	if (ImGui::ColorButton("##TextBackColorShowPickerButton", ImVec4(backColor.r,backColor.g,backColor.b,backColor.a))) {
+	if (ImGui::ColorButton("##TextBackColorShowPickerButton", ImVec4(backColor.r, backColor.g, backColor.b, backColor.a))) {
 		showTextBackgroundColorPicker = !showTextBackgroundColorPicker;
 	}
 	if (showTextBackgroundColorPicker) {
 		ShowColorPicker(text->GetBackgroundColor(), "##SetBackgroundTextColor");
 	}
+
+	ImGui::EndChild();
+}
+
+void BtnSqd::PropertiesMenue::DrawBtnImageData(std::shared_ptr<BtnWidget> widget) {
+	std::shared_ptr<BtnImage> image = std::dynamic_pointer_cast<BtnImage>(widget);
+	ImGui::BeginChild("DisplayWidgetTypePropertiesWindow", ImVec2(0.0f, 0.0f),
+					  ImGuiChildFlags_AlwaysAutoResize | ImGuiChildFlags_AutoResizeY | ImGuiChildFlags_Border);
+	ImGui::Text("Image:");
 
 	ImGui::EndChild();
 }

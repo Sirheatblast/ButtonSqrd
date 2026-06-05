@@ -10,6 +10,7 @@
 #include"BtnCurve.h"
 
 #include"ButtonSqrd/Gui/Widgets/BtnTextBox.h"
+#include"ButtonSqrd/Gui/Widgets/BtnImage.h"
 
 #include<string>
 #include<imgui.h>
@@ -137,6 +138,8 @@ namespace BtnSqd {
 		void TexturePicker(std::shared_ptr<Texture>& texture, std::vector<bool>::reference flag, glm::vec3 clearColor = glm::vec3(), int index = 0);
 
 		void DrawBtnTextBoxData(std::shared_ptr<BtnWidget>widget);
+		void DrawBtnImageData(std::shared_ptr<BtnWidget>widget);
+
 		void ProcessFontDropTarget(std::shared_ptr<BtnTextBox>& text);
 		bool OnGetWidget(BtnSqd::OnGetWidgetEvent* e);
 
