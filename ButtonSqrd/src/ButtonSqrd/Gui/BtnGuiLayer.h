@@ -33,7 +33,7 @@ namespace BtnSqd {
 	private:
 		struct CompareWidget {
 			bool operator()(const std::shared_ptr<BtnWidget>& a, const std::shared_ptr<BtnWidget>& b) const {
-				return a->GetLevel() < b->GetLevel();
+				return a->GetLevel() > b->GetLevel();
 			}
 		};
 

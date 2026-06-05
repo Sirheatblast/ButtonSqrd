@@ -31,6 +31,7 @@ namespace BtnSqd {
 		inline bool GetHovered()const { return isHovered; }
 		
 		inline void SetId(unsigned int nId) { id = nId; }
+		inline void SetLevel(unsigned int nLevel) { level = nLevel; }
 		inline void SetPos(glm::vec2 nPos) { pos = nPos; }
 		inline void SetPosPercent(glm::vec2 nPercent) { percentPos = nPercent; }
 		inline void SetName(std::string newName) { name = newName; }

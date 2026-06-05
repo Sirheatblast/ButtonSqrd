@@ -113,19 +113,24 @@ namespace BtnSqd {
 		widgetShader->Use();
 		widgetShader->SetMat4("VP", camera.projectionMatrix * camera.viewMatrix);
 
-		glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(widget->GetPos(), 0.5f));
+		float level = widget->GetLevel() / 10.0f;
+		glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(widget->GetPos(), level)); //fix this so that it could render widgets not from fixed world positions
 		auto dimensions = widget->GetDimensions();
 
 		widgetShader->SetMat4("model", modelMat);
 		widgetShader->SetVec3("clearColor", widget->GetColor());
 		RenderCommand::DrawMesh(widget->Draw());
+		widgetShader->Detatch();
 	}
 
 	void BtnGuiLayer::RenderText(std::shared_ptr<BtnSqd::BtnWidget>& widget) {
 		textShader->Use();
 
 		textShader->SetMat4("VP", camera.projectionMatrix * camera.viewMatrix);
-		glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(widget->GetPos(), 0.5f)); //fix this so that it could render widgets not from fixed world positions
+
+		float level = widget->GetLevel()/10.0f;
+
+		glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(widget->GetPos(), level)); //fix this so that it could render widgets not from fixed world positions
 		auto dimensions = widget->GetDimensions();
 		textShader->SetMat4("model", modelMat);
 
@@ -139,11 +144,12 @@ namespace BtnSqd {
 		textShader->SetVec4("backColor", text->GetBackgroundColor());
 		textShader->SetFloat("pixelRange", 3.0f);
 		RenderCommand::DrawMesh(text->Draw());
+		textShader->Detatch();
 	}
 
 	void BtnGuiLayer::GenWidgetPQ() {
-		for (const auto& Widget : currentScene->GetWidgets()) {
-			widgets.push(Widget);
+		for (const auto& widget : currentScene->GetWidgets()) {
+			widgets.push(widget);
 		}
 	}
 	void BtnGuiLayer::SetUpCamera() {

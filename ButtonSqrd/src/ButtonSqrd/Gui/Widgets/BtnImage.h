@@ -20,7 +20,7 @@ namespace BtnSqd {
 		void InitIndices();
 		std::vector<Vertices> GenerateVerts();
 
-		static std::vector<unsigned int>indices;
+		std::vector<unsigned int>indices;
 		BtnSmartRect rect;
 
 		std::shared_ptr<Mesh>imageMesh;

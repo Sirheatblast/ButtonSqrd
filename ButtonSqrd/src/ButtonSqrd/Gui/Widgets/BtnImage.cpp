@@ -1,8 +1,6 @@
 #include "BtnImage.h"
 
 namespace BtnSqd {
-	std::vector<unsigned int> BtnImage::indices = {};
-
 	BtnImage::BtnImage() {
 		lastDimensions = glm::vec2(0.0f);
 		margin = 10.0f;
@@ -22,6 +20,10 @@ namespace BtnSqd {
 			}
 
 			UpdateMesh();
+		}
+
+		if (imageTexture) {
+			imageMesh->SetTexture(imageTexture);
 		}
 
 		return *imageMesh;
@@ -48,11 +50,11 @@ namespace BtnSqd {
 	}
 
 	void BtnImage::InitIndices() {
-		if (!BtnImage::indices.empty()) {
+		if (!indices.empty()) {
 			return;
 		}
 
-		BtnImage::indices.reserve(54);
+		indices.reserve(54);
 
 		const unsigned int verticesPerSide = 4;
 
@@ -64,13 +66,13 @@ namespace BtnSqd {
 				unsigned int bottomLeft = topLeft + verticesPerSide;
 				unsigned int bottomRight = bottomLeft + 1;
 
-				BtnImage::indices.push_back(topRight);
-				BtnImage::indices.push_back(bottomLeft);
-				BtnImage::indices.push_back(topLeft);
+				indices.push_back(topRight);
+				indices.push_back(bottomLeft);
+				indices.push_back(topLeft);
 
-				BtnImage::indices.push_back(bottomRight);
-				BtnImage::indices.push_back(bottomLeft);
-				BtnImage::indices.push_back(topRight);
+				indices.push_back(bottomRight);
+				indices.push_back(bottomLeft);
+				indices.push_back(topRight);
 			}
 		}
 	}

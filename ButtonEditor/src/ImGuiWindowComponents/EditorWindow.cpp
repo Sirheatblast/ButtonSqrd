@@ -27,7 +27,7 @@ namespace BtnSqd {
 		windowPos = ImGui::GetCursorScreenPos();
 		auto [width, height] = ImGui::GetWindowSize();
 		auto [offsetX, offsetY] = ImGui::GetCursorScreenPos();
-		windowSize = ImVec2(width,height);
+		windowSize = ImVec2(width, height);
 		bGuiLayer->SetViewPortSize({ width,height });
 		bGuiLayer->SetViewPortOffset({ offsetX,offsetY });
 
@@ -110,10 +110,14 @@ namespace BtnSqd {
 		dispatcher.Dispatch<OnSelectWidgetEvent>([this](OnSelectWidgetEvent* e)->bool {
 			selectedWidget = e->GetWidget();
 			return true;
-												 });
+		});
+		dispatcher.Dispatch<OnDisableGuiEvent>([this](OnDisableGuiEvent* e)->bool {
+			selectedWidget = nullptr;
+			return true;
+		});
 
-		for (auto layer : renderLayers)
-			layer->OnEvent(e);
+			for (auto layer : renderLayers)
+				layer->OnEvent(e);
 	}
 	void EditorWindow::EditorWindowHotKeys() {
 		if (Input::IsKeyPressed(KeyCode::LeftShift) && Input::IsKeyPressed(KeyCode::A)) {
@@ -160,8 +164,8 @@ namespace BtnSqd {
 					selectedWidget->SetPos(nPos);
 
 					float maxPercent = 100.0f;
-					glm::vec2 nPercent = (nPos / (winSize-selectedWidget->GetDimensions())) * maxPercent;
-					nPercent=glm::clamp(nPercent, glm::vec2(0.0f), glm::vec2(maxPercent));
+					glm::vec2 nPercent = (nPos / (winSize - selectedWidget->GetDimensions())) * maxPercent;
+					nPercent = glm::clamp(nPercent, glm::vec2(0.0f), glm::vec2(maxPercent));
 					selectedWidget->SetPosPercent(nPercent);
 				}
 			}
@@ -174,16 +178,15 @@ namespace BtnSqd {
 
 	void EditorWindow::HandleSelectedWidget() {
 		if (!selectedWidget) return;
-
 		glm::vec2 winPos = glm::vec2(windowPos.x, windowPos.y);
 		glm::vec2 pos = selectedWidget->GetPos();
 		glm::vec2 size = selectedWidget->GetDimensions();
 		glm::vec2 handlePos = winPos + pos + size;
 
 		ImGui::GetWindowDrawList()->AddRect(
-			ImVec2(pos.x+windowPos.x,pos.y+windowPos.y), 
+			ImVec2(pos.x + windowPos.x, pos.y + windowPos.y),
 			ImVec2(handlePos.x, handlePos.y),
-			IM_COL32(50, 50, 50, 255),0.0f,0,3.0f);
+			IM_COL32(50, 50, 50, 255), 0.0f, 0, 3.0f);
 
 		float handleRadius = 8.0f;
 		ImVec2 mousePos = ImGui::GetIO().MousePos;

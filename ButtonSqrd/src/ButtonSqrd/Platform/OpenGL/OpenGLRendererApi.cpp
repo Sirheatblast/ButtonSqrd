@@ -69,6 +69,7 @@ namespace BtnSqd {
 	void OpenGLRenderApi::DrawIndexed(Mesh& mesh) {
 		mesh.Draw();
 		glDrawElements(GL_TRIANGLES, mesh.GetVertexArray()->getIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+		mesh.GetVertexArray()->Unbind();
 	}
 	void OpenGLRenderApi::DrawIndexed(Model& model) {
 		model.GetShader()->Use();

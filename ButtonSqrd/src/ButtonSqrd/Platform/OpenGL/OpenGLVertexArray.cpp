@@ -24,6 +24,9 @@ namespace BtnSqd {
 	OpenGLVertexArray::OpenGLVertexArray(){
 		glGenVertexArrays(1, &rendererId);
 	}
+	OpenGLVertexArray::~OpenGLVertexArray() {
+		glDeleteVertexArrays(1, &rendererId);
+	}
 	void OpenGLVertexArray::Bind() const{
 		glBindVertexArray(rendererId);
 	}

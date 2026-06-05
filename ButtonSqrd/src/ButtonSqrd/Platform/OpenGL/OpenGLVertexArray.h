@@ -7,6 +7,7 @@ namespace BtnSqd {
 	class OpenGLVertexArray: public VertexArray {
 	public:
 		OpenGLVertexArray();
+		~OpenGLVertexArray() override;
 
 		void Bind() const override;
 		void Unbind() const override;

@@ -1155,6 +1155,13 @@ void BtnSqd::PropertiesMenue::WidgetCanvasComp(GameObject& selectedObj) {
 		}
 		widgetTypeDrawCallbacks[wCanvas.selectedWidget->GetType()](wCanvas.selectedWidget);
 
+		ImGui::Text("Level: ");
+		ImGui::SameLine();
+		int cLevel = wCanvas.selectedWidget->GetLevel();
+		if (ImGui::DragInt("##WidgetDragWidgetLevel", &cLevel,1,0,10)) {
+			wCanvas.selectedWidget->SetLevel(cLevel);
+		}
+
 		bool useDim = wCanvas.selectedWidget->GetUseScreenDim();
 		ImGui::Text("Use Screen Dimensions ");
 		ImGui::SameLine();
