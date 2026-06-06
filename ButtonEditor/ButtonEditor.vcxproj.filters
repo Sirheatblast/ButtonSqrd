@@ -67,6 +67,7 @@
     <ClInclude Include="src\Scripting\ScriptManager.h">
       <Filter>src\Scripting</Filter>
     </ClInclude>
+    <ClInclude Include="src\ImGuiWindowComponents\AssetResourceTree.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\EditorEvents.cpp">
@@ -117,6 +118,7 @@
     <ClCompile Include="src\buttonEditor.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\ImGuiWindowComponents\AssetResourceTree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ButtonEditor.rc" />

@@ -192,6 +192,7 @@ IF EXIST ..\$(ProjectName)\imgui.ini\ (xcopy /Q /E /Y /I ..\$(ProjectName)\imgui
     <ClInclude Include="src\GameEditLayer.h" />
     <ClInclude Include="src\ImGuiWindowComponents\AnimatorController.h" />
     <ClInclude Include="src\ImGuiWindowComponents\AssetDirectory.h" />
+    <ClInclude Include="src\ImGuiWindowComponents\AssetResourceTree.h" />
     <ClInclude Include="src\ImGuiWindowComponents\BtnConsole.h" />
     <ClInclude Include="src\ImGuiWindowComponents\BtnCurve.h" />
     <ClInclude Include="src\ImGuiWindowComponents\EditorWindow.h" />
@@ -209,6 +210,7 @@ IF EXIST ..\$(ProjectName)\imgui.ini\ (xcopy /Q /E /Y /I ..\$(ProjectName)\imgui
     <ClCompile Include="src\GameEditLayer.cpp" />
     <ClCompile Include="src\ImGuiWindowComponents\AnimatorController.cpp" />
     <ClCompile Include="src\ImGuiWindowComponents\AssetDirectory.cpp" />
+    <ClCompile Include="src\ImGuiWindowComponents\AssetResourceTree.cpp" />
     <ClCompile Include="src\ImGuiWindowComponents\BtnConsole.cpp" />
     <ClCompile Include="src\ImGuiWindowComponents\BtnCurve.cpp" />
     <ClCompile Include="src\ImGuiWindowComponents\EditorWindow.cpp" />
