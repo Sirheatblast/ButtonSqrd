@@ -6,6 +6,7 @@
 
 #include"../EditorEvents.h"
 #include"AssetResourceTree.h"
+#include"EditorTools/BtnTextureViewer.h"
 
 namespace BtnSqd {
 	enum class AssetDirType {
@@ -47,6 +48,7 @@ namespace BtnSqd {
 		void DisplayLoadedTexures();
 		void DisplayLoadedSkyBoxTextures();
 		void DisplayLoadedParticleTextures();
+		void ManageViewer(const std::shared_ptr<BtnSqd::Texture>& texture);
 		void DisplayLoadedSounds();
 		void DisplayLoadedScenes();
 		void DisplayLoadedScripts();
@@ -67,6 +69,7 @@ namespace BtnSqd {
 		std::unique_ptr<Texture> fileTexture;
 		AssetResourceTree arTree;
 		std::map<AssetCategory, LoadedAssetCallback> lAssetCallbacks;
+		BtnTextureViewer viewer;
 	};
 }
 

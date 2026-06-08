@@ -119,6 +119,7 @@ namespace BtnSqd {
 
 		widgetShader->SetMat4("model", modelMat);
 		widgetShader->SetVec4("clearColor", widget->GetColor());
+		widgetShader->SetBool("useAlbedoTexture", widget->GetHasTexture());
 		widgetShader->SetBool("mixTex", widget->GetMix());
 		RenderCommand::DrawMesh(widget->Draw());
 		widgetShader->Detatch();

@@ -278,6 +278,20 @@ namespace BtnSqd {
 			break;
 		}
 	}
+	TextureSettings OpenGLTexture::GetSettings() {
+		return texSettings;
+	}
+	void OpenGLTexture::ApplySettings() {
+		Bind();
+		glTexParameteri(GetTextureType(), GL_TEXTURE_WRAP_S, GetTextureWrapData());
+		glTexParameteri(GetTextureType(), GL_TEXTURE_WRAP_T, GetTextureWrapData());
+		glTexParameteri(GetTextureType(), GL_TEXTURE_MIN_FILTER, GetTextureMinFilterSettings());
+		glTexParameteri(GetTextureType(), GL_TEXTURE_MAG_FILTER, GetTextureMaxFilterSettings());
+		UnBind();
+	}
+	void OpenGLTexture::UpdateSettings(TextureSettings newSettings) {
+		texSettings = newSettings;
+	}
 	std::tuple<unsigned int, unsigned int> OpenGLTexture::GetResolution() {
 		return { width,height };
 	}

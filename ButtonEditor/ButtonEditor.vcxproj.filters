@@ -68,6 +68,7 @@
       <Filter>src\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="src\ImGuiWindowComponents\AssetResourceTree.h" />
+    <ClInclude Include="src\ImGuiWindowComponents\EditorTools\BtnTextureViewer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\EditorEvents.cpp">
@@ -119,6 +120,7 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\ImGuiWindowComponents\AssetResourceTree.cpp" />
+    <ClCompile Include="src\ImGuiWindowComponents\EditorTools\BtnTextureViewer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ButtonEditor.rc" />

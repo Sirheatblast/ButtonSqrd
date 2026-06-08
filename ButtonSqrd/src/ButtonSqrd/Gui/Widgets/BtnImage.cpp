@@ -40,13 +40,13 @@ namespace BtnSqd {
 	void BtnImage::SetTexture(std::string path) {
 		if(ResourceManager::GetLoadedTextures().contains(path)){
 			imageTexture = ResourceManager::GetLoadedTextures()[path];
-			auto [texWidth, texHeight] = imageTexture->GetResolution();
-			rect = BtnSmartRect(texWidth,texHeight);
+			hasTexture = true;
 		}
 		else {
 			imageTexture = nullptr;
-			rect = BtnSmartRect(width,height);
+			hasTexture = false;
 		}
+		rect = BtnSmartRect(width, height);
 	}
 
 	void BtnImage::InitIndices() {

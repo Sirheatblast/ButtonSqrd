@@ -57,6 +57,10 @@ namespace BtnSqd {
 			ImGui::EndDragDropTarget();
 		}
 		ImGui::End();
+
+		if (viewer.ShouldShow()) {
+			viewer.DisplayTexture();
+		}
 	}
 	void AssetDirectory::GetCurrentFileDir() {
 		for (auto& p : std::filesystem::directory_iterator(currentDir)) {
@@ -305,6 +309,8 @@ namespace BtnSqd {
 
 			}
 
+			ManageViewer(texture);
+
 			CreateDragPayload(path,name,"Textures");
 
 			ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + iconImageSize);
@@ -328,6 +334,8 @@ namespace BtnSqd {
 			if (ImGui::ImageButton(uniqueId.c_str(), fileTexture->GetId(), ImVec2(iconImageSize, iconImageSize), ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f))) {
 
 			}
+
+			ManageViewer(texture);
 
 			CreateDragPayload(path, name, "Textures");
 
@@ -353,6 +361,8 @@ namespace BtnSqd {
 
 			}
 
+			ManageViewer(texture);
+
 			CreateDragPayload(path, name, "Textures");
 
 			ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + iconImageSize);
@@ -363,6 +373,12 @@ namespace BtnSqd {
 			if ((iconImageSize * 2) + ImGui::GetStyle().ItemSpacing.x + ImGui::GetCursorPosX() < regionAvail) {
 				ImGui::SameLine(0.0f, 10.0f);
 			}
+		}
+	}
+	void AssetDirectory::ManageViewer(const std::shared_ptr<BtnSqd::Texture>& texture) {
+		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
+			viewer.SetShowViewer(true);
+			viewer.SetTexture(texture);
 		}
 	}
 	void AssetDirectory::DisplayLoadedSounds() {

@@ -195,6 +195,7 @@ IF EXIST ..\$(ProjectName)\imgui.ini\ (xcopy /Q /E /Y /I ..\$(ProjectName)\imgui
     <ClInclude Include="src\ImGuiWindowComponents\AssetResourceTree.h" />
     <ClInclude Include="src\ImGuiWindowComponents\BtnConsole.h" />
     <ClInclude Include="src\ImGuiWindowComponents\BtnCurve.h" />
+    <ClInclude Include="src\ImGuiWindowComponents\EditorTools\BtnTextureViewer.h" />
     <ClInclude Include="src\ImGuiWindowComponents\EditorWindow.h" />
     <ClInclude Include="src\ImGuiWindowComponents\EditorWindowLayers\GuiLayer.h" />
     <ClInclude Include="src\ImGuiWindowComponents\EditorWindowLayers\RenderLayer.h" />
@@ -213,6 +214,7 @@ IF EXIST ..\$(ProjectName)\imgui.ini\ (xcopy /Q /E /Y /I ..\$(ProjectName)\imgui
     <ClCompile Include="src\ImGuiWindowComponents\AssetResourceTree.cpp" />
     <ClCompile Include="src\ImGuiWindowComponents\BtnConsole.cpp" />
     <ClCompile Include="src\ImGuiWindowComponents\BtnCurve.cpp" />
+    <ClCompile Include="src\ImGuiWindowComponents\EditorTools\BtnTextureViewer.cpp" />
     <ClCompile Include="src\ImGuiWindowComponents\EditorWindow.cpp" />
     <ClCompile Include="src\ImGuiWindowComponents\EditorWindowLayers\GuiLayer.cpp" />
     <ClCompile Include="src\ImGuiWindowComponents\EditorWindowLayers\RenderLayer.cpp" />

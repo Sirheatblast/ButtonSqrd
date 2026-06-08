@@ -46,5 +46,12 @@ namespace BtnSqd {
 		std::string path,textureType;
 
 		TextureSettings texSettings;
+
+		TextureSettings GetSettings() override;
+
+		void ApplySettings() override;
+
+		// Inherited via Texture
+		void UpdateSettings(TextureSettings newSettings) override;
 	};
 }

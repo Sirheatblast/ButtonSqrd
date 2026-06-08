@@ -29,6 +29,7 @@ namespace BtnSqd {
 		inline BtnWidgetType GetType()const { return wType; }
 		inline bool GetUseScreenDim()const { return useScreenDim; }
 		inline bool GetHovered()const { return isHovered; }
+		inline bool GetHasTexture()const { return hasTexture; }
 		
 		inline void SetId(unsigned int nId) { id = nId; }
 		inline void SetLevel(unsigned int nLevel) { level = nLevel; }
@@ -41,6 +42,7 @@ namespace BtnSqd {
 		inline void SetHover(bool hover) { isHovered = hover; }
 		inline bool GetMix() { return mix; }
 		inline void SetMix(bool nMix) { mix = nMix; }
+		inline void SetHasTexture(bool hasTex) { hasTexture = hasTex; }
 		void SetDimensions(glm::vec2 dimensions) {
 			width = dimensions.x;
 			height = dimensions.y;
@@ -59,6 +61,7 @@ namespace BtnSqd {
 		bool isHovered = false;
 		bool useScreenDim = false;
 		bool mix = false;
+		bool hasTexture = false;
 		std::string name = "widget";
 		BtnWidgetType wType= BtnWidgetType::None;
 	};

@@ -311,12 +311,21 @@ void BtnSqd::PropertiesMenue::ModelComp(BtnSqd::GameObject& selectedObj) {
 		unsigned int mainTexId = (mesh->GetMaterial()->albedo != nullptr) ? mesh->GetMaterial()->albedo->GetId() : 0;
 		tag = "##MainTextureButton";
 		tag += std::to_string(i);
+
 		if (ImGui::ImageButton(tag.c_str(), mainTexId, ImVec2(20.0f, 20.0f))) {
-			showTexturePickerMain[i] = !showTexturePickerMain[i];
+
 		}
 
-		if (showTexturePickerMain[i]) {
-			TexturePicker(mesh->GetMaterial()->albedo, showTexturePickerMain[i], mesh->GetMaterial()->clearColor, i);
+		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
+			mesh->GetMaterial()->albedo = nullptr;
+		}
+
+		if (ImGui::BeginDragDropTarget()) {
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_INFO")) {
+				AssetPayloadType* pData = static_cast<AssetPayloadType*>(payload->Data);
+				mesh->GetMaterial()->albedo = ResourceManager::GetLoadedTextures()[pData->path];
+			}
+			ImGui::EndDragDropTarget();
 		}
 
 		ImGui::Text("Current Normal Texture:");
@@ -325,11 +334,20 @@ void BtnSqd::PropertiesMenue::ModelComp(BtnSqd::GameObject& selectedObj) {
 		tag = "##NormalTextureButton";
 		tag += std::to_string(i);
 		if (ImGui::ImageButton(tag.c_str(), normalTexId, ImVec2(20.0f, 20.0f))) {
-			showTexturePickerNormal[i] = !showTexturePickerNormal[i];
+
 		}
-		if (showTexturePickerNormal[i]) {
-			TexturePicker(mesh->GetMaterial()->normal, showTexturePickerNormal[i], glm::vec3(), i);
+		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
+			mesh->GetMaterial()->normal = nullptr;
 		}
+
+		if (ImGui::BeginDragDropTarget()) {
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_INFO")) {
+				AssetPayloadType* pData = static_cast<AssetPayloadType*>(payload->Data);
+				mesh->GetMaterial()->normal = ResourceManager::GetLoadedTextures()[pData->path];
+			}
+			ImGui::EndDragDropTarget();
+		}
+
 		ImGui::Text("Roughness: ");
 		ImGui::SameLine();
 		tag = " ##RoughnessInput";
@@ -1644,13 +1662,25 @@ void BtnSqd::PropertiesMenue::DrawBtnImageData(std::shared_ptr<BtnWidget> widget
 	ImGui::Text("Selected Texture:");
 	ImGui::Indent(20.0f);
 	if (image->GetTexture()) {
-		if (ImGui::ImageButton("##CurrentWidgetImageTexture", image->GetTexture()->GetId(), ImVec2(150.0f, 150.0f)) && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
+		if (ImGui::ImageButton("##CurrentWidgetImageTexture", image->GetTexture()->GetId(), ImVec2(150.0f, 150.0f))) {
+			
+		}
+		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
 			image->SetTexture("bin/null");
 		}
 	}
 	else {
 		ImGui::ImageButton("##CurrentWidgetImageTexture", 0, ImVec2(150.0f, 150.0f));
 	}
+
+	if (ImGui::BeginDragDropTarget()) {
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_INFO")) {
+			AssetPayloadType* pData = static_cast<AssetPayloadType*>(payload->Data);
+			image->SetTexture(pData->path);
+		}
+		ImGui::EndDragDropTarget();
+	}
+
 	ImGui::Unindent(20.0f);
 
 	const auto& cColor = image->GetColor();

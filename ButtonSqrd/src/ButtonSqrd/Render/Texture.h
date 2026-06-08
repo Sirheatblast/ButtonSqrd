@@ -52,7 +52,10 @@ namespace BtnSqd {
 
 		virtual std::tuple<unsigned int, unsigned int> GetResolution() = 0;
 
-		virtual void Resize(unsigned int nWidth, unsigned int nHeight) = 0;;
+		virtual void Resize(unsigned int nWidth, unsigned int nHeight) = 0;
+		virtual void ApplySettings()=0;
+		virtual void UpdateSettings(TextureSettings newSettings)=0;
+		virtual TextureSettings GetSettings() = 0;
 
 		static Texture* Create(std::string const path,TextureSettings texSettings);
 		static Texture* Create(unsigned int width,unsigned int height,TextureSettings texSettings,void* data = nullptr);
