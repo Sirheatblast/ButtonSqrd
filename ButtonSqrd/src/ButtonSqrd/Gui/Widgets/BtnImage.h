@@ -15,7 +15,9 @@ namespace BtnSqd {
 		Mesh& Draw() override;
 		void UpdateMesh();
 		void SetTexture(std::string path);
+		void SetUseImageScale(bool useScale);
 		std::shared_ptr<Texture> GetTexture() { return imageTexture; }
+		bool GetUseImageScale() { return imageScale; }
 	private:
 		void InitIndices();
 		std::vector<Vertices> GenerateVerts();
@@ -27,5 +29,6 @@ namespace BtnSqd {
 		std::shared_ptr<Texture>imageTexture;
 		glm::vec2 lastDimensions;
 		float margin;
+		bool imageScale;
 	};
 }

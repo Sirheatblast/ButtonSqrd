@@ -3,6 +3,7 @@
 #include"ButtonSqrd/Render/Texture.h"
 
 #include<memory>
+#include<unordered_map>
 #include<imgui.h>
 
 namespace BtnSqd {
@@ -11,10 +12,27 @@ namespace BtnSqd {
 		BtnTextureViewer();
 		void SetTexture(std::shared_ptr<Texture> tex);
 		void DisplayTexture();
+		void DisplayTexSettings();
 		bool ShouldShow()const { return showViewer; }
 		void SetShowViewer(bool show) { showViewer = show; }
 	private:
+		std::string GetTexType();
+		std::string GetTexWrapping();
+		std::string GetTexMaxFilter();
+		std::string GetTexMinFilter();
+		std::string GetTexFormat();
+		std::string GetTexDataType();
+		std::string GetTexSlot();
+
+		void SetWrappingMode();
+		void SetMinFilter();
+		void SetMaxFilter();
+		void SetTexSlot();
+
+		void DrawNineSliceEditor(ImVec2 imagePos);
+
 		bool showViewer = false;
+		bool showNineSlice = false;
 		float imageSize = 500.0f;
 		std::shared_ptr<Texture> showedTex;
 		TextureSettings settings;

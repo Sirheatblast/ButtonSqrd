@@ -9,16 +9,13 @@ namespace BtnSqd {
 		rect = BtnSmartRect(width, height);
 		wType = BtnWidgetType::BtnImage;
 		name = "BtnImage";
-
+		imageScale = false;
 		InitIndices();
 	}
 
 	Mesh& BtnImage::Draw() {
 		if (width != lastDimensions.x || height != lastDimensions.y) {
-			if (!imageTexture) {
-				rect.UpdateDimensions(width, height);
-			}
-
+			rect.UpdateDimensions(width, height);
 			UpdateMesh();
 		}
 
@@ -47,6 +44,11 @@ namespace BtnSqd {
 			hasTexture = false;
 		}
 		rect = BtnSmartRect(width, height);
+	}
+
+	void BtnImage::SetUseImageScale(bool useScale) {
+		imageScale = useScale; 
+		UpdateMesh();
 	}
 
 	void BtnImage::InitIndices() {
@@ -82,31 +84,19 @@ namespace BtnSqd {
 
 		RectSlicePoints points = rect.GetSlicePoints();
 		
-		float xPoints[4] = {
-			0.0f,
-			points.sliceUL.x,
-			points.sliceUR.x,
-			width
-		};
-		float yPoints[4] = {
-			0.0f,
-			points.sliceUL.y,
-			points.sliceLL.y,
-			height
-		};
+		float xPoints[4] = { 0.0f, points.sliceUL.x, points.sliceUR.x, width };
+		float yPoints[4] = { 0.0f, points.sliceUL.y,points.sliceLL.y, height };
 
-		float uPos[4] = {
-			0.0f,
-			rect.GetSlicePercentages().verticalLeft,
-			rect.GetSlicePercentages().verticalRight,
-			1.0f
-		};
-		float vPos[4] = {
-			0.0f,
-			rect.GetSlicePercentages().horizUp,
-			rect.GetSlicePercentages().horizDown,
-			1.0f
-		};
+		float uRatio = 1.0f;
+		float vRatio = 1.0f;
+		if (imageScale&&imageTexture) {
+			auto [texWidth,texHeight] = imageTexture->GetResolution();
+			uRatio = (float)width / texWidth;
+			vRatio = (float)height / texWidth;
+		}
+
+		float uPos[4] = { 0.0f, rect.GetSlicePercentages().verticalLeft*uRatio, rect.GetSlicePercentages().verticalRight*uRatio, uRatio };
+		float vPos[4] = { 0.0f, rect.GetSlicePercentages().horizUp* vRatio, rect.GetSlicePercentages().horizDown* vRatio,vRatio };
 
 		for (int x = 0; x < 4; x++) {
 			for (int y = 0; y < 4; y++) {

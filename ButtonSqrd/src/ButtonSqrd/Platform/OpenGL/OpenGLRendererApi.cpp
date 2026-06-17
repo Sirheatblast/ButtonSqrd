@@ -91,7 +91,7 @@ namespace BtnSqd {
 		std::vector<glm::vec3>lightPos;
 		std::vector<glm::vec3>lightColors;
 		std::vector<float> lightStrength;
-		Model model = gameObject.GetComponent<ModelComponent>().currentModel;
+		Model& model = gameObject.GetComponent<ModelComponent>().currentModel;
 		BtnTransform transform = gameObject.GetComponent<TransformComponent>().transform;
 
 		model.GetShader()->Use();
@@ -185,7 +185,7 @@ namespace BtnSqd {
 
 
 		for (auto& [gameId, gameModels, gameTransform] : activeScene->GetRegister().GetAllOfID<ModelComponent, TransformComponent>()) {
-			Model model = gameModels.currentModel;
+			Model& model = gameModels.currentModel;
 			std::shared_ptr<Shader> shader = model.GetShader();
 			if (model.GetMeshes()->size() == 0) {
 				continue;
@@ -262,6 +262,8 @@ namespace BtnSqd {
 				materialData.transparency = material->transparency;
 				materialData.ao = amibentOclusion;
 				materialData.clearColor = material->clearColor;
+				materialData.textureScale = material->textureScale;
+				materialData.useDyanamicScale = static_cast<int>(material->useTextureScale);
 
 				mesh.Draw(shader.get());
 
@@ -296,7 +298,7 @@ namespace BtnSqd {
 
 		unsigned int i = 0;
 		for (auto& [gameObjId, gameModel, gameTransform] : activeScene->GetRegister().GetAllOfID<ModelComponent, TransformComponent>()) {
-			Model model = gameModel.currentModel;
+			Model& model = gameModel.currentModel;
 			shader->SetUnsignedInt("objectId", gameObjId);
 			shader->SetUnsignedInt("drawId", i + 1);
 			shader->SetInt("hasBones", activeScene->GetgameObjects()[gameObjId]->CheckObjectForComponent<ArmatureComponent>());

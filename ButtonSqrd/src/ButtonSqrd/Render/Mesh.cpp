@@ -13,6 +13,7 @@ namespace BtnSqd {
 
 		if (material.normal != nullptr) {
 			shader->SetBool("useNormalMap", 1);
+			shader->SetUniform("ourNormalMap", 1);
 			material.normal->Bind(TextureSlot::Normal);
 		}
 		else {

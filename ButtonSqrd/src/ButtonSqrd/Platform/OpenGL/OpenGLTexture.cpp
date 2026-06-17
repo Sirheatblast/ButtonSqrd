@@ -5,7 +5,7 @@
 
 namespace BtnSqd {
 	OpenGLTexture::OpenGLTexture(std::string path, TextureSettings texSettings) :texSettings(texSettings), path(path) {
-		glActiveTexture(GetTextreSlot());
+		glActiveTexture(GetTextreSlot(texSettings.texSlot));
 		switch (texSettings.texType) {
 		case TextureType::CubeMap:
 			LoadCubeMap();
@@ -15,10 +15,11 @@ namespace BtnSqd {
 			LoadNormal();
 			break;
 		}
+		ApplySettings();
 		glBindTexture(GetTextureType(), 0);
 	}
 	OpenGLTexture::OpenGLTexture(unsigned int width, unsigned int height, TextureSettings texSettings, void* data) :texSettings(texSettings), width(width), height(height) {
-		glActiveTexture(GetTextreSlot());
+		glActiveTexture(GetTextreSlot(texSettings.texSlot));
 		glGenTextures(1, &textureId);
 		glBindTexture(GetTextureType(), textureId);
 
@@ -37,12 +38,7 @@ namespace BtnSqd {
 			glTexImage1D(GetTextureType(), 0, GetTextureDataType(), width, 0, GetTextureDataType(), GetTextureDataInternalType(), data);
 		}
 
-		// set the texture wrapping/filtering options (on the currently bound texture object)
-		glTexParameteri(GetTextureType(), GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GetTextureType(), GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		glTexParameteri(GetTextureType(), GL_TEXTURE_WRAP_S, GetTextureWrapData());
-		glTexParameteri(GetTextureType(), GL_TEXTURE_WRAP_T, GetTextureWrapData());
+		ApplySettings();
 
 		glBindTexture(GetTextureType(), 0);
 	}
@@ -51,16 +47,13 @@ namespace BtnSqd {
 		glDeleteTextures(1, &textureId);
 	}
 
-	OpenGLTexture::OpenGLTexture(OpenGLTexture& glTex) :texSettings(glTex.texSettings), width(glTex.width), height(glTex.height), textureId(glTex.textureId), path(glTex.path), nrComponents(glTex.nrComponents) {}
-
 	void OpenGLTexture::Bind() {
-		glActiveTexture(GetTextreSlot());
+		glActiveTexture(GetTextreSlot(texSettings.texSlot));
 		glBindTexture(GetTextureType(), textureId);
 	}
 
 	void OpenGLTexture::Bind(TextureSlot texSlot) {
-		texSettings.texSlot = texSlot;
-		glActiveTexture(GetTextreSlot());
+		glActiveTexture(GetTextreSlot(texSlot));
 		glBindTexture(GetTextureType(), textureId);
 	}
 
@@ -89,38 +82,30 @@ namespace BtnSqd {
 				stbi_image_free(data);
 			}
 		}
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 	}
 
 	void OpenGLTexture::LoadNormal() {
-		glGenTextures(1, &textureId);
-		glBindTexture(GetTextureType(), textureId);
-		// set the texture wrapping/filtering options (on the currently bound texture object)
-		glTexParameteri(GetTextureType(), GL_TEXTURE_WRAP_S, GetTextureWrapData());
-		glTexParameteri(GetTextureType(), GL_TEXTURE_WRAP_T, GetTextureWrapData());
-		glTexParameteri(GetTextureType(), GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GetTextureType(), GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glCreateTextures(GetTextureType(), 1, &textureId);
 
-		// load and generate the texture
-		stbi_set_flip_vertically_on_load(true);
-		stbi_info(path.c_str(), &width, &height, &nrChannels);
+    stbi_set_flip_vertically_on_load(true);
+    stbi_info(path.c_str(), &width, &height, &nrChannels);
+    int desChannels = (nrChannels == 4) ? STBI_rgb_alpha : 0;
+    unsigned char* data = stbi_load(path.c_str(), &width, &height, &nrChannels, desChannels);
 
-		int desChannels = (nrChannels == 4) ? STBI_rgb_alpha : 0;
-		unsigned char* data = stbi_load(path.c_str(), &width, &height, &nrChannels, desChannels);
-		if (data) {
-			glTexImage2D(GetTextureType(), 0, GetTextureInternal(), width, height, 0, GetTextureFormat(), GetTextureDataInternalType(), data);
-			glGenerateMipmap(GetTextureType());
-		}
-		else {
-			std::string errorMessage = "Failed to load texture at path: " + path + "\n" + "Texture Error: " + stbi_failure_reason();
-			BTN_CORE_LOG_ERROR(errorMessage);
-		}
-		stbi_image_free(data);
-	}
+    if (data) {
+        int levels = 1 + floor(log2(std::max(width, height)));
+
+        glTextureStorage2D(textureId, levels, GetTextureInternal(), width, height);
+        glTextureSubImage2D(textureId, 0, 0, 0, width, height, GetTextureFormat(), GetTextureDataInternalType(), data);
+    } else {
+        std::string errorMessage = "Failed to load texture at path: " + path + "\n" + "Texture Error: " + stbi_failure_reason();
+        BTN_CORE_LOG_ERROR(errorMessage);
+    }
+    
+    stbi_image_free(data);
+    ApplySettings();
+}
+
 
 	GLenum OpenGLTexture::GetTextureType() {
 		switch (texSettings.texType) {
@@ -191,8 +176,8 @@ namespace BtnSqd {
 		}
 		return GLenum();
 	}
-	GLenum OpenGLTexture::GetTextreSlot() {
-		switch (texSettings.texSlot) {
+	GLenum OpenGLTexture::GetTextreSlot(TextureSlot slot) {
+		switch (slot) {
 		case TextureSlot::Albedo:
 			return GL_TEXTURE0;
 		case TextureSlot::Normal:
@@ -282,11 +267,21 @@ namespace BtnSqd {
 		return texSettings;
 	}
 	void OpenGLTexture::ApplySettings() {
-		Bind();
-		glTexParameteri(GetTextureType(), GL_TEXTURE_WRAP_S, GetTextureWrapData());
-		glTexParameteri(GetTextureType(), GL_TEXTURE_WRAP_T, GetTextureWrapData());
-		glTexParameteri(GetTextureType(), GL_TEXTURE_MIN_FILTER, GetTextureMinFilterSettings());
-		glTexParameteri(GetTextureType(), GL_TEXTURE_MAG_FILTER, GetTextureMaxFilterSettings());
+
+		Bind(texSettings.texSlot);
+
+		glTextureParameteri(textureId, GL_TEXTURE_WRAP_S, GetTextureWrapData());
+		glTextureParameteri(textureId, GL_TEXTURE_WRAP_T, GetTextureWrapData());
+
+		if (texSettings.texType == TextureType::CubeMap) {
+			glTextureParameteri(textureId, GL_TEXTURE_WRAP_R, GetTextureWrapData());
+		}
+
+		glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, GetTextureMinFilterSettings());
+		glTextureParameteri(textureId, GL_TEXTURE_MAG_FILTER, GetTextureMaxFilterSettings());
+
+		glGenerateTextureMipmap(textureId);
+
 		UnBind();
 	}
 	void OpenGLTexture::UpdateSettings(TextureSettings newSettings) {

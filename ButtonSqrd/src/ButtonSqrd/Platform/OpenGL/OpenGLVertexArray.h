@@ -22,5 +22,6 @@ namespace BtnSqd {
 		std::vector<std::shared_ptr<VertexBuffer>> vertexBufferList;
 		std::shared_ptr<IndexBuffer> indexBuffer;
 		uint32_t rendererId;
+		uint32_t vertexBufferIdx = 0;
 	};
 }

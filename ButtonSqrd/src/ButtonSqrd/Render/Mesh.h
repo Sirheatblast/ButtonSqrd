@@ -14,12 +14,15 @@
 
 namespace BtnSqd {
 	struct Material {
-		Material():metallic(0.0f), roughness(1.0f), reflectance(0.0f),emmissiveColor(1.0f),clearColor(1.0f),transparency(1.0f) , albedo(nullptr), normal(nullptr) {}
+		Material():metallic(0.0f), roughness(1.0f), reflectance(0.0f),emmissiveColor(1.0f),clearColor(1.0f),transparency(1.0f),textureScale(1.0f), albedo(nullptr), normal(nullptr) {}
 
 		float metallic;
 		float roughness;
 		float reflectance;
 		float transparency;
+		float textureScale;
+
+		bool useTextureScale = false;
 
 		glm::vec4 emmissiveColor;
 		glm::vec3 clearColor;
@@ -41,8 +44,16 @@ namespace BtnSqd {
 		Material* GetMaterial() { return &material; }
 
 		void SetTexture(std::shared_ptr<Texture> nTexture,TextureSlot slot = TextureSlot::Albedo) {
-			nTexture->Bind();
-			material.albedo = nTexture;
+			nTexture->Bind(slot);
+			switch (slot) {
+			case TextureSlot::Normal:
+				material.normal = nTexture;
+				break;
+			default:
+				material.albedo = nTexture;
+				break;
+			}
+			
 			nTexture->UnBind();
 		}
 

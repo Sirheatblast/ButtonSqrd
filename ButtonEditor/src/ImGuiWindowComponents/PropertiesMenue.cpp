@@ -323,7 +323,7 @@ void BtnSqd::PropertiesMenue::ModelComp(BtnSqd::GameObject& selectedObj) {
 		if (ImGui::BeginDragDropTarget()) {
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_INFO")) {
 				AssetPayloadType* pData = static_cast<AssetPayloadType*>(payload->Data);
-				mesh->GetMaterial()->albedo = ResourceManager::GetLoadedTextures()[pData->path];
+				mesh->SetTexture(ResourceManager::GetLoadedTextures()[pData->path], TextureSlot::Albedo);
 			}
 			ImGui::EndDragDropTarget();
 		}
@@ -343,7 +343,7 @@ void BtnSqd::PropertiesMenue::ModelComp(BtnSqd::GameObject& selectedObj) {
 		if (ImGui::BeginDragDropTarget()) {
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_INFO")) {
 				AssetPayloadType* pData = static_cast<AssetPayloadType*>(payload->Data);
-				mesh->GetMaterial()->normal = ResourceManager::GetLoadedTextures()[pData->path];
+				mesh->SetTexture(ResourceManager::GetLoadedTextures()[pData->path],TextureSlot::Normal);
 			}
 			ImGui::EndDragDropTarget();
 		}
@@ -368,6 +368,21 @@ void BtnSqd::PropertiesMenue::ModelComp(BtnSqd::GameObject& selectedObj) {
 		tag = " ##Transparency";
 		tag += std::to_string(i);
 		ImGui::DragFloat(tag.c_str(), &mesh->GetMaterial()->transparency, 0.01f, 0.0f, 1.0f);
+
+		ImGui::Text("Texture Dynamic Scale: ");
+		ImGui::SameLine();
+		tag = "##MeshTextureDynamicScale";
+		tag += std::to_string(i);
+		if (ImGui::Checkbox(tag.c_str(), &mesh->GetMaterial()->useTextureScale)) {
+
+		}
+
+		ImGui::Text("Texture Scale: ");
+		ImGui::SameLine();
+		tag = "##TextureScale";
+		tag += std::to_string(i);
+		ImGui::DragFloat((tag + "_DragTextureScale").c_str(), &mesh->GetMaterial()->textureScale, 0.1f, 0.01f, FLT_MAX);
+		
 
 		ImGui::Unindent(20.0f);
 		i++;
@@ -1703,6 +1718,13 @@ void BtnSqd::PropertiesMenue::DrawBtnImageData(std::shared_ptr<BtnWidget> widget
 	ImGui::SameLine();
 	if (ImGui::Checkbox("##ShouldImageWidgetMixColor", &shouldMix)) {
 		image->SetMix(shouldMix);
+	}
+
+	bool useImageScale = image->GetUseImageScale();
+	ImGui::Text("Use Image Scale: ");
+	ImGui::SameLine();
+	if (ImGui::Checkbox("##UseImageScaleWidgetImage", &useImageScale)) {
+		image->SetUseImageScale(useImageScale);
 	}
 
 	ImGui::EndChild();

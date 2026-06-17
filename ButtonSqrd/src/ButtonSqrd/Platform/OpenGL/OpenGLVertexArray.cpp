@@ -37,17 +37,16 @@ namespace BtnSqd {
 		glBindVertexArray(rendererId);
 		vBuffer->Bind();
 
-		uint32_t index = 0;
 		for (const auto& element : vBuffer->GetLayout()) {
-			glEnableVertexAttribArray(index);
+			glEnableVertexAttribArray(vertexBufferIdx);
 			auto dType = ShaderDataTypeConversion(element.type);
 			if (dType !=GL_INT) {
-				glVertexAttribPointer(index, element.GetCompCount(), dType, element.normalized ? GL_TRUE : GL_FALSE, vBuffer->GetLayout().GetStride(), (const void*)element.offset);
+				glVertexAttribPointer(vertexBufferIdx, element.GetCompCount(), dType, element.normalized ? GL_TRUE : GL_FALSE, vBuffer->GetLayout().GetStride(), (const void*)element.offset);
 			}
 			else {
-				glVertexAttribIPointer(index, element.GetCompCount(), dType, vBuffer->GetLayout().GetStride(), (const void*)element.offset);
+				glVertexAttribIPointer(vertexBufferIdx, element.GetCompCount(), dType, vBuffer->GetLayout().GetStride(), (const void*)element.offset);
 			}
-			++index;
+			++vertexBufferIdx;
 		}
 
 		vertexBufferList.emplace_back(vBuffer);

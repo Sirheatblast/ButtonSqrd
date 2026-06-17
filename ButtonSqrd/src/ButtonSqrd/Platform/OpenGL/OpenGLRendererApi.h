@@ -67,6 +67,9 @@ namespace BtnSqd {
 			float ao; //4
 			glm::vec3 clearColor; //12
 			float transparency; //4
+			float textureScale;
+			int useDyanamicScale;
+			glm::vec2 padding;
 		};
 
 		struct ModelData {

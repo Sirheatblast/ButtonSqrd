@@ -416,6 +416,5 @@ namespace BtnSqd {
 		if (loc != -1) {
 			glUniformMatrix4fv(loc,static_cast<GLsizei>(value.size()),GL_FALSE,glm::value_ptr(value[0]));
 		}
-		glUseProgram(0);
 	}
 }

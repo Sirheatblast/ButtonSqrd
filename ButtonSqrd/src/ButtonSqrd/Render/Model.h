@@ -89,12 +89,11 @@ namespace BtnSqd {
 		void GetRawBones(aiNode* node, const aiScene* scene, ArmaturePacket& armPack, std::unordered_map<std::string, aiBone*>&rawBones);
 		
 		Mesh GenMesh(aiMesh* mesh,const aiScene* scene, const ArmaturePacket& armPack,unsigned int meshIndex);
-		std::vector<Texture*> LoadMaterialTextures(aiMaterial* mat,const aiScene* scene, aiTextureType type, std::string typeName);
+		std::vector<std::shared_ptr<Texture>> LoadMaterialTextures(aiMaterial* mat,const aiScene* scene, aiTextureType type, std::string typeName);
 
 		std::shared_ptr<Shader>baseShader;
 		std::vector<Mesh> meshes;
 		std::vector<aiMesh*>meshesAssimp;
 		std::string directory;
-
 	};
 }

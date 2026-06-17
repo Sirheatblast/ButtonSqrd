@@ -228,7 +228,7 @@ namespace BtnSqd {
 	Mesh Model::GenMesh(aiMesh* mesh,const aiScene* scene, const ArmaturePacket& armPack,unsigned int meshIndex){
 		std::vector<Vertices> vertices;
 		std::vector<unsigned int> indices;
-		std::vector<Texture*> textures;
+		std::vector<std::shared_ptr<Texture>> textures;
 
 		for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
 			//process vertex positions, normals and texture coordinates
@@ -282,22 +282,22 @@ namespace BtnSqd {
 		Material meshMat;
 
 		// 1. diffuse maps
-		std::vector<Texture*> diffuseMaps = LoadMaterialTextures(mat,scene, aiTextureType_DIFFUSE, "texture_diffuse");
+		std::vector<std::shared_ptr<Texture>> diffuseMaps = LoadMaterialTextures(mat,scene, aiTextureType_DIFFUSE, "texture_diffuse");
 		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 		if(diffuseMaps.size()>0)
-			meshMat.albedo.reset(diffuseMaps.back());
+			meshMat.albedo = diffuseMaps.back();
 		// 2. specular maps
-		std::vector<Texture*> specularMaps = LoadMaterialTextures(mat,scene, aiTextureType_SPECULAR, "texture_specular");
+		std::vector<std::shared_ptr<Texture>> specularMaps = LoadMaterialTextures(mat,scene, aiTextureType_SPECULAR, "texture_specular");
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 		// 3. normal maps
-		std::vector<Texture*> normalMaps = LoadMaterialTextures(mat,scene, aiTextureType_HEIGHT, "texture_normal");
+		std::vector<std::shared_ptr<Texture>> normalMaps = LoadMaterialTextures(mat,scene, aiTextureType_HEIGHT, "texture_normal");
 		if(normalMaps.size()==0)
 			normalMaps = LoadMaterialTextures(mat, scene, aiTextureType_NORMALS, "texture_normal");
 		textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
 		if(normalMaps.size()>0)
-			meshMat.normal.reset(normalMaps.back());
+			meshMat.normal = normalMaps.back();
 		// 4. height maps
-		std::vector<Texture*> heightMaps = LoadMaterialTextures(mat,scene, aiTextureType_AMBIENT, "texture_height");
+		std::vector<std::shared_ptr<Texture>> heightMaps = LoadMaterialTextures(mat,scene, aiTextureType_AMBIENT, "texture_height");
 		textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
 		//Add vertex weights
@@ -317,15 +317,15 @@ namespace BtnSqd {
 		mat->Get(AI_MATKEY_REFLECTIVITY, meshMat.reflectance);
 		return Mesh(vertices, indices, meshMat);
 	}
-	std::vector<Texture*> Model::LoadMaterialTextures(aiMaterial* mat,const aiScene* scene, aiTextureType type, std::string typeName){
-		std::vector<Texture*> textures;
+	std::vector<std::shared_ptr<Texture>> Model::LoadMaterialTextures(aiMaterial* mat,const aiScene* scene, aiTextureType type, std::string typeName){
+		std::vector<std::shared_ptr<Texture>> textures;
 		for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
 			aiString str;
 			mat->GetTexture(type, i, &str);
 			bool skip = false;
 
 			if (ResourceManager::GetLoadedTextures().contains(str.C_Str())) {
-				textures.push_back(ResourceManager::GetLoadedTextures()[str.C_Str()].get());
+				textures.push_back(ResourceManager::GetLoadedTextures()[str.C_Str()]);
 				skip = true;
 			}
 
@@ -334,10 +334,9 @@ namespace BtnSqd {
 				if (embeddedTexture) {
 					std::shared_ptr<Texture> texture;
 					TextureSettings texSettings;
-					texSettings.wrappingMode = TextureWrappingInfo::Clamp;
 					texture.reset(Texture::Create(embeddedTexture->mFilename.C_Str(), texSettings));
 					texture->SetType(typeName);
-					textures.push_back(texture.get());
+					textures.push_back(texture);
 					ResourceManager::AddTexture(texture);
 					skip = true;
 				}
@@ -354,10 +353,9 @@ namespace BtnSqd {
 				
 				std::shared_ptr<Texture> texture;
 				TextureSettings texSettings;
-				texSettings.wrappingMode = TextureWrappingInfo::Clamp;
 				texture.reset(Texture::Create(str.C_Str(),texSettings));
 				texture->SetType(typeName);
-				textures.push_back(texture.get());
+				textures.push_back(texture);
 				ResourceManager::AddTexture(texture);
 			}
 		}

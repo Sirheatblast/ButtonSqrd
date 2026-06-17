@@ -15,7 +15,6 @@ namespace BtnSqd {
 
 		~OpenGLTexture();
 
-		OpenGLTexture(OpenGLTexture& glTex);
 		void Bind() override;
 		void Bind(TextureSlot texSlot) override;
 		void UnBind() override;
@@ -35,7 +34,7 @@ namespace BtnSqd {
 		GLenum GetTextureMaxFilterSettings();
 		GLenum GetTextureMinFilterSettings();
 		GLenum GetTextureDataType();
-		GLenum GetTextreSlot();
+		GLenum GetTextreSlot(TextureSlot slot);
 
 		GLenum GetTextureInternal();
 		GLenum GetTextureFormat();
