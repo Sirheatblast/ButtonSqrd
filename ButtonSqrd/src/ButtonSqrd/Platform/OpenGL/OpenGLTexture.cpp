@@ -287,6 +287,9 @@ namespace BtnSqd {
 	void OpenGLTexture::UpdateSettings(TextureSettings newSettings) {
 		texSettings = newSettings;
 	}
+	BtnSmartRect& OpenGLTexture::GetRect() {
+		return texSettings.rect;
+	}
 	std::tuple<unsigned int, unsigned int> OpenGLTexture::GetResolution() {
 		return { width,height };
 	}

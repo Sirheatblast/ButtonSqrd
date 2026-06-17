@@ -1,6 +1,5 @@
 #pragma once
 #include"ButtonSqrd/Gui/BtnWidget.h"
-#include"ButtonSqrd/Gui/BtnSmartRect.h"
 #include"ButtonSqrd/Render/Mesh.h"
 #include"ButtonSqrd/Core/ResourceManager.h"
 
@@ -23,7 +22,6 @@ namespace BtnSqd {
 		std::vector<Vertices> GenerateVerts();
 
 		std::vector<unsigned int>indices;
-		BtnSmartRect rect;
 
 		std::shared_ptr<Mesh>imageMesh;
 		std::shared_ptr<Texture>imageTexture;

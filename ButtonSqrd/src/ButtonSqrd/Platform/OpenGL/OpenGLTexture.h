@@ -11,7 +11,7 @@ namespace BtnSqd {
 	class OpenGLTexture :public Texture {
 	public:
 		OpenGLTexture(std::string path, TextureSettings texSettings);
-		OpenGLTexture(unsigned int width,unsigned int height, TextureSettings texSettings,void* data = nullptr);
+		OpenGLTexture(unsigned int width, unsigned int height, TextureSettings texSettings, void* data = nullptr);
 
 		~OpenGLTexture();
 
@@ -42,15 +42,14 @@ namespace BtnSqd {
 
 		unsigned int textureId;
 		int width, height, nrComponents, nrChannels;
-		std::string path,textureType;
+		std::string path, textureType;
 
 		TextureSettings texSettings;
 
 		TextureSettings GetSettings() override;
 
 		void ApplySettings() override;
-
-		// Inherited via Texture
 		void UpdateSettings(TextureSettings newSettings) override;
+		BtnSmartRect& GetRect() override;
 	};
 }

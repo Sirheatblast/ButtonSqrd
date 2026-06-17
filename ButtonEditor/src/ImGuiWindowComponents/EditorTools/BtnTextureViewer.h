@@ -30,6 +30,7 @@ namespace BtnSqd {
 		void SetTexSlot();
 
 		void DrawNineSliceEditor(ImVec2 imagePos);
+		void DrawLine(ImVec2 offset,ImVec2 point1,ImVec2 point2);
 
 		bool showViewer = false;
 		bool showNineSlice = false;

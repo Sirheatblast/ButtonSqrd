@@ -181,15 +181,28 @@ namespace BtnSqd {
 	}
 
 	void BtnTextureViewer::DrawNineSliceEditor(ImVec2 imagePos) {
+		BtnSmartRect& rect = showedTex->GetRect();
+		RectSlicePercentages slices = rect.GetSlicePercentages();
+
 		//All of this is temp to figure some things out
 		ImVec2 winPos = ImGui::GetWindowPos();
-		ImVec2 p1(winPos.x+imagePos.x+(imageSize*0.33f), winPos.y + imagePos.y);
-		ImVec2 p2(winPos.x + imagePos.x + (imageSize * 0.33f),winPos.y+ imagePos.y+ imageSize);
+		ImVec2 offset = ImVec2(winPos.x + imagePos.x, winPos.y + imagePos.y);
 
-		float handle_radius = 6.0f;
-		ImDrawList* draw_list = ImGui::GetWindowDrawList();
+		DrawLine(offset, ImVec2(imageSize * slices.verticalLeft, 0.0f),
+				 ImVec2(imageSize * slices.verticalLeft,imageSize));
+		DrawLine(offset, ImVec2(imageSize * slices.verticalRight, 0.0f),
+				 ImVec2(imageSize * slices.verticalRight, imageSize));
 
-		draw_list->AddLine(p1, p2, IM_COL32(255, 255, 0, 255), 3.0f);
+		DrawLine(offset, ImVec2(0.0f, imageSize * slices.horizUp),
+				 ImVec2(imageSize, imageSize*slices.horizUp));
+		DrawLine(offset, ImVec2(0.0f, imageSize * slices.horizDown),
+				 ImVec2(imageSize, imageSize * slices.horizDown));
+	}
+
+	void BtnTextureViewer::DrawLine(ImVec2 offset,ImVec2 point1, ImVec2 point2) {
+		ImDrawList* drawList = ImGui::GetWindowDrawList();
+		drawList->AddLine(ImVec2(offset.x+point1.x,offset.y+point1.y), ImVec2(offset.x + point2.x, offset.y + point2.y)
+						   , IM_COL32(0, 255, 0, 255), 3.0f);
 	}
 
 

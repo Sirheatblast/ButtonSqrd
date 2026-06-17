@@ -1,6 +1,6 @@
 #pragma once
 #include<string>
-
+#include<ButtonSqrd/Gui/BtnSmartRect.h>
 namespace BtnSqd {
 
 	enum class TextureType {
@@ -38,6 +38,7 @@ namespace BtnSqd {
 		TextureSlot texSlot;
 		TexFormat texFormat;
 		unsigned int maxLayers = 1;
+		BtnSmartRect rect;
 	};
 
 	class Texture {
@@ -56,6 +57,7 @@ namespace BtnSqd {
 		virtual void ApplySettings()=0;
 		virtual void UpdateSettings(TextureSettings newSettings)=0;
 		virtual TextureSettings GetSettings() = 0;
+		virtual BtnSmartRect& GetRect() = 0;
 
 		static Texture* Create(std::string const path,TextureSettings texSettings);
 		static Texture* Create(unsigned int width,unsigned int height,TextureSettings texSettings,void* data = nullptr);

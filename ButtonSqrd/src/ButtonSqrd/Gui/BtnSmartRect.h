@@ -1,7 +1,6 @@
 #pragma once
 
 #include<glm/glm.hpp>
-
 namespace BtnSqd {
 	struct RectSlicePoints {
 		glm::vec2 sliceUL = glm::vec2(0.0f);
@@ -9,7 +8,6 @@ namespace BtnSqd {
 		glm::vec2 sliceLL = glm::vec2(0.0f);
 		glm::vec2 sliceLR = glm::vec2(0.0f);
 	};
-
 	struct RectSlicePercentages {
 		float verticalLeft = 0.33f;
 		float verticalRight = 0.66f;
