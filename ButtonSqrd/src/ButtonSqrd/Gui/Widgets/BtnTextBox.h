@@ -11,7 +11,7 @@ namespace BtnSqd {
 		BtnTextBox();
 		~BtnTextBox() override;
 
-		Mesh& Draw() override;
+		Mesh& Draw(std::shared_ptr<Shader> shader) override;
 
 		void SetVerts();
 

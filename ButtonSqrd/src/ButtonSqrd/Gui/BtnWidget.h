@@ -16,7 +16,7 @@ namespace BtnSqd {
 	class BtnWidget {
 	public:
 		virtual ~BtnWidget()= default;
-		virtual Mesh& Draw() = 0;
+		virtual Mesh& Draw(std::shared_ptr<Shader> shader) = 0;
 
 		inline unsigned int GetLevel() const { return level; }
 		inline unsigned int GetId()const { return id; }
@@ -47,6 +47,7 @@ namespace BtnSqd {
 			width = dimensions.x;
 			height = dimensions.y;
 		}
+
 	protected:
 		unsigned int id =0;
 		unsigned int level=0;

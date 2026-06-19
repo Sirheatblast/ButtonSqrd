@@ -119,9 +119,10 @@ namespace BtnSqd {
 
 		widgetShader->SetMat4("model", modelMat);
 		widgetShader->SetVec4("clearColor", widget->GetColor());
+		widgetShader->SetVec2("widgetSize", widget->GetDimensions());
 		widgetShader->SetBool("useAlbedoTexture", widget->GetHasTexture());
 		widgetShader->SetBool("mixTex", widget->GetMix());
-		RenderCommand::DrawMesh(widget->Draw());
+		RenderCommand::DrawMesh(widget->Draw(widgetShader));
 		widgetShader->Detatch();
 	}
 
@@ -145,7 +146,7 @@ namespace BtnSqd {
 		textShader->SetVec4("textColor", text->GetColor());
 		textShader->SetVec4("backColor", text->GetBackgroundColor());
 		textShader->SetFloat("pixelRange", 3.0f);
-		RenderCommand::DrawMesh(text->Draw());
+		RenderCommand::DrawMesh(text->Draw(textShader));
 		textShader->Detatch();
 	}
 

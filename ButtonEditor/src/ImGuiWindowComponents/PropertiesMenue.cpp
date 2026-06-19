@@ -1678,7 +1678,7 @@ void BtnSqd::PropertiesMenue::DrawBtnImageData(std::shared_ptr<BtnWidget> widget
 	ImGui::Indent(20.0f);
 	if (image->GetTexture()) {
 		if (ImGui::ImageButton("##CurrentWidgetImageTexture", image->GetTexture()->GetId(), ImVec2(150.0f, 150.0f))) {
-			
+
 		}
 		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
 			image->SetTexture("bin/null");
@@ -1702,12 +1702,12 @@ void BtnSqd::PropertiesMenue::DrawBtnImageData(std::shared_ptr<BtnWidget> widget
 
 	ImGui::Text("Clear Color: ");
 	ImGui::SameLine();
-	if(ImGui::ColorButton("##WidgetImageClearColor", ImVec4(cColor.x,cColor.y,cColor.z,1.0f))){
+	if (ImGui::ColorButton("##WidgetImageClearColor", ImVec4(cColor.x, cColor.y, cColor.z, 1.0f))) {
 		showImageClearColorPicker = !showImageClearColorPicker;
 	}
 	if (showImageClearColorPicker) {
 		glm::vec4 color = cColor;
-		ShowColorPicker(color,"##WidgetImagePickClearColor");
+		ShowColorPicker(color, "##WidgetImagePickClearColor");
 		if (color != cColor) {
 			image->SetColor(color);
 		}
@@ -1720,13 +1720,22 @@ void BtnSqd::PropertiesMenue::DrawBtnImageData(std::shared_ptr<BtnWidget> widget
 		image->SetMix(shouldMix);
 	}
 
-	bool useImageScale = image->GetUseImageScale();
-	ImGui::Text("Use Image Scale: ");
+	bool shouldSlice = image->GetUseNineSlice();
+	ImGui::Text("Nine-Slice: ");
 	ImGui::SameLine();
-	if (ImGui::Checkbox("##UseImageScaleWidgetImage", &useImageScale)) {
-		image->SetUseImageScale(useImageScale);
+	if (ImGui::Checkbox("##WidgetImageSetUseNineSliceCheckbox",&shouldSlice)) {
+		image->SetUseNineSlice(shouldSlice);
 	}
 
+	if (shouldSlice) {
+		float texScale = image->GetTextureScale();
+		ImGui::Text("TextureScale: ");
+		ImGui::SameLine();
+		if (ImGui::DragFloat("##WidgetImageTextureScaleDragFloat", &texScale, 0.1f, 0.0f, FLT_MAX)) {
+			image->SetTextureScale(texScale);
+		}
+	}	
+	
 	ImGui::EndChild();
 }
 

@@ -5,10 +5,10 @@
 
 namespace BtnSqd {
 	struct RectSlicePoints {
-		glm::vec2 sliceUL = glm::vec2(0.0f);
-		glm::vec2 sliceUR = glm::vec2(0.0f);
-		glm::vec2 sliceLL = glm::vec2(0.0f);
-		glm::vec2 sliceLR = glm::vec2(0.0f);
+		float sliceUL = 0.0f;
+		float sliceUR = 0.0f;
+		float sliceLL = 0.0f;
+		float sliceLR = 0.0f;
 	};
 
 	class BtnSmartRect {

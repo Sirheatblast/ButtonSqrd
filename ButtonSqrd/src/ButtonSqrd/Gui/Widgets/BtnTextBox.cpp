@@ -21,7 +21,7 @@ namespace BtnSqd {
 
 	}
 
-	Mesh& BtnSqd::BtnTextBox::Draw() {
+	Mesh& BtnSqd::BtnTextBox::Draw(std::shared_ptr<Shader> shader) {
 		if (lastWidth != width || lastHeight != height) {
 			SetVerts();
 		}

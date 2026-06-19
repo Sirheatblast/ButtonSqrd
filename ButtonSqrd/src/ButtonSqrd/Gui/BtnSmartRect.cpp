@@ -13,9 +13,9 @@ namespace BtnSqd {
 
 	void BtnSmartRect::SetSlicePoints(RectSlicePercentages nSlicePercentages) {
 		slicePercentages = nSlicePercentages;
-		slicePoints.sliceUL = glm::vec2(width * slicePercentages.verticalLeft, height * slicePercentages.horizUp);
-		slicePoints.sliceUR = glm::vec2(width * slicePercentages.verticalRight, height * slicePercentages.horizUp);
-		slicePoints.sliceLL = glm::vec2(width * slicePercentages.verticalLeft, height * slicePercentages.horizDown);
-		slicePoints.sliceLR = glm::vec2(width * slicePercentages.verticalRight, height * slicePercentages.horizDown);
+		slicePoints.sliceUL = slicePercentages.verticalLeft * width;
+		slicePoints.sliceUR = (1.0f - slicePercentages.verticalRight) * width;
+		slicePoints.sliceLL = slicePercentages.horizUp * height;
+		slicePoints.sliceLR = (1.0f - slicePercentages.horizDown) * height;
 	}
 }

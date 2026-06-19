@@ -11,12 +11,17 @@ namespace BtnSqd {
 	public:
 		BtnImage();
 
-		Mesh& Draw() override;
+		Mesh& Draw(std::shared_ptr<Shader> shader) override;
 		void UpdateMesh();
 		void SetTexture(std::string path);
-		void SetUseImageScale(bool useScale);
 		std::shared_ptr<Texture> GetTexture() { return imageTexture; }
-		bool GetUseImageScale() { return imageScale; }
+
+		float GetTextureScale() { return textureScale; }
+		void SetTextureScale(float scale) { textureScale = scale; }
+
+		bool GetUseNineSlice() { return useNineSlice; }
+		void SetUseNineSlice(bool shouldUse) { useNineSlice = shouldUse; }
+
 	private:
 		void InitIndices();
 		std::vector<Vertices> GenerateVerts();
@@ -27,7 +32,7 @@ namespace BtnSqd {
 		std::shared_ptr<Texture>imageTexture;
 		glm::vec2 lastDimensions;
 		BtnSmartRect rect;
-		float margin;
-		bool imageScale;
+		float textureScale;
+		bool useNineSlice;
 	};
 }
