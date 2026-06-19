@@ -82,36 +82,56 @@ namespace BtnSqd {
 		std::vector<Vertices> verts;
 		verts.reserve(16);
 
-		RectSlicePoints points;
+		RectSlicePercentages slices;
+		unsigned int texWidth = 1;
+		unsigned int texHeight = 1;
+
 		if (imageTexture) {
-			points = rect.GetSlicePoints();
+			slices = imageTexture->GetSlices();
+			auto [w, h] = imageTexture->GetResolution();
+			texWidth = w;
+			texHeight = h;
 		}
 
-		float xPoints[4] = { 0.0f, points.sliceUL.x, points.sliceUR.x, width };
-		float yPoints[4] = { 0.0f, points.sliceUL.y,points.sliceLL.y, height };
+		float leftBorderPixels = slices.verticalLeft * texWidth;
+		float rightBorderPixels = (1.0f - slices.verticalRight) * texWidth;
+		float bottomBorderPixels = slices.horizUp * texHeight;
+		float topBorderPixels = (1.0f - slices.horizDown) * texHeight;
+
+		float xPoints[4] = {
+			0.0f,
+			leftBorderPixels,
+			width - rightBorderPixels,
+			width
+		};
+
+		float yPoints[4] = {
+			0.0f,
+			bottomBorderPixels,
+			height - topBorderPixels,
+			height
+		};
 
 		float uRatio = 1.0f;
 		float vRatio = 1.0f;
 		if (imageScale && imageTexture) {
-			auto [texWidth, texHeight] = imageTexture->GetResolution();
 			uRatio = (float)width / texWidth;
-			vRatio = (float)height / texWidth;
-		}
-
-		RectSlicePercentages slices;
-		if (imageTexture) {
-			slices = imageTexture->GetSlices();
+			vRatio = (float)height / texHeight;
 		}
 
 		float uPos[4] = { 0.0f, slices.verticalLeft * uRatio, slices.verticalRight * uRatio, uRatio };
-		float vPos[4] = { 0.0f, slices.horizUp * vRatio, slices.horizDown * vRatio,vRatio };
+		float vPos[4] = { 0.0f, slices.horizUp * vRatio, slices.horizDown * vRatio, vRatio };
 
-		for (int x = 0; x < 4; x++) {
-			for (int y = 0; y < 4; y++) {
-				verts.push_back({ glm::vec3(xPoints[x],yPoints[y],0.0f),{uPos[x],vPos[y]} });
+		for (int col = 0; col < 4; col++) {
+			for (int row = 0; row < 4; row++) {
+				verts.push_back({
+					glm::vec3(xPoints[col], yPoints[row], 0.0f),
+					glm::vec2(uPos[col], vPos[row])
+								});
 			}
 		}
 
 		return verts;
 	}
+
 }
