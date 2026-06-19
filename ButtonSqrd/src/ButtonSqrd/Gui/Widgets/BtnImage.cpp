@@ -19,8 +19,8 @@ namespace BtnSqd {
 
 		if (imageTexture) {
 			imageMesh->SetTexture(imageTexture);
-			imageTexture->GetRect().UpdateDimensions(width, height);
-			
+			rect.SetSlicePoints(imageTexture->GetSlices());
+			rect.UpdateDimensions(width, height);
 		}
 
 		return *imageMesh;
@@ -31,11 +31,11 @@ namespace BtnSqd {
 		lastDimensions.y = height;
 
 		std::vector<Vertices> verts = GenerateVerts();
-		imageMesh.reset(new Mesh(verts,indices,Material()));
+		imageMesh.reset(new Mesh(verts, indices, Material()));
 	}
 
 	void BtnImage::SetTexture(std::string path) {
-		if(ResourceManager::GetLoadedTextures().contains(path)){
+		if (ResourceManager::GetLoadedTextures().contains(path)) {
 			imageTexture = ResourceManager::GetLoadedTextures()[path];
 			hasTexture = true;
 		}
@@ -43,11 +43,11 @@ namespace BtnSqd {
 			imageTexture = nullptr;
 			hasTexture = false;
 		}
-		imageTexture->GetRect() = BtnSmartRect(width, height);
+		rect = BtnSmartRect(width, height);
 	}
 
 	void BtnImage::SetUseImageScale(bool useScale) {
-		imageScale = useScale; 
+		imageScale = useScale;
 		UpdateMesh();
 	}
 
@@ -84,31 +84,31 @@ namespace BtnSqd {
 
 		RectSlicePoints points;
 		if (imageTexture) {
-			points = imageTexture->GetRect().GetSlicePoints();
+			points = rect.GetSlicePoints();
 		}
-		
+
 		float xPoints[4] = { 0.0f, points.sliceUL.x, points.sliceUR.x, width };
 		float yPoints[4] = { 0.0f, points.sliceUL.y,points.sliceLL.y, height };
 
 		float uRatio = 1.0f;
 		float vRatio = 1.0f;
-		if (imageScale&&imageTexture) {
-			auto [texWidth,texHeight] = imageTexture->GetResolution();
+		if (imageScale && imageTexture) {
+			auto [texWidth, texHeight] = imageTexture->GetResolution();
 			uRatio = (float)width / texWidth;
 			vRatio = (float)height / texWidth;
 		}
 
 		RectSlicePercentages slices;
 		if (imageTexture) {
-			slices = imageTexture->GetRect().GetSlicePercentages();
+			slices = imageTexture->GetSlices();
 		}
 
-		float uPos[4] = { 0.0f, slices.verticalLeft*uRatio, slices.verticalRight*uRatio, uRatio };
-		float vPos[4] = { 0.0f, slices.horizUp* vRatio, slices.horizDown* vRatio,vRatio };
+		float uPos[4] = { 0.0f, slices.verticalLeft * uRatio, slices.verticalRight * uRatio, uRatio };
+		float vPos[4] = { 0.0f, slices.horizUp * vRatio, slices.horizDown * vRatio,vRatio };
 
 		for (int x = 0; x < 4; x++) {
 			for (int y = 0; y < 4; y++) {
-				verts.push_back({glm::vec3(xPoints[x],yPoints[y],0.0f),{uPos[x],vPos[y]}});
+				verts.push_back({ glm::vec3(xPoints[x],yPoints[y],0.0f),{uPos[x],vPos[y]} });
 			}
 		}
 

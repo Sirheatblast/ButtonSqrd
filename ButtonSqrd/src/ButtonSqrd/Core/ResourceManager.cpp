@@ -17,6 +17,21 @@ namespace BtnSqd {
 		return true;
 	}
 
+	bool ResourceManager::LoadTextures() {
+		std::string textureDir = "./Assets/Textures/Textures/";
+		for (auto& p : std::filesystem::recursive_directory_iterator(textureDir)) {
+			if (p.is_directory()) {
+				continue;
+			}
+			std::string directory = std::filesystem::absolute(p.path()).string();
+			if (!loadedShaders.contains(directory)) {
+				TextureSettings settings;
+				loadedTextures[directory] = std::shared_ptr<Texture>(Texture::Create(directory, settings));
+			}
+		}
+		return true;
+	}
+
 	ResourceManager* ResourceManager::instance = new ResourceManager();
 	bool ResourceManager::LoadSuperGameObjects() {
 		std::string superDirectory = "./Assets/SuperGameObjects/";
@@ -32,6 +47,9 @@ namespace BtnSqd {
 	bool ResourceManager::LoadSounds() {
 		std::string soundDirectory = "./Assets/Sounds/";
 		for (auto& p : std::filesystem::directory_iterator(soundDirectory)) {
+			if (p.is_directory()) {
+				continue;
+			}
 			std::string soundName = p.path().stem().string();
 			if (!loadedSounds.contains(soundName)) {
 				std::shared_ptr<SoundBuffer> newSound;
@@ -47,6 +65,9 @@ namespace BtnSqd {
 	bool ResourceManager::LoadParticleTextures() {
 		std::string paritcleDirectory = "./Assets/Textures/Particles/";
 		for (auto& p : std::filesystem::directory_iterator(paritcleDirectory)) {
+			if (p.is_directory()) {
+				continue;
+			}
 			std::string directory = paritcleDirectory + p.path().filename().string();
 			TextureSettings settings;
 			loadedParticleTextures[directory] = std::shared_ptr<Texture>(Texture::Create(directory, settings));

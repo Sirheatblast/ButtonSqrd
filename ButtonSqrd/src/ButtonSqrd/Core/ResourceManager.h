@@ -50,6 +50,7 @@ namespace BtnSqd {
 		static bool LoadAllShaders() { return instance->LoadShaders(); }
 		static bool LoadAllModels() { return instance->LoadModels(); }
 		static bool LoadAllSkyboxes() { return instance->LoadSkyBoxes(); }
+		static bool LoadAllTextures() { return instance->LoadTextures(); }
 		static bool LoadAllSuperGameObjects() { return instance->LoadSuperGameObjects(); }
 		static bool LoadAllSounds() { return instance->LoadSounds(); }
 		static bool LoadAllParticleTextures() { return instance->LoadParticleTextures(); }
@@ -68,6 +69,7 @@ namespace BtnSqd {
 
 	private:
 		bool LoadSkyBoxes();
+		bool LoadTextures();
 
 		//This function goes after Load Shaders
 		bool LoadModels() {

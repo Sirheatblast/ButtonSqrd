@@ -1,5 +1,5 @@
 #include "BtnTextureViewer.h"
-
+#include<ButtonSqrd/Core/Logger.h>
 namespace BtnSqd {
 	BtnTextureViewer::BtnTextureViewer() {}
 	void BtnTextureViewer::SetTexture(std::shared_ptr<Texture> tex) {
@@ -9,7 +9,7 @@ namespace BtnSqd {
 	void BtnTextureViewer::DisplayTexture() {
 
 		ImGui::Begin("BtnTexureViewer", &showViewer, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_AlwaysAutoResize);
-		
+
 		ImGui::BeginGroup();
 
 		if (ImGui::Button("9-Slice##BtnTexureViewerNineSliceButton")) {
@@ -18,11 +18,11 @@ namespace BtnSqd {
 
 		ImGui::EndGroup();
 
-		ImGui::BeginChild("##BtnTextureViwerContent",ImVec2(0,0), ImGuiChildFlags_AlwaysAutoResize| ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY | ImGuiChildFlags_Border);
+		ImGui::BeginChild("##BtnTextureViwerContent", ImVec2(0, 0), ImGuiChildFlags_AlwaysAutoResize | ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY | ImGuiChildFlags_Border);
 
 		ImGui::BeginGroup();
-		ImGui::Text(showedTex->GetPath().c_str());		
-		
+		ImGui::Text(showedTex->GetPath().c_str());
+
 		ImVec2 imagePos = ImGui::GetCursorPos();
 		ImGui::Image(showedTex->GetId(), ImVec2(imageSize, imageSize));
 		if (showNineSlice) {
@@ -33,7 +33,7 @@ namespace BtnSqd {
 
 		ImGui::BeginGroup();
 		ImGui::Text("Texture Settings");
-		ImGui::BeginChild("##BtnTextureViwerSettingsWindow", ImVec2(0, imageSize), ImGuiChildFlags_AlwaysAutoResize | ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY|ImGuiChildFlags_Border);
+		ImGui::BeginChild("##BtnTextureViwerSettingsWindow", ImVec2(0, imageSize), ImGuiChildFlags_AlwaysAutoResize | ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY | ImGuiChildFlags_Border);
 		DisplayTexSettings();
 		ImGui::EndChild();
 		if (ImGui::Button("Apply##BtnTextureViwerContentApplyButton")) {
@@ -181,28 +181,68 @@ namespace BtnSqd {
 	}
 
 	void BtnTextureViewer::DrawNineSliceEditor(ImVec2 imagePos) {
-		BtnSmartRect& rect = showedTex->GetRect();
-		RectSlicePercentages slices = rect.GetSlicePercentages();
+		RectSlicePercentages& slices = settings.slices;
+		ImVec2 windowPos = ImGui::GetWindowPos();
+		HandleLine("##VerticalLeftSliceButton", imagePos, windowPos, ImVec2(imageSize * slices.verticalLeft, 0.0f),
+				   ImVec2(imageSize * slices.verticalLeft, imageSize),slices.verticalLeft);
 
-		//All of this is temp to figure some things out
-		ImVec2 winPos = ImGui::GetWindowPos();
-		ImVec2 offset = ImVec2(winPos.x + imagePos.x, winPos.y + imagePos.y);
+		HandleLine("##VerticalRightSliceButton", imagePos, windowPos, ImVec2(imageSize * slices.verticalRight, 0.0f),
+				 ImVec2(imageSize * slices.verticalRight, imageSize),slices.verticalRight);
 
-		DrawLine(offset, ImVec2(imageSize * slices.verticalLeft, 0.0f),
-				 ImVec2(imageSize * slices.verticalLeft,imageSize));
-		DrawLine(offset, ImVec2(imageSize * slices.verticalRight, 0.0f),
-				 ImVec2(imageSize * slices.verticalRight, imageSize));
-
-		DrawLine(offset, ImVec2(0.0f, imageSize * slices.horizUp),
-				 ImVec2(imageSize, imageSize*slices.horizUp));
-		DrawLine(offset, ImVec2(0.0f, imageSize * slices.horizDown),
-				 ImVec2(imageSize, imageSize * slices.horizDown));
+		HandleLine("##HorizUpSliceButton", imagePos, windowPos, ImVec2(0.0f, imageSize * slices.horizUp),
+				 ImVec2(imageSize, imageSize*slices.horizUp),slices.horizUp);
+		HandleLine("##HorizDownSliceButton", imagePos, windowPos, ImVec2(0.0f, imageSize * slices.horizDown),
+				 ImVec2(imageSize, imageSize * slices.horizDown),slices.horizDown);
 	}
 
-	void BtnTextureViewer::DrawLine(ImVec2 offset,ImVec2 point1, ImVec2 point2) {
+	void BtnTextureViewer::HandleLine(std::string label, ImVec2 imagePos, ImVec2 windowPos, ImVec2 point1, ImVec2 point2, float& slice) {
+
+		point1 = ImVec2(imagePos.x + point1.x, imagePos.y + point1.y);
+		point2 = ImVec2(imagePos.x + point2.x, imagePos.y + point2.y);
+
+		ImU32 color;
+		HandleLineDrag(label,point1, point2,color,slice);
+		DrawLine(windowPos, point1, point2,color);
+	}
+
+	void BtnTextureViewer::DrawLine(ImVec2 windowPos, ImVec2 point1, ImVec2 point2, ImU32 color) {
+		ImVec2 offset = windowPos;
+		point1 = ImVec2(offset.x + point1.x, offset.y + point1.y);
+		point2 = ImVec2(offset.x + point2.x, offset.y + point2.y);
+
 		ImDrawList* drawList = ImGui::GetWindowDrawList();
-		drawList->AddLine(ImVec2(offset.x+point1.x,offset.y+point1.y), ImVec2(offset.x + point2.x, offset.y + point2.y)
-						   , IM_COL32(0, 255, 0, 255), 3.0f);
+		drawList->AddLine(point1, point2, color, lineThickness);
+	}
+
+	void BtnTextureViewer::HandleLineDrag(std::string label, ImVec2& point1, ImVec2& point2, ImU32& color, float& slice) {
+		color = IM_COL32(0, 200, 0, 255);
+
+		ImGui::SetCursorPos(point1);
+		ImVec2 buttonSize = ImVec2(lineThickness,imageSize);
+		bool isHoriz = false;
+		if (point2.x!=point1.x) {
+			buttonSize = ImVec2(imageSize, lineThickness);
+			isHoriz = true;
+		}
+
+		ImGui::InvisibleButton(label.c_str(), buttonSize);
+		if (ImGui::IsItemHovered()) {
+			color = IM_COL32(0, 255, 0, 255);
+		}
+		if (ImGui::IsItemActive()) {
+			color = IM_COL32(255, 255, 0, 255);
+			float netChange = 0.0f;
+			if (!isHoriz) {
+				netChange += ImGui::GetMouseDragDelta().x;
+			}
+			else {
+				netChange += ImGui::GetMouseDragDelta().y;
+			}
+			netChange = netChange / imageSize;
+			slice += netChange;
+			slice = glm::clamp(slice, 0.0f, 1.0f);
+			ImGui::ResetMouseDragDelta();
+		}
 	}
 
 

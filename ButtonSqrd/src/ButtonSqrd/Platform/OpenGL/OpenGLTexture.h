@@ -50,6 +50,6 @@ namespace BtnSqd {
 
 		void ApplySettings() override;
 		void UpdateSettings(TextureSettings newSettings) override;
-		BtnSmartRect& GetRect() override;
+		RectSlicePercentages& GetSlices() override;
 	};
 }

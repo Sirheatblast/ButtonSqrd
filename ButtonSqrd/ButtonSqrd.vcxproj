@@ -212,6 +212,7 @@
     <ClInclude Include="src\ButtonSqrd\Render\Renderer.h" />
     <ClInclude Include="src\ButtonSqrd\Render\RendererApi.h" />
     <ClInclude Include="src\ButtonSqrd\Render\RendererCommand.h" />
+    <ClInclude Include="src\ButtonSqrd\Render\RenderUtils.h" />
     <ClInclude Include="src\ButtonSqrd\Render\Shader.h" />
     <ClInclude Include="src\ButtonSqrd\Render\Texture.h" />
     <ClInclude Include="src\ButtonSqrd\Render\VertexArray.h" />

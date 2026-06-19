@@ -5,6 +5,8 @@
 #include<memory>
 #include<unordered_map>
 #include<imgui.h>
+#include<glm/glm.hpp>
+#include<ButtonSqrd/Core/Input.h>
 
 namespace BtnSqd {
 	class BtnTextureViewer {
@@ -30,11 +32,15 @@ namespace BtnSqd {
 		void SetTexSlot();
 
 		void DrawNineSliceEditor(ImVec2 imagePos);
-		void DrawLine(ImVec2 offset,ImVec2 point1,ImVec2 point2);
+		void HandleLine(std::string label,ImVec2 imagePos,ImVec2 windowPos, ImVec2 point1, ImVec2 point2,float& slice);
+		void HandleLineDrag(std::string label,ImVec2& point1, ImVec2& point2, ImU32& color, float& slice);
+		void DrawLine(ImVec2 windowPos, ImVec2 point1,ImVec2 point2, ImU32 color);
 
 		bool showViewer = false;
 		bool showNineSlice = false;
 		float imageSize = 500.0f;
+		float lineThickness = 6.0f;
+		glm::vec2 lastMousePos = glm::vec2(0.0f);
 		std::shared_ptr<Texture> showedTex;
 		TextureSettings settings;
 	};

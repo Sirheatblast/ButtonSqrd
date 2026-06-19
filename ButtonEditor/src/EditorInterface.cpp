@@ -11,6 +11,7 @@ namespace BtnSqd {
 
 		ResourceManager::LoadAllSkyboxes();
 		ResourceManager::LoadAllParticleTextures();
+		ResourceManager::LoadAllTextures();
 		ResourceManager::LoadAllShaders();
 		ResourceManager::LoadAllModels();
 		ResourceManager::LoadAllSuperGameObjects();

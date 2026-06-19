@@ -1,18 +1,14 @@
 #pragma once
 
 #include<glm/glm.hpp>
+#include<ButtonSqrd/Render/RenderUtils.h>
+
 namespace BtnSqd {
 	struct RectSlicePoints {
 		glm::vec2 sliceUL = glm::vec2(0.0f);
 		glm::vec2 sliceUR = glm::vec2(0.0f);
 		glm::vec2 sliceLL = glm::vec2(0.0f);
 		glm::vec2 sliceLR = glm::vec2(0.0f);
-	};
-	struct RectSlicePercentages {
-		float verticalLeft = 0.33f;
-		float verticalRight = 0.66f;
-		float horizUp = 0.33f;
-		float horizDown = 0.66f;
 	};
 
 	class BtnSmartRect {

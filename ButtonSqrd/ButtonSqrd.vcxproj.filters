@@ -234,6 +234,7 @@
     </ClInclude>
     <ClInclude Include="src\ButtonSqrd\Gui\Widgets\BtnImage.h" />
     <ClInclude Include="src\ButtonSqrd\Gui\BtnSmartRect.h" />
+    <ClInclude Include="src\ButtonSqrd\Render\RenderUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ButtonSqrd\Audio\AudioDevice.cpp">

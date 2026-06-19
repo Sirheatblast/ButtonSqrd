@@ -99,7 +99,7 @@ namespace BtnSqd {
         glTextureSubImage2D(textureId, 0, 0, 0, width, height, GetTextureFormat(), GetTextureDataInternalType(), data);
     } else {
         std::string errorMessage = "Failed to load texture at path: " + path + "\n" + "Texture Error: " + stbi_failure_reason();
-        BTN_CORE_LOG_ERROR(errorMessage);
+        BTNLOG_ERROR(errorMessage);
     }
     
     stbi_image_free(data);
@@ -287,8 +287,8 @@ namespace BtnSqd {
 	void OpenGLTexture::UpdateSettings(TextureSettings newSettings) {
 		texSettings = newSettings;
 	}
-	BtnSmartRect& OpenGLTexture::GetRect() {
-		return texSettings.rect;
+	RectSlicePercentages& OpenGLTexture::GetSlices() {
+		return texSettings.slices;
 	}
 	std::tuple<unsigned int, unsigned int> OpenGLTexture::GetResolution() {
 		return { width,height };
