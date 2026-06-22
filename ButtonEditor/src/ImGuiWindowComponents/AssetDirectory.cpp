@@ -6,6 +6,9 @@ namespace BtnSqd {
 		TextureSettings texSettings;
 		texSettings.wrappingMode = TextureWrappingInfo::Clamp;
 		texSettings.texType = TextureType::Texture_2D;
+		texSettings.texMax = TextureFilterSettings::Near;
+		texSettings.texMin = TextureFilterSettings::Near_Linear_mip;
+
 		folderTexture.reset(Texture::Create("./EngineAssets/Textures/FolderImage.png", texSettings));
 		fileTexture.reset(Texture::Create("./EngineAssets/Textures/FileIcon.png", texSettings));
 		GenerateARTree();
