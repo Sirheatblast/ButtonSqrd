@@ -18,7 +18,7 @@ namespace BtnSqd {
 		void DragGameObj(std::shared_ptr<BtnSqd::GameObject>& gameObj);
 	private:
 		void DestroySelected(GameObject& parent);
-		void DisplayGameObject(std::shared_ptr<BtnSqd::GameObject>& gameObj);
+		void DisplayGameObject(std::shared_ptr<BtnSqd::GameObject>& gameObj, GameObject& selectedObj);
 		void DisplayChildren(GameObject gameObj, GameObject& selectedObj);
 		void SaveScene();
 		void LoadScene();

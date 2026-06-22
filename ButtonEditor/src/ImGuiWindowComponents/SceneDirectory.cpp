@@ -64,19 +64,13 @@ namespace BtnSqd {
 					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
 				}
 
-				DisplayGameObject(gameObj);
-
-				if (ImGui::IsItemClicked(ImGuiMouseButton_Right)) {
-					ImGui::OpenPopup("GameObjectOptionsPopUp");
-					selectedObj = *gameObj;
-				}
+				DisplayGameObject(gameObj,selectedObj);
 
 				if (gameObj->GetShowChildren()) {
 					DisplayChildren(*gameObj,selectedObj);
 				}
 				ImGui::PopStyleColor();
 			}
-			DropAddChild(gameObj);
 		}
 
 		if (ImGui::BeginPopup("GameObjectOptionsPopUp")) {
@@ -97,7 +91,7 @@ namespace BtnSqd {
 		ImGui::PopStyleColor(1);
 		ImGui::End();
 	}
-	void SceneDirectory::DisplayGameObject(std::shared_ptr<BtnSqd::GameObject>& gameObj) {
+	void SceneDirectory::DisplayGameObject(std::shared_ptr<BtnSqd::GameObject>& gameObj, GameObject& selectedObj) {
 		ImGui::BeginGroup();
 
 		if (ImGui::Selectable(gameObj->GetComponent<TagComponenet>().tag.c_str())) {
@@ -121,16 +115,27 @@ namespace BtnSqd {
 		}
 
 		ImGui::EndGroup();
+
+		if (ImGui::IsItemClicked(ImGuiMouseButton_Right)) {
+			ImGui::OpenPopup("GameObjectOptionsPopUp");
+			selectedObj = *gameObj;
+		}
 	}
 	void SceneDirectory::DropAddChild(std::shared_ptr<BtnSqd::GameObject>& gameObj)	{
 		if (ImGui::BeginDragDropTarget()) {
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GAMEOBJECT_INFO")) {
 				GameObjectPayload* data = static_cast<GameObjectPayload*>(payload->Data);
 
+				GameObject* child = data->gameObject.get();
+
+				if (child->GetParent()) {
+					child->GetParent()->RemoveChild(*child);
+				}
+
 				std::shared_ptr<GameObject> parentObj;
 				parentObj = gameObj;
 
-				parentObj->AddChild(*data->gameObject);
+				parentObj->AddChild(*child);
 			}
 			ImGui::EndDragDropTarget();
 		}
@@ -163,7 +168,7 @@ namespace BtnSqd {
 				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
 			}
 
-			DisplayGameObject(currentScene->GetgameObjects()[child.GetId()]);
+			DisplayGameObject(currentScene->GetgameObjects()[child.GetId()],selectedObj);
 
 			if (currentScene->GetgameObjects()[child.GetId()]->GetShowChildren()) {
 				DisplayChildren(*currentScene->GetgameObjects()[child.GetId()],selectedObj);
