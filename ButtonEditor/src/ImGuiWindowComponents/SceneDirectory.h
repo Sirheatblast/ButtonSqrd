@@ -18,6 +18,7 @@ namespace BtnSqd {
 		void DragGameObj(std::shared_ptr<BtnSqd::GameObject>& gameObj);
 	private:
 		void DestroySelected(GameObject& parent);
+		void DisplayGameObject(std::shared_ptr<BtnSqd::GameObject>& gameObj);
 		void DisplayChildren(GameObject gameObj, GameObject& selectedObj);
 		void SaveScene();
 		void LoadScene();
@@ -32,6 +33,11 @@ namespace BtnSqd {
 		bool loadScene = false;
 		char buffer[35] = "";
 		std::string destination = "./Assets/Scenes/";
+
+		std::unique_ptr<Texture> hiddenChildrenTexture;
+		std::unique_ptr<Texture> showChildrenTexture;
+
+		float childrenTexSize = 24.0f;
 	};
 }
 

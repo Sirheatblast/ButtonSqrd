@@ -2,7 +2,8 @@
 
 namespace BtnSqd {
 	SceneDirectory::SceneDirectory(std::shared_ptr<BtnScene>& currentScene):currentScene(currentScene){
-
+		hiddenChildrenTexture.reset(Texture::Create("./EngineAssets/Textures/HideChildrenArrow.png",TextureSettings()));
+		showChildrenTexture.reset(Texture::Create("./EngineAssets/Textures/ShowChildrenArrow.png", TextureSettings()));
 	}
 	void SceneDirectory::OnUpdate(GameObject& selectedObj) {
 		if (!selectedObj.IsValid()) {
@@ -63,14 +64,7 @@ namespace BtnSqd {
 					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
 				}
 
-				if (ImGui::Selectable(gameObj->GetComponent<TagComponenet>().tag.c_str())) {
-					gameObj->ChangeShowChildren();
-					Application::GetApp()->PushEvent(new OnSelectGameObjectEvent(*gameObj));
-					Application::GetApp()->PushEvent(new OnDisableGuiEvent("EditorGui"));
-					Application::GetApp()->PushEvent(new OnEditWidgetDisableEvent("EditorGui"));
-				}
-				DropAddChild(gameObj);
-				DragGameObj(gameObj);
+				DisplayGameObject(gameObj);
 
 				if (ImGui::IsItemClicked(ImGuiMouseButton_Right)) {
 					ImGui::OpenPopup("GameObjectOptionsPopUp");
@@ -102,6 +96,31 @@ namespace BtnSqd {
 
 		ImGui::PopStyleColor(1);
 		ImGui::End();
+	}
+	void SceneDirectory::DisplayGameObject(std::shared_ptr<BtnSqd::GameObject>& gameObj) {
+		ImGui::BeginGroup();
+
+		if (ImGui::Selectable(gameObj->GetComponent<TagComponenet>().tag.c_str())) {
+			Application::GetApp()->PushEvent(new OnSelectGameObjectEvent(*gameObj));
+			Application::GetApp()->PushEvent(new OnDisableGuiEvent("EditorGui"));
+			Application::GetApp()->PushEvent(new OnEditWidgetDisableEvent("EditorGui"));
+		}
+
+		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
+			gameObj->ChangeShowChildren();
+		}
+		DropAddChild(gameObj);
+		DragGameObj(gameObj);
+
+		if (!gameObj->GetChildren().empty()) {
+			unsigned int texId = (gameObj->GetShowChildren()) ? showChildrenTexture->GetId() : hiddenChildrenTexture->GetId();
+
+			ImGui::SameLine();
+			ImGui::SetNextItemAllowOverlap();
+			ImGui::Image(texId, ImVec2(childrenTexSize, childrenTexSize));
+		}
+
+		ImGui::EndGroup();
 	}
 	void SceneDirectory::DropAddChild(std::shared_ptr<BtnSqd::GameObject>& gameObj)	{
 		if (ImGui::BeginDragDropTarget()) {
@@ -144,16 +163,7 @@ namespace BtnSqd {
 				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
 			}
 
-			if (ImGui::Selectable(child.GetComponent<TagComponenet>().tag.c_str())) {
-				currentScene->GetgameObjects()[child.GetId()]->ChangeShowChildren();
-				Application::GetApp()->PushEvent(new OnSelectGameObjectEvent(child));
-			}
-			DragGameObj(currentScene->GetgameObjects()[child.GetId()]);
-
-			if (ImGui::IsItemClicked(ImGuiMouseButton_Right)) {
-				ImGui::OpenPopup("GameObjectOptionsPopUp");
-				selectedObj = child;
-			}
+			DisplayGameObject(currentScene->GetgameObjects()[child.GetId()]);
 
 			if (currentScene->GetgameObjects()[child.GetId()]->GetShowChildren()) {
 				DisplayChildren(*currentScene->GetgameObjects()[child.GetId()],selectedObj);
