@@ -3,7 +3,7 @@
 #include"ButtonSqrd/Gui/Widgets/BtnTextBox.h"
 
 namespace BtnSqd {
-	BtnGuiLayer::BtnGuiLayer(std::shared_ptr<BtnScene> currentScene, glm::vec2 viewPortSize, std::string name) :currentScene(currentScene), viewPortSize(viewPortSize), name(name) {
+	BtnGuiLayer::BtnGuiLayer(std::shared_ptr<BtnScene>& currentScene, glm::vec2 viewPortSize, std::string name) :currentScene(currentScene), viewPortSize(viewPortSize), name(name) {
 		camera.fov = 80.0f;
 		camera.nearPlain = -1.0f;
 		camera.farPlain = 1.0f;

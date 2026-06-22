@@ -16,7 +16,7 @@
 namespace BtnSqd {
 	class BtnGuiLayer : public Layer {
 	public:
-		BtnGuiLayer(std::shared_ptr<BtnScene> currentScene,glm::vec2 viewPortSize,std::string name = "def");
+		BtnGuiLayer(std::shared_ptr<BtnScene>& currentScene,glm::vec2 viewPortSize,std::string name = "def");
 		~BtnGuiLayer() override;
 		void OnAttach() override;
 		void OnDetach() override;
@@ -45,7 +45,7 @@ namespace BtnSqd {
 		void RenderNormal(std::shared_ptr<BtnSqd::BtnWidget>& widget);
 		void RenderText(std::shared_ptr<BtnSqd::BtnWidget>& widget);
 
-		std::shared_ptr<BtnScene> currentScene;
+		std::shared_ptr<BtnScene>& currentScene;
 		std::shared_ptr<FrameBuffer> frameBuffer;
 
 		std::shared_ptr<Shader> widgetShader;
