@@ -67,6 +67,7 @@ namespace BtnSqd {
 				DisplayGameObject(gameObj,selectedObj);
 
 				if (gameObj->GetShowChildren()) {
+					HandleDisplayWidgets(gameObj, selectedObj);
 					DisplayChildren(*gameObj,selectedObj);
 				}
 				ImGui::PopStyleColor();
@@ -100,13 +101,14 @@ namespace BtnSqd {
 			Application::GetApp()->PushEvent(new OnEditWidgetDisableEvent("EditorGui"));
 		}
 
+
 		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
 			gameObj->ChangeShowChildren();
 		}
 		DropAddChild(gameObj);
 		DragGameObj(gameObj);
 
-		if (!gameObj->GetChildren().empty()) {
+		if (!gameObj->GetChildren().empty()||gameObj->CheckObjectForComponent<WidgetCanvasComponent>()) {
 			unsigned int texId = (gameObj->GetShowChildren()) ? showChildrenTexture->GetId() : hiddenChildrenTexture->GetId();
 
 			ImGui::SameLine();
@@ -120,6 +122,66 @@ namespace BtnSqd {
 			ImGui::OpenPopup("GameObjectOptionsPopUp");
 			selectedObj = *gameObj;
 		}
+	}
+	void SceneDirectory::HandleDisplayWidgets(std::shared_ptr<BtnSqd::GameObject>& gameObj, BtnSqd::GameObject& selectedObj) {
+		if (gameObj->CheckObjectForComponent<WidgetCanvasComponent>()) {
+			WidgetCanvasComponent& widgetComp = gameObj->GetComponent<WidgetCanvasComponent>();
+
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
+			ImGui::Indent(20.0f);
+			ImGui::Selectable(("Widgets##ShowBtnWidgetsSelectableForObj_" + std::to_string(gameObj->GetId())).c_str());
+			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
+				widgetComp.displayInEditor = !widgetComp.displayInEditor;
+			}
+
+
+			if (!widgetComp.Widgets.empty()) {
+				unsigned int texId = (widgetComp.displayInEditor) ? showChildrenTexture->GetId() : hiddenChildrenTexture->GetId();
+
+				ImGui::SameLine();
+				ImGui::SetNextItemAllowOverlap();
+				ImGui::Image(texId, ImVec2(childrenTexSize, childrenTexSize));
+			}
+
+			if (widgetComp.displayInEditor) {
+				DisplayWidgets(widgetComp,gameObj->GetId());
+			}
+
+			ImGui::Unindent(20.0f);
+			ImGui::PopStyleColor();
+		}
+	}
+	void SceneDirectory::DisplayWidgets(WidgetCanvasComponent& widgetComp,uint32_t gameId) {
+		ImGui::Indent(20.0f);
+		unsigned int i = 0;
+		for (const auto& widget:widgetComp.Widgets) {
+			if (widget == widgetComp.selectedWidget) {
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
+			}
+			else {
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
+			}
+
+			std::string label = widget->GetName() + "##WidgetDisplayedID_" + std::to_string(gameId) + "_"+std::to_string(i);
+			if (ImGui::Selectable(label.c_str())) {
+				widgetComp.selectedWidget = widget;
+				Application::GetApp()->PushEvent(new OnSelectWidgetEvent(widget));
+			}
+
+			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
+				widget->SetShowChildren(!widget->GetShowChildren());
+			}
+
+			if (widget->HasChildren()) {
+				unsigned int texId = (widget->GetShowChildren()) ? showChildrenTexture->GetId() : hiddenChildrenTexture->GetId();
+
+				ImGui::SameLine();
+				ImGui::SetNextItemAllowOverlap();
+				ImGui::Image(texId, ImVec2(childrenTexSize, childrenTexSize));
+			}
+			ImGui::PopStyleColor();
+		}
+		ImGui::Unindent(20.0f);
 	}
 	void SceneDirectory::DropAddChild(std::shared_ptr<BtnSqd::GameObject>& gameObj)	{
 		if (ImGui::BeginDragDropTarget()) {
@@ -172,6 +234,7 @@ namespace BtnSqd {
 
 			if (currentScene->GetgameObjects()[child.GetId()]->GetShowChildren()) {
 				DisplayChildren(*currentScene->GetgameObjects()[child.GetId()],selectedObj);
+				HandleDisplayWidgets(currentScene->GetgameObjects()[child.GetId()], selectedObj);
 			}
 			ImGui::PopStyleColor();
 		}

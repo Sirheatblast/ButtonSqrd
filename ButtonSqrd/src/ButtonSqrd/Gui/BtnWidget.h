@@ -48,6 +48,26 @@ namespace BtnSqd {
 			height = dimensions.y;
 		}
 
+		void AddChild(std::shared_ptr<BtnWidget>widget) {
+			if (widget->parent) {
+				widget->parent->RemoveChild(widget);
+			}
+			widget->parent = std::shared_ptr<BtnWidget>(this);
+			children.push_back(widget);
+		}
+
+		void RemoveChild(std::shared_ptr<BtnWidget>widget) {
+			auto it = std::find(children.begin(), children.end(), widget);
+			if (it != children.end()) {
+				widget->parent = nullptr;
+				children.erase(it);
+			}
+		}
+
+		bool HasChildren()const { return !children.empty(); }
+		bool GetShowChildren() { return showChildren; }
+		void SetShowChildren(bool show) { showChildren = show; }
+
 	protected:
 		unsigned int id =0;
 		unsigned int level=0;
@@ -63,7 +83,11 @@ namespace BtnSqd {
 		bool useScreenDim = false;
 		bool mix = false;
 		bool hasTexture = false;
+		bool showChildren = false;
 		std::string name = "widget";
 		BtnWidgetType wType= BtnWidgetType::None;
+
+		std::shared_ptr<BtnWidget>parent = nullptr;
+		std::vector<std::shared_ptr<BtnWidget>>children;
 	};
 }

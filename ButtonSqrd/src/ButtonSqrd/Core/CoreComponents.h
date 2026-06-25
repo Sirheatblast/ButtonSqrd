@@ -262,13 +262,13 @@ namespace BtnSqd {
 		float repeatMaxTime = 0.25f;
 	};
 
-	//Note the WidgetHolder will always face the camera
 	struct WidgetCanvasComponent {
 		std::vector<std::shared_ptr<BtnWidget>>Widgets;
 
 		glm::ivec2 dimensions = glm::ivec2(150,100);
 		glm::ivec2 posOffset = glm::ivec2(0);
 		bool useWholeScreen = false;
+		bool displayInEditor = false;
 		std::shared_ptr<BtnWidget>selectedWidget;
 	};
 }

@@ -19,6 +19,8 @@ namespace BtnSqd {
 	private:
 		void DestroySelected(GameObject& parent);
 		void DisplayGameObject(std::shared_ptr<BtnSqd::GameObject>& gameObj, GameObject& selectedObj);
+		void HandleDisplayWidgets(std::shared_ptr<BtnSqd::GameObject>& gameObj, BtnSqd::GameObject& selectedObj);
+		void DisplayWidgets(WidgetCanvasComponent& widgetComp,uint32_t gameId);
 		void DisplayChildren(GameObject gameObj, GameObject& selectedObj);
 		void SaveScene();
 		void LoadScene();
@@ -37,7 +39,7 @@ namespace BtnSqd {
 		std::unique_ptr<Texture> hiddenChildrenTexture;
 		std::unique_ptr<Texture> showChildrenTexture;
 
-		float childrenTexSize = 24.0f;
+		float childrenTexSize = 20.0f;
 	};
 }
 
