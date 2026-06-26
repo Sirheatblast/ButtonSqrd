@@ -13,7 +13,7 @@ namespace BtnSqd {
 		None
 	};
 
-	class BtnWidget {
+	class BtnWidget:public std::enable_shared_from_this<BtnWidget> {
 	public:
 		virtual ~BtnWidget()= default;
 		virtual Mesh& Draw(std::shared_ptr<Shader> shader) = 0;
@@ -48,25 +48,33 @@ namespace BtnSqd {
 			height = dimensions.y;
 		}
 
-		void AddChild(std::shared_ptr<BtnWidget>widget) {
-			if (widget->parent) {
-				widget->parent->RemoveChild(widget);
+		void AddChild(BtnWidget* widget) {
+			if (widget == this) {
+				return;
 			}
-			widget->parent = std::shared_ptr<BtnWidget>(this);
+
+			if (widget->HasParent()) {
+				widget->GetParent()->RemoveChild(widget);
+			}
+
+			widget->parent = this;
 			children.push_back(widget);
 		}
 
-		void RemoveChild(std::shared_ptr<BtnWidget>widget) {
+		void RemoveChild(BtnWidget* widget) {
 			auto it = std::find(children.begin(), children.end(), widget);
 			if (it != children.end()) {
 				widget->parent = nullptr;
 				children.erase(it);
 			}
 		}
+		bool HasParent()const { return parent != nullptr; }
+		BtnWidget* GetParent() { return parent; }
 
 		bool HasChildren()const { return !children.empty(); }
 		bool GetShowChildren() { return showChildren; }
 		void SetShowChildren(bool show) { showChildren = show; }
+		std::vector<BtnWidget*> GetChildren() { return children; }
 
 	protected:
 		unsigned int id =0;
@@ -87,7 +95,7 @@ namespace BtnSqd {
 		std::string name = "widget";
 		BtnWidgetType wType= BtnWidgetType::None;
 
-		std::shared_ptr<BtnWidget>parent = nullptr;
-		std::vector<std::shared_ptr<BtnWidget>>children;
+		BtnWidget* parent = nullptr;
+		std::vector<BtnWidget*>children;
 	};
 }

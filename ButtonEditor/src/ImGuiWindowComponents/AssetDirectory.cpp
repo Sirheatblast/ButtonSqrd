@@ -53,7 +53,7 @@ namespace BtnSqd {
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GAMEOBJECT_INFO")) {
 				GameObjectPayload* data = static_cast<GameObjectPayload*>(payload->Data);
 				std::string path = "./Assets/SuperGameObjects/";
-				SuperGameObject superGameObject(data->gameObject.get(), path);
+				SuperGameObject superGameObject(data->gameObject, path);
 			}
 			ImGui::EndDragDropTarget();
 		}

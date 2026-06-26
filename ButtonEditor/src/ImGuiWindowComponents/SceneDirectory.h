@@ -14,13 +14,17 @@ namespace BtnSqd {
 	public:
 		SceneDirectory(std::shared_ptr<BtnScene>& currentScene);
 		void OnUpdate(GameObject& selectedObj);
-		void DropAddChild(std::shared_ptr<BtnSqd::GameObject>& gameObj);
-		void DragGameObj(std::shared_ptr<BtnSqd::GameObject>& gameObj);
 	private:
+		void DropAddChild(std::shared_ptr<BtnSqd::GameObject> gameObj);
+		void DragGameObj(GameObject* gameObj);
+		void DragWidgetSource(std::shared_ptr<BtnWidget> widget, std::shared_ptr<BtnSqd::GameObject>& gameObj);
+		void DropWidgetTarget(std::shared_ptr<BtnWidget> nParent, std::shared_ptr<BtnSqd::GameObject>& gameObj);
+
 		void DestroySelected(GameObject& parent);
 		void DisplayGameObject(std::shared_ptr<BtnSqd::GameObject>& gameObj, GameObject& selectedObj);
 		void HandleDisplayWidgets(std::shared_ptr<BtnSqd::GameObject>& gameObj, BtnSqd::GameObject& selectedObj);
-		void DisplayWidgets(WidgetCanvasComponent& widgetComp,uint32_t gameId);
+		void DisplayWidgets(WidgetCanvasComponent& widgetComp, std::shared_ptr<BtnSqd::GameObject>& gameObj);
+		void DisplayWidget(BtnWidget* widget, BtnSqd::WidgetCanvasComponent& widgetComp, std::shared_ptr<BtnSqd::GameObject>& gameObj, unsigned int i);
 		void DisplayChildren(GameObject gameObj, GameObject& selectedObj);
 		void SaveScene();
 		void LoadScene();

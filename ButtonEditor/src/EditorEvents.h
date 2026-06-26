@@ -19,8 +19,14 @@ namespace BtnSqd {
 
 	struct GameObjectPayload {
 		char name[128];
-		std::shared_ptr<GameObject> gameObject;
+		GameObject* gameObject;
 		AssetRawType assetType;
+	};
+
+	struct WidgetPayload {
+		char name[128];
+		GameObject* gameObject;
+		BtnWidget* widget;
 	};
 
 	class OnSelectGameObjectEvent:public Event  {
