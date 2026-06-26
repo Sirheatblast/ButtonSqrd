@@ -152,6 +152,9 @@ namespace BtnSqd {
 
 	void BtnGuiLayer::GenWidgetPQ() {
 		for (const auto& widget : currentScene->GetWidgets()) {
+			if (!widget->HasParent()) {
+				widget->UpdateChildrenPos(widget.get());
+			}
 			widgets.push(widget);
 		}
 	}

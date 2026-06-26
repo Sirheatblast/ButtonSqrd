@@ -252,6 +252,7 @@ namespace BtnSqd {
 	void SceneDirectory::DragWidgetSource(std::shared_ptr<BtnWidget> widget, std::shared_ptr<BtnSqd::GameObject>& gameObj) {
 		if (ImGui::BeginDragDropSource()) {
 			WidgetPayload payload;
+			payload.gameObject = gameObj.get();
 			payload.widget = widget.get();
 			strcpy_s(payload.name, widget->GetName().c_str());
 

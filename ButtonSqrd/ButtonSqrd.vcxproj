@@ -241,6 +241,7 @@
     <ClCompile Include="src\ButtonSqrd\Gui\BtnFontLoader.cpp" />
     <ClCompile Include="src\ButtonSqrd\Gui\BtnGuiLayer.cpp" />
     <ClCompile Include="src\ButtonSqrd\Gui\BtnSmartRect.cpp" />
+    <ClCompile Include="src\ButtonSqrd\Gui\BtnWidget.cpp" />
     <ClCompile Include="src\ButtonSqrd\Gui\Widgets\BtnImage.cpp" />
     <ClCompile Include="src\ButtonSqrd\Gui\Widgets\BtnTextBox.cpp" />
     <ClCompile Include="src\ButtonSqrd\Physics\BtnPhysics.cpp" />

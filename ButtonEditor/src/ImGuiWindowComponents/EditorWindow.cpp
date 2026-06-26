@@ -157,11 +157,16 @@ namespace BtnSqd {
 					canDrag = true;
 				}
 				if (canDrag) {
-					glm::vec2 currentPos = selectedWidget->GetPos();
+					glm::vec2 currentPos = (!selectedWidget->HasParent())? selectedWidget->GetPos():selectedWidget->GetLocalPos();
 					glm::vec2 offset = glm::vec2(xOffset, yOffset);
 					glm::vec2 nPos = currentPos + offset;
 					glm::vec2 winSize = glm::vec2(windowSize.x, windowSize.y);
-					selectedWidget->SetPos(nPos);
+					if (selectedWidget->HasParent()) {
+						selectedWidget->SetLocalPos(nPos);
+					}
+					else {
+						selectedWidget->SetPos(nPos);
+					}
 
 					float maxPercent = 100.0f;
 					glm::vec2 nPercent = (nPos / (winSize - selectedWidget->GetDimensions())) * maxPercent;

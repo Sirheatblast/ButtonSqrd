@@ -21,6 +21,7 @@ namespace BtnSqd {
 		inline unsigned int GetLevel() const { return level; }
 		inline unsigned int GetId()const { return id; }
 		inline glm::vec2 GetPos()const { return pos; }
+		inline glm::vec2 GetLocalPos()const { return localPos; }
 		inline glm::vec2 GetPercentPos()const { return percentPos; }
 		inline std::string GetName()const { return name; }
 		inline glm::vec2 GetDimensions()const { return {width,height}; }
@@ -34,6 +35,7 @@ namespace BtnSqd {
 		inline void SetId(unsigned int nId) { id = nId; }
 		inline void SetLevel(unsigned int nLevel) { level = nLevel; }
 		inline void SetPos(glm::vec2 nPos) { pos = nPos; }
+		inline void SetLocalPos(glm::vec2 nlPos) { localPos = nlPos; }
 		inline void SetPosPercent(glm::vec2 nPercent) { percentPos = nPercent; }
 		inline void SetName(std::string newName) { name = newName; }
 		inline void SetColor(glm::vec4 nColor) { color = nColor; }
@@ -48,26 +50,10 @@ namespace BtnSqd {
 			height = dimensions.y;
 		}
 
-		void AddChild(BtnWidget* widget) {
-			if (widget == this) {
-				return;
-			}
+		void AddChild(BtnWidget* widget);
+		void RemoveChild(BtnWidget* widget);
+		void UpdateChildrenPos(BtnWidget* widget);
 
-			if (widget->HasParent()) {
-				widget->GetParent()->RemoveChild(widget);
-			}
-
-			widget->parent = this;
-			children.push_back(widget);
-		}
-
-		void RemoveChild(BtnWidget* widget) {
-			auto it = std::find(children.begin(), children.end(), widget);
-			if (it != children.end()) {
-				widget->parent = nullptr;
-				children.erase(it);
-			}
-		}
 		bool HasParent()const { return parent != nullptr; }
 		BtnWidget* GetParent() { return parent; }
 
@@ -84,6 +70,7 @@ namespace BtnSqd {
 		float border = 1.0f;
 
 		glm::vec2 pos = glm::vec2(0.0f);
+		glm::vec2 localPos = glm::vec2(0.0f);
 		glm::vec2 percentPos = glm::vec2(0.0f);
 		glm::vec4 color = glm::vec4(1.0f);
 		bool isEnabled = true;

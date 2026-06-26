@@ -1204,7 +1204,7 @@ void BtnSqd::PropertiesMenue::WidgetCanvasComp(GameObject& selectedObj) {
 
 		ImGui::Text("Position: ");
 		ImGui::SameLine();
-		if (wCanvas.selectedWidget->GetUseScreenDim()) {
+		if (wCanvas.selectedWidget->GetUseScreenDim()&&!wCanvas.selectedWidget->HasParent()) {
 			float max = 100.0f;
 			glm::vec2 windSize;
 			ImGui::Begin("Game Viewport");
@@ -1216,9 +1216,17 @@ void BtnSqd::PropertiesMenue::WidgetCanvasComp(GameObject& selectedObj) {
 			wCanvas.selectedWidget->SetPosPercent(wPos);
 		}
 		else {
-			glm::vec2 wPos = wCanvas.selectedWidget->GetPos();
-			if (ImGui::DragFloat2("##SelectedWidgetDragPosition", glm::value_ptr(wPos))) {
-				wCanvas.selectedWidget->SetPos(wPos);
+			if (wCanvas.selectedWidget->HasParent()) {
+				glm::vec2 wPos = wCanvas.selectedWidget->GetLocalPos();
+				if (ImGui::DragFloat2("##SelectedWidgetDragPosition", glm::value_ptr(wPos))) {
+					wCanvas.selectedWidget->SetLocalPos(wPos);
+				}
+			}
+			else {
+				glm::vec2 wPos = wCanvas.selectedWidget->GetPos();
+				if (ImGui::DragFloat2("##SelectedWidgetDragPosition", glm::value_ptr(wPos))) {
+					wCanvas.selectedWidget->SetPos(wPos);
+				}
 			}
 		}
 

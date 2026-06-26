@@ -380,5 +380,6 @@
     </ClCompile>
     <ClCompile Include="src\ButtonSqrd\Gui\Widgets\BtnImage.cpp" />
     <ClCompile Include="src\ButtonSqrd\Gui\BtnSmartRect.cpp" />
+    <ClCompile Include="src\ButtonSqrd\Gui\BtnWidget.cpp" />
   </ItemGroup>
 </Project>
