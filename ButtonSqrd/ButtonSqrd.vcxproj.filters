@@ -235,6 +235,7 @@
     <ClInclude Include="src\ButtonSqrd\Gui\Widgets\BtnImage.h" />
     <ClInclude Include="src\ButtonSqrd\Gui\BtnSmartRect.h" />
     <ClInclude Include="src\ButtonSqrd\Render\RenderUtils.h" />
+    <ClInclude Include="src\ButtonSqrd\Gui\Widgets\BtnButton.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ButtonSqrd\Audio\AudioDevice.cpp">
@@ -381,5 +382,6 @@
     <ClCompile Include="src\ButtonSqrd\Gui\Widgets\BtnImage.cpp" />
     <ClCompile Include="src\ButtonSqrd\Gui\BtnSmartRect.cpp" />
     <ClCompile Include="src\ButtonSqrd\Gui\BtnWidget.cpp" />
+    <ClCompile Include="src\ButtonSqrd\Gui\Widgets\BtnButton.cpp" />
   </ItemGroup>
 </Project>

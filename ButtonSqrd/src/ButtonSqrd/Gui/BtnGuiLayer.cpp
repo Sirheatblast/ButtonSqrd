@@ -23,7 +23,6 @@ namespace BtnSqd {
 	}
 	void BtnGuiLayer::OnUpdate() {
 		GenWidgetPQ();
-		PullInput();
 		RenderWidgets();
 	}
 	void BtnGuiLayer::OnEvent(Event* e) {
@@ -101,12 +100,15 @@ namespace BtnSqd {
 				RenderNormal(widget);
 				break;
 			}
+
+			PullInput(widget);
 		}
 		widgetShader->Detatch();
 
 		if (frameBuffer) {
 			frameBuffer->UnBind();
 		}
+
 	}
 
 	void BtnGuiLayer::RenderNormal(std::shared_ptr<BtnSqd::BtnWidget>& widget) {
@@ -131,7 +133,7 @@ namespace BtnSqd {
 
 		textShader->SetMat4("VP", camera.projectionMatrix * camera.viewMatrix);
 
-		float level = widget->GetLevel()/10.0f;
+		float level = widget->GetLevel() / 10.0f;
 
 		glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(widget->GetPos(), level)); //fix this so that it could render widgets not from fixed world positions
 		auto dimensions = widget->GetDimensions();
@@ -141,7 +143,7 @@ namespace BtnSqd {
 		textShader->SetUniform("fontAtlas", 0);
 		if (text->GetFont().GetFontTexture()) {
 			text->GetFont().GetFontTexture()->Bind();
-		}		
+		}
 
 		textShader->SetVec4("textColor", text->GetColor());
 		textShader->SetVec4("backColor", text->GetBackgroundColor());
@@ -163,7 +165,7 @@ namespace BtnSqd {
 		camera.projectionMatrix = glm::ortho(0.0f, viewPortSize.x, viewPortSize.y, 0.0f, camera.nearPlain, camera.farPlain);
 	}
 
-	void BtnGuiLayer::PullInput() {
-
+	void BtnGuiLayer::PullInput(const std::shared_ptr<BtnWidget>& widget) {
+		glm::vec2 mouse = Input::GetMousePosition();
 	}
 }

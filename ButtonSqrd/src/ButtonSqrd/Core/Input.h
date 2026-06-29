@@ -5,6 +5,8 @@
 #include"MouseButtonCodes.h"
 
 #include<unordered_map>
+#include<glm/glm.hpp>
+
 namespace BtnSqd {
 	enum KeyState {
 		Nutral=0,Pushed, Released, Held
@@ -18,7 +20,7 @@ namespace BtnSqd {
 		static bool IsMouseButtonPressed(MouseCode button);
 		static bool IsMouseButtonUp(MouseCode button);
 
-		static std::pair<float, float>GetMousePosition();
+		static glm::vec2 GetMousePosition();
 
 		static void SetCursorLock(bool locked);
 

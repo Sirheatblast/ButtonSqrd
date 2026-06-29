@@ -29,7 +29,7 @@ namespace BtnSqd {
 		return state == GLFW_RELEASE;
 	 }
 
-	 std::pair<float, float>Input::GetMousePosition() {
+	 glm::vec2 Input::GetMousePosition() {
 		auto* window = static_cast<GLFWwindow*>(Application::GetApp()->GetWindow()->GetNativeWindow());
 		double xPos, ypos;
 		glfwGetCursorPos(window, &xPos, &ypos);

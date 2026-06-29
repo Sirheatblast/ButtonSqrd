@@ -155,14 +155,14 @@ namespace BtnSqd {
 	void BtnSqd::RenderLayer::SelectObject() {
 
 		if (Input::IsMouseButtonPressed(MouseCode::Left)) {
-			auto [mouseX, mouseY] = Input::GetMousePosition();
+			glm::vec2 mouse = Input::GetMousePosition();
 			auto [frameX, frameY] = mousePickerBuffer->GetResolution();
 
 			ImVec2 windowPos = ImGui::GetWindowPos();
 			ImVec2 windowSize = ImGui::GetWindowSize();
 
-			float localX = mouseX - windowPos.x;
-			float localY = mouseY - windowPos.y;
+			float localX = mouse.x - windowPos.x;
+			float localY = mouse.y - windowPos.y;
 
 			// Clamp to image bounds
 			localX = std::clamp(localX, 0.0f, windowSize.x - 1.0f);

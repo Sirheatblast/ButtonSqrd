@@ -611,22 +611,23 @@ void BtnSqd::PropertiesMenue::PhysicsComp(GameObject& selectedObj) {
 
 	ImGui::Indent(20.0f);
 	ImGui::Text("Rotation Lock: ");
-	ImGui::SameLine();
-
 
 	ImGui::BeginGroup();
-	ImGui::Text(" X "); ImGui::SameLine();
-	ImGui::Text(" Y"); ImGui::SameLine();
-	ImGui::Text(" Z");
-
+	ImGui::Text(" X ");
 	if (ImGui::Checkbox("##LockX", &physicsComp.lockX)) {
 		btnPhysics.AddPhysicsObject(selectedObj);
 	}
-	ImGui::SameLine();;
+	ImGui::EndGroup();	
+	ImGui::SameLine();
+	ImGui::BeginGroup();
+	ImGui::Text(" Y ");
 	if (ImGui::Checkbox("##LockY", &physicsComp.lockY)) {
 		btnPhysics.AddPhysicsObject(selectedObj);
 	}
+	ImGui::EndGroup();
 	ImGui::SameLine();
+	ImGui::BeginGroup();
+	ImGui::Text(" Z ");
 	if (ImGui::Checkbox("##LockZ", &physicsComp.lockZ)) {
 		btnPhysics.AddPhysicsObject(selectedObj);
 	}

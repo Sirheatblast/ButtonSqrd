@@ -51,12 +51,12 @@ namespace BtnSqd {
 		if (Input::IsMouseButtonPressed(MouseCode::Right)) {
 
 			BtnSqd::Input::SetCursorLock(true);
-			auto [mousePositionX, mousePositionY] = BtnSqd::Input::GetMousePosition();
+			glm::vec2 mouseOffset = BtnSqd::Input::GetMousePosition();
 
-			float xMouseOffset = mousePositionX - lastMouseX;
-			float yMouseOffset = lastMouseY - mousePositionY;
-			lastMouseX = mousePositionX;
-			lastMouseY = mousePositionY;
+			float xMouseOffset = mouseOffset.x - lastMouseX;
+			float yMouseOffset = lastMouseY - mouseOffset.y;
+			lastMouseX = mouseOffset.x;
+			lastMouseY = mouseOffset.y;
 
 			if (!firstClick) {
 				xMouseOffset *= 0.1f;//mouse sensitivity
@@ -132,8 +132,7 @@ namespace BtnSqd {
 			if (!ImGui::IsWindowHovered()) {
 				return;
 			}
-			auto [sX, sY] = Input::GetMousePosition();
-			glm::vec2 mousePos = { sX, sY };
+			glm::vec2 mousePos = Input::GetMousePosition();
 			selectedWidget = bGuiLayer->PickWidget(mousePos);
 			if (selectedWidget) {
 				Application::GetApp()->PushEvent(new OnGetWidgetEvent(selectedWidget));
@@ -143,8 +142,7 @@ namespace BtnSqd {
 	}
 
 	void EditorWindow::DragWidget() {
-		auto [sX, sY] = Input::GetMousePosition();
-		glm::vec2 mousePos = { sX, sY };
+		glm::vec2 mousePos = Input::GetMousePosition();
 
 		float xOffset = mousePos.x - lastMouseX;
 		float yOffset = mousePos.y - lastMouseY;

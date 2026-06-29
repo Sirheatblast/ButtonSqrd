@@ -40,7 +40,7 @@ namespace BtnSqd {
 		void RenderWidgets();
 		void GenWidgetPQ();
 		void SetUpCamera();
-		void PullInput();
+		void PullInput(const std::shared_ptr<BtnWidget>& widget);
 
 		void RenderNormal(std::shared_ptr<BtnSqd::BtnWidget>& widget);
 		void RenderText(std::shared_ptr<BtnSqd::BtnWidget>& widget);

@@ -17,6 +17,7 @@ namespace BtnSqd {
 	public:
 		virtual ~BtnWidget()= default;
 		virtual Mesh& Draw(std::shared_ptr<Shader> shader) = 0;
+		virtual void OnUpdate() {}
 
 		inline unsigned int GetLevel() const { return level; }
 		inline unsigned int GetId()const { return id; }
