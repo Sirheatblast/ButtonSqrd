@@ -7,6 +7,8 @@ namespace BtnSqd {
 		BtnButton();
 		Mesh& Draw(std::shared_ptr<Shader> shader) override;
 		void OnUpdate()override;
+		void OnClick()override;
+		void OnClickUp()override;
 	private:
 		std::shared_ptr<Mesh>imageMesh;
 	};

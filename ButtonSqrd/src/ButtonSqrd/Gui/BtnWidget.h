@@ -37,7 +37,7 @@ namespace BtnSqd {
 		
 		inline void SetId(unsigned int nId) { id = nId; }
 		inline void SetLevel(unsigned int nLevel) { level = nLevel; }
-		inline void SetPos(glm::vec2 nPos) { pos = nPos; }
+		
 		inline void SetLocalPos(glm::vec2 nlPos) { localPos = nlPos; }
 		inline void SetPosPercent(glm::vec2 nPercent) { percentPos = nPercent; }
 		inline void SetName(std::string newName) { name = newName; }
@@ -48,9 +48,14 @@ namespace BtnSqd {
 		inline bool GetMix() { return mix; }
 		inline void SetMix(bool nMix) { mix = nMix; }
 		inline void SetHasTexture(bool hasTex) { hasTexture = hasTex; }
+
 		void SetDimensions(glm::vec2 dimensions) {
 			width = dimensions.x;
 			height = dimensions.y;
+		}
+		void SetPos(glm::vec2 nPos) {
+			pos = nPos;
+			UpdateChildrenPos(this);
 		}
 
 		void AddChild(BtnWidget* widget);

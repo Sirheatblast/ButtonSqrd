@@ -11,4 +11,10 @@ namespace BtnSqd {
 	void BtnButton::OnUpdate() {
 	
 	}
+	void BtnButton::OnClick() {
+	
+	}
+	void BtnButton::OnClickUp() {
+	
+	}
 }
