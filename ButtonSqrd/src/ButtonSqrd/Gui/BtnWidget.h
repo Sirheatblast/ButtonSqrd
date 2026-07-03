@@ -18,6 +18,8 @@ namespace BtnSqd {
 		virtual ~BtnWidget()= default;
 		virtual Mesh& Draw(std::shared_ptr<Shader> shader) = 0;
 		virtual void OnUpdate() {}
+		virtual void OnClick(){}
+		virtual void OnClickUp(){}
 
 		inline unsigned int GetLevel() const { return level; }
 		inline unsigned int GetId()const { return id; }
@@ -63,6 +65,14 @@ namespace BtnSqd {
 		void SetShowChildren(bool show) { showChildren = show; }
 		std::vector<BtnWidget*> GetChildren() { return children; }
 
+		bool GetIsEnabled()const { return isEnabled; }
+		bool GetClicked()const { return isClicked; }
+		bool GetIsInteractive()const { return isInteractive; }
+
+		void SetIsEnabled(bool enabled) { isEnabled = enabled; }
+		void SetIsInteractive(bool interactive) { isInteractive = interactive; }
+		void SetClicked(bool clicked) { isClicked = clicked; }
+
 	protected:
 		unsigned int id =0;
 		unsigned int level=0;
@@ -76,6 +86,8 @@ namespace BtnSqd {
 		glm::vec4 color = glm::vec4(1.0f);
 		bool isEnabled = true;
 		bool isHovered = false;
+		bool isClicked = false;
+		bool isInteractive = false;
 		bool useScreenDim = false;
 		bool mix = false;
 		bool hasTexture = false;

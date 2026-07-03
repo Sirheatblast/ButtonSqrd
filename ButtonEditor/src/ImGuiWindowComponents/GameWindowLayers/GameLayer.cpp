@@ -60,6 +60,7 @@ namespace BtnSqd {
 			BtnSqd::RenderCommand::DrawScene();
 			BtnSqd::Renderer::EndScene();
 
+			guiLayer->PullInput();
 			guiLayer->OnUpdate();
 
 			gameViewport->UnBind();

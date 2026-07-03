@@ -22,6 +22,7 @@ namespace BtnSqd {
 		void OnDetach() override;
 		void OnUpdate() override;
 		void OnEvent(Event* e) override;
+		void PullInput();
 
 		void SetViewPortSize(glm::vec2 nViewPortSize);
 		inline void SetViewPortOffset(glm::vec2 nOffset) { viewPortOffset = nOffset; }
@@ -40,7 +41,6 @@ namespace BtnSqd {
 		void RenderWidgets();
 		void GenWidgetPQ();
 		void SetUpCamera();
-		void PullInput(const std::shared_ptr<BtnWidget>& widget);
 
 		void RenderNormal(std::shared_ptr<BtnSqd::BtnWidget>& widget);
 		void RenderText(std::shared_ptr<BtnSqd::BtnWidget>& widget);

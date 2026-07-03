@@ -54,8 +54,8 @@ namespace BtnSqd {
 			glm::vec2 startPos = widget->GetPos();
 			glm::vec2 endPos = startPos + widget->GetDimensions();
 
-			if (mousePos.x > startPos.x && mousePos.x<endPos.x &&
-				mousePos.y>startPos.y && mousePos.y < endPos.y) {
+			if (glm::all(glm::lessThanEqual(mousePos, endPos)) &&
+				glm::all(glm::greaterThanEqual(mousePos, startPos))) {
 
 				selected = widget;
 				widget->SetHover(true);
@@ -100,8 +100,6 @@ namespace BtnSqd {
 				RenderNormal(widget);
 				break;
 			}
-
-			PullInput(widget);
 		}
 		widgetShader->Detatch();
 
@@ -154,6 +152,9 @@ namespace BtnSqd {
 
 	void BtnGuiLayer::GenWidgetPQ() {
 		for (const auto& widget : currentScene->GetWidgets()) {
+			if (!widget->GetIsEnabled()) {
+				continue;
+			}
 			if (!widget->HasParent()) {
 				widget->UpdateChildrenPos(widget.get());
 			}
@@ -165,7 +166,52 @@ namespace BtnSqd {
 		camera.projectionMatrix = glm::ortho(0.0f, viewPortSize.x, viewPortSize.y, 0.0f, camera.nearPlain, camera.farPlain);
 	}
 
-	void BtnGuiLayer::PullInput(const std::shared_ptr<BtnWidget>& widget) {
+	void BtnGuiLayer::PullInput() {
+		GenWidgetPQ();
+
 		glm::vec2 mouse = Input::GetMousePosition();
+		ViewPort viewPort = Application::GetApp()->GetCurrentViewPort();
+
+		while (!widgets.empty()) {
+			auto widget = widgets.top();
+			widgets.pop();
+
+			if (widget->GetUseScreenDim()) {
+				float max = 100.0f;
+				glm::vec2 windSize = viewPort.size;
+				glm::vec2 wPos = widget->GetPercentPos();
+				glm::vec2 wPercent = wPos / max;
+
+				glm::vec2 newScreenPos = (wPercent * (windSize - widget->GetDimensions()));
+				widget->SetPos(newScreenPos);
+			}
+
+			if (!widget->GetIsInteractive()) {
+				continue;
+			}
+
+			glm::vec2 screenWidgetPos = viewPort.offset + widget->GetPos();
+			glm::vec2 widgetHigh = screenWidgetPos + widget->GetDimensions();
+
+			if (glm::all(glm::lessThanEqual(mouse, widgetHigh)) &&
+				glm::all(glm::greaterThanEqual(mouse, screenWidgetPos))) {
+				widget->SetHover(true);
+			}
+			else {
+				widget->SetHover(false);
+			}
+
+			if (widget->GetHovered() && Input::IsMouseButtonPressed(MouseCode::Left)) {
+				widget->SetClicked(true);
+				widget->OnClick();
+			}
+			else {
+				if (widget->GetClicked() && Input::IsMouseButtonUp(MouseCode::Left)) {
+					widget->OnClickUp();
+				}
+
+				widget->SetClicked(false);
+			}
+		}
 	}
 }

@@ -1189,6 +1189,20 @@ void BtnSqd::PropertiesMenue::WidgetCanvasComp(GameObject& selectedObj) {
 		}
 		widgetTypeDrawCallbacks[wCanvas.selectedWidget->GetType()](wCanvas.selectedWidget);
 
+		ImGui::Text("Enabled: ");
+		ImGui::SameLine();
+		bool isWidgetEnabled = wCanvas.selectedWidget->GetIsEnabled();
+		if (ImGui::Checkbox("##WidgetIsEnabled",&isWidgetEnabled)) {
+			wCanvas.selectedWidget->SetIsEnabled(isWidgetEnabled);
+		}
+
+		ImGui::Text("Interactable: ");
+		ImGui::SameLine();
+		bool isWidgetInteract = wCanvas.selectedWidget->GetIsInteractive();
+		if (ImGui::Checkbox("##WidgetIsInteractable", &isWidgetInteract)) {
+			wCanvas.selectedWidget->SetIsInteractive(isWidgetInteract);
+		}
+
 		ImGui::Text("Level: ");
 		ImGui::SameLine();
 		int cLevel = wCanvas.selectedWidget->GetLevel();
