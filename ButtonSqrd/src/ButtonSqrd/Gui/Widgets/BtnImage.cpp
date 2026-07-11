@@ -9,7 +9,6 @@ namespace BtnSqd {
 		wType = BtnWidgetType::BtnImage;
 		name = "BtnImage";
 		useNineSlice = false;
-		InitIndices();
 	}
 
 	Mesh& BtnImage::Draw(std::shared_ptr<Shader> shader) {
@@ -56,20 +55,6 @@ namespace BtnSqd {
 		rect = BtnSmartRect(width, height);
 	}
 
-	void BtnImage::InitIndices() {
-		if (!indices.empty()) {
-			return;
-		}
-		indices.reserve(6);
-
-		indices.push_back(0);
-		indices.push_back(3);
-		indices.push_back(2);
-
-		indices.push_back(2);
-		indices.push_back(1);
-		indices.push_back(0);
-	}
 	std::vector<Vertices> BtnImage::GenerateVerts() {
 		std::vector<Vertices> verts;
 		verts.reserve(4);

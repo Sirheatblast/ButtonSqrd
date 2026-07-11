@@ -7,6 +7,9 @@ BtnSqd::PropertiesMenue::PropertiesMenue(std::shared_ptr<BtnScene>& scene, BtnPh
 	widgetTypeDrawCallbacks[BtnWidgetType::BtnImage] = [this](std::shared_ptr<BtnWidget> widget) {
 		this->DrawBtnImageData(widget);
 		};
+	widgetTypeDrawCallbacks[BtnWidgetType::Button] = [this](std::shared_ptr<BtnWidget> widget) {
+		this->DrawBtnButtonData(widget);
+		};
 }
 
 void BtnSqd::PropertiesMenue::OnUpdate(GameObject& selectedObj) {
@@ -1283,7 +1286,11 @@ void BtnSqd::PropertiesMenue::CreateWidgetPopup(WidgetCanvasComponent& wCanvas) 
 			wCanvas.Widgets.push_back(std::make_shared<BtnTextBox>());
 		}
 		if (ImGui::Selectable("Button")) {
-
+			auto button = std::make_shared<BtnButton>();
+			wCanvas.Widgets.push_back(button);
+			auto text = std::make_shared<BtnTextBox>();
+			wCanvas.Widgets.push_back(text);
+			button->AddChild(text.get());
 		}
 		if (ImGui::Selectable("Image")) {
 			wCanvas.Widgets.push_back(std::make_shared<BtnImage>());
@@ -1759,6 +1766,123 @@ void BtnSqd::PropertiesMenue::DrawBtnImageData(std::shared_ptr<BtnWidget> widget
 		}
 	}	
 	
+	ImGui::EndChild();
+}
+
+void BtnSqd::PropertiesMenue::DrawBtnButtonData(std::shared_ptr<BtnWidget> widget) {
+	std::shared_ptr<BtnButton> button = std::dynamic_pointer_cast<BtnButton>(widget);
+
+	ImGui::BeginChild("DisplayWidgetTypePropertiesWindow", ImVec2(0.0f, 0.0f),
+					  ImGuiChildFlags_AlwaysAutoResize | ImGuiChildFlags_AutoResizeY | ImGuiChildFlags_Border);
+	ImGui::Text("Button:");
+
+	ImGui::Text("Selected Texture:");
+	ImGui::Indent(20.0f);
+	if (button->GetTexture()) {
+		if (ImGui::ImageButton("##CurrentWidgetButtonTexture", button->GetTexture()->GetId(), ImVec2(150.0f, 150.0f))) {
+
+		}
+		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
+			button->SetMainTexture("bin/null");
+		}
+	}
+	else {
+		ImGui::ImageButton("##CurrentWidgetButtonTexture", 0, ImVec2(150.0f, 150.0f));
+	}
+
+	if (ImGui::BeginDragDropTarget()) {
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_INFO")) {
+			AssetPayloadType* pData = static_cast<AssetPayloadType*>(payload->Data);
+			button->SetMainTexture(pData->path);
+		}
+		ImGui::EndDragDropTarget();
+	}
+	ImGui::Unindent(20.0f);
+
+	ImGui::Text("Hovered Texture:");
+	ImGui::Indent(20.0f);
+	if (button->GetHoverTexture()) {
+		if (ImGui::ImageButton("##CurrentWidgetButtonHoverTexture", button->GetHoverTexture()->GetId(), ImVec2(150.0f, 150.0f))) {
+
+		}
+		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
+			button->SetHoverTexture("bin/null");
+		}
+	}
+	else {
+		ImGui::ImageButton("##CurrentWidgetButtonHoverTexture", 0, ImVec2(150.0f, 150.0f));
+	}
+
+	if (ImGui::BeginDragDropTarget()) {
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_INFO")) {
+			AssetPayloadType* pData = static_cast<AssetPayloadType*>(payload->Data);
+			button->SetHoverTexture(pData->path);
+		}
+		ImGui::EndDragDropTarget();
+	}
+	ImGui::Unindent(20.0f);
+
+	ImGui::Text("Click Texture:");
+	ImGui::Indent(20.0f);
+	if (button->GetClickTexture()) {
+		if (ImGui::ImageButton("##CurrentWidgetButtonClickTexture", button->GetClickTexture()->GetId(), ImVec2(150.0f, 150.0f))) {
+
+		}
+		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
+			button->SetClickTexture("bin/null");
+		}
+	}
+	else {
+		ImGui::ImageButton("##CurrentWidgetButtonClickTexture", 0, ImVec2(150.0f, 150.0f));
+	}
+
+	if (ImGui::BeginDragDropTarget()) {
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_INFO")) {
+			AssetPayloadType* pData = static_cast<AssetPayloadType*>(payload->Data);
+			button->SetClickTexture(pData->path);
+		}
+		ImGui::EndDragDropTarget();
+	}
+	ImGui::Unindent(20.0f);
+
+	const auto& cColor = button->GetColor();
+
+	ImGui::Text("Clear Color: ");
+	ImGui::SameLine();
+	if (ImGui::ColorButton("##WidgetImageClearColor", ImVec4(cColor.x, cColor.y, cColor.z, 1.0f))) {
+		showImageClearColorPicker = !showImageClearColorPicker;
+	}
+	if (showImageClearColorPicker) {
+		glm::vec4 color = cColor;
+		ShowColorPicker(color, "##WidgetImagePickClearColor");
+		if (color != cColor) {
+			button->SetColor(color);
+		}
+	}
+
+	bool shouldMix = button->GetMix();
+	ImGui::Text("Mix: ");
+	ImGui::SameLine();
+	if (ImGui::Checkbox("##ShouldImageWidgetMixColor", &shouldMix)) {
+		button->SetMix(shouldMix);
+	}
+
+	bool shouldSlice = button->GetUseNineSlice();
+	ImGui::Text("Nine-Slice: ");
+	ImGui::SameLine();
+	if (ImGui::Checkbox("##WidgetImageSetUseNineSliceCheckbox", &shouldSlice)) {
+		button->SetUseNineSlice(shouldSlice);
+	}
+
+	if (shouldSlice) {
+		float texScale = button->GetTextureScale();
+		ImGui::Text("TextureScale: ");
+		ImGui::SameLine();
+		if (ImGui::DragFloat("##WidgetImageTextureScaleDragFloat", &texScale, 0.1f, 0.0f, FLT_MAX)) {
+			button->SetTextureScale(texScale);
+		}
+	}
+
 	ImGui::EndChild();
 }
 

@@ -39,11 +39,13 @@ namespace BtnSqd {
 		};
 
 		void RenderWidgets();
+		void DrawWidget(BtnWidget* widget);
+		void DrawChildren(BtnWidget* widget);
 		void GenWidgetPQ();
 		void SetUpCamera();
 
-		void RenderNormal(std::shared_ptr<BtnSqd::BtnWidget>& widget);
-		void RenderText(std::shared_ptr<BtnSqd::BtnWidget>& widget);
+		void RenderNormal(BtnWidget* widget);
+		void RenderText(BtnWidget* widget);
 
 		std::shared_ptr<BtnScene>& currentScene;
 		std::shared_ptr<FrameBuffer> frameBuffer;

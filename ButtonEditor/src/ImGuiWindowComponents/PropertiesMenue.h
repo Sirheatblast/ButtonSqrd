@@ -11,6 +11,7 @@
 
 #include"ButtonSqrd/Gui/Widgets/BtnTextBox.h"
 #include"ButtonSqrd/Gui/Widgets/BtnImage.h"
+#include"ButtonSqrd/Gui/Widgets/BtnButton.h"
 
 #include<string>
 #include<imgui.h>
@@ -139,6 +140,7 @@ namespace BtnSqd {
 
 		void DrawBtnTextBoxData(std::shared_ptr<BtnWidget>widget);
 		void DrawBtnImageData(std::shared_ptr<BtnWidget>widget);
+		void DrawBtnButtonData(std::shared_ptr<BtnWidget>widget);
 
 		void ProcessFontDropTarget(std::shared_ptr<BtnTextBox>& text);
 		bool OnGetWidget(BtnSqd::OnGetWidgetEvent* e);

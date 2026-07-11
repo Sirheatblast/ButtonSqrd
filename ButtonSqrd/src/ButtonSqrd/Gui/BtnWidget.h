@@ -48,6 +48,11 @@ namespace BtnSqd {
 		inline bool GetMix() { return mix; }
 		inline void SetMix(bool nMix) { mix = nMix; }
 		inline void SetHasTexture(bool hasTex) { hasTexture = hasTex; }
+		inline float GetTextureScale() { return textureScale; }
+		inline void SetTextureScale(float scale) { textureScale = scale; }
+
+		inline bool GetUseNineSlice() { return useNineSlice; }
+		inline void SetUseNineSlice(bool shouldUse) { useNineSlice = shouldUse; }
 
 		void SetDimensions(glm::vec2 dimensions) {
 			width = dimensions.x;
@@ -97,6 +102,8 @@ namespace BtnSqd {
 		bool mix = false;
 		bool hasTexture = false;
 		bool showChildren = false;
+		float textureScale;
+		bool useNineSlice;
 		std::string name = "widget";
 		BtnWidgetType wType= BtnWidgetType::None;
 

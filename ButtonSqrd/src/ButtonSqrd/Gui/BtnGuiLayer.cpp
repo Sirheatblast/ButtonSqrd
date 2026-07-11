@@ -81,25 +81,7 @@ namespace BtnSqd {
 		while (!widgets.empty()) {
 			auto widget = widgets.top();
 			widgets.pop();
-
-			if (widget->GetUseScreenDim()) {
-				float max = 100.0f;
-				glm::vec2 windSize = viewPortSize;
-				glm::vec2 wPos = widget->GetPercentPos();
-				glm::vec2 wPercent = wPos / max;
-
-				glm::vec2 newScreenPos = (wPercent * (windSize - widget->GetDimensions()));
-				widget->SetPos(newScreenPos);
-			}
-
-			switch (widget->GetType()) {
-			case BtnWidgetType::Text:
-				RenderText(widget);
-				break;
-			default:
-				RenderNormal(widget);
-				break;
-			}
+			DrawChildren(widget.get());
 		}
 		widgetShader->Detatch();
 
@@ -109,11 +91,48 @@ namespace BtnSqd {
 
 	}
 
-	void BtnGuiLayer::RenderNormal(std::shared_ptr<BtnSqd::BtnWidget>& widget) {
+	void BtnGuiLayer::DrawWidget(BtnWidget* widget) {
+		if (widget->GetUseScreenDim()) {
+			float max = 100.0f;
+			glm::vec2 windSize = viewPortSize;
+			glm::vec2 wPos = widget->GetPercentPos();
+			glm::vec2 wPercent = wPos / max;
+
+			glm::vec2 newScreenPos = (wPercent * (windSize - widget->GetDimensions()));
+			widget->SetPos(newScreenPos);
+		}
+
+		switch (widget->GetType()) {
+		case BtnWidgetType::Text:
+			RenderText(widget);
+			break;
+		default:
+			RenderNormal(widget);
+			break;
+		}
+	}
+
+	void BtnGuiLayer::DrawChildren(BtnWidget* widget) {
+		DrawWidget(widget);
+		for (auto child : widget->GetChildren()) {
+			if (!child) {
+				widget->RemoveChild(child);
+				continue;
+			}
+			DrawChildren(child);
+		}
+	}
+
+	void BtnGuiLayer::RenderNormal(BtnWidget* widget) {
 		widgetShader->Use();
 		widgetShader->SetMat4("VP", camera.projectionMatrix * camera.viewMatrix);
 
 		float level = widget->GetLevel() / 10.0f;
+
+		if (widget->HasParent()) {
+			level += widget->GetParent()->GetLevel() + 0.01f;
+		}
+
 		glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(widget->GetPos(), level)); //fix this so that it could render widgets not from fixed world positions
 		auto dimensions = widget->GetDimensions();
 
@@ -126,18 +145,21 @@ namespace BtnSqd {
 		widgetShader->Detatch();
 	}
 
-	void BtnGuiLayer::RenderText(std::shared_ptr<BtnSqd::BtnWidget>& widget) {
+	void BtnGuiLayer::RenderText(BtnWidget* widget) {
 		textShader->Use();
 
 		textShader->SetMat4("VP", camera.projectionMatrix * camera.viewMatrix);
 
 		float level = widget->GetLevel() / 10.0f;
+		if (widget->HasParent()) {
+			level += widget->GetParent()->GetLevel() + 0.01f;
+		}
 
 		glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(widget->GetPos(), level)); //fix this so that it could render widgets not from fixed world positions
 		auto dimensions = widget->GetDimensions();
 		textShader->SetMat4("model", modelMat);
 
-		std::shared_ptr<BtnTextBox> text = std::dynamic_pointer_cast<BtnTextBox>(widget);
+		BtnTextBox* text = static_cast<BtnTextBox*>(widget);
 		textShader->SetUniform("fontAtlas", 0);
 		if (text->GetFont().GetFontTexture()) {
 			text->GetFont().GetFontTexture()->Bind();
@@ -152,12 +174,10 @@ namespace BtnSqd {
 
 	void BtnGuiLayer::GenWidgetPQ() {
 		for (const auto& widget : currentScene->GetWidgets()) {
-			if (!widget->GetIsEnabled()) {
+			if (!widget->GetIsEnabled() || widget->HasParent()) {
 				continue;
 			}
-			if (!widget->HasParent()) {
-				widget->UpdateChildrenPos(widget.get());
-			}
+			widget->UpdateChildrenPos(widget.get());
 			widgets.push(widget);
 		}
 	}
