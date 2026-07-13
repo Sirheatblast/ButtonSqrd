@@ -6,7 +6,7 @@ namespace BtnSqd {
 		name = "new TextBox";
 		text = "Basic Text";
 		width = 200.0f;
-		height = 100.0f;
+		height = 50.0f;
 		border = 0.0f;
 		fontSize = 35.0f;
 		maxPerc = 0.95f;

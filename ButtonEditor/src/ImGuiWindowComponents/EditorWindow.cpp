@@ -135,6 +135,9 @@ namespace BtnSqd {
 			glm::vec2 mousePos = Input::GetMousePosition();
 			selectedWidget = bGuiLayer->PickWidget(mousePos);
 			if (selectedWidget) {
+				if (Input::IsMouseButtonDoubleClicked(MouseCode::Left)&&selectedWidget->GetParent()) {
+					selectedWidget = std::shared_ptr<BtnWidget>(selectedWidget->GetParent());
+				}
 				Application::GetApp()->PushEvent(new OnGetWidgetEvent(selectedWidget));
 			}
 		}

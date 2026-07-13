@@ -48,9 +48,11 @@ namespace BtnSqd {
 			int height;
 			const char* name;
 			bool isLocked;
+			double lastMouseClickTime[8] = { 0.0 };
 
 			EventCallbackFn callback;
 		};
+
 
 		GLFWwindow* window;
 		GraphicsContext* gContext;

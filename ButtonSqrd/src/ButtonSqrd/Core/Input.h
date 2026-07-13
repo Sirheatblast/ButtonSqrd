@@ -9,7 +9,7 @@
 
 namespace BtnSqd {
 	enum KeyState {
-		Nutral=0,Pushed, Released, Held
+		Nutral = 0, Pushed, Released, Held
 	};
 
 	class Input {
@@ -19,10 +19,13 @@ namespace BtnSqd {
 
 		static bool IsMouseButtonPressed(MouseCode button);
 		static bool IsMouseButtonUp(MouseCode button);
+		static bool IsMouseButtonDoubleClicked(MouseCode button);
 
 		static glm::vec2 GetMousePosition();
 
 		static void SetCursorLock(bool locked);
 
+	private:
+		static inline double mButtonDoubleClick[8] = {0.0};
 	};
 }

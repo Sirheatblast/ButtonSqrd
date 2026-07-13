@@ -21,6 +21,21 @@ namespace BtnSqd {
 		int button;
 	};
 
+	class OnMouseDoubleClickEvent :public Event {
+	public:
+		OnMouseDoubleClickEvent(int button) :button(button) { eCategory = EventCategory::MouseEventType; }
+
+		std::string GetName() const override {
+			return "MouseDoubleClickEvent: " + std::to_string(char(button)) + " pressed";
+		}
+
+		int GetButton() const { return button; }
+
+		SET_EVENT_TYPE(MouseDoubleClickEvent);
+	private:
+		int button;
+	};
+
 	class OnMouseClickReleaseEvent :public Event {
 	public:
 		OnMouseClickReleaseEvent(int button) :button(button) { eCategory = EventCategory::MouseEventType; }

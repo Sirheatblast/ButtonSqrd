@@ -92,6 +92,11 @@ namespace BtnSqd {
 					entityMap[srcEntity].AddComponent<ParticleEmitterComponent>();
 					entityMap[srcEntity].GetComponent<ParticleEmitterComponent>() = particEmitter;
 				}
+				if (reg.gameReg.any_of<WidgetCanvasComponent>(srcEntity)) {
+					WidgetCanvasComponent wCanvas = reg.gameReg.get<WidgetCanvasComponent>(srcEntity);
+					entityMap[srcEntity].AddComponent<WidgetCanvasComponent>();
+					entityMap[srcEntity].GetComponent<WidgetCanvasComponent>() = wCanvas;
+				}
 			}
 		}
 		return *this;

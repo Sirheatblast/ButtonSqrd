@@ -8,12 +8,21 @@ namespace BtnSqd {
 		mix = false;
 		wType = BtnWidgetType::Button;
 		useNineSlice = false;
+		width = 200.0f;
+		height = 50.0f;
 
 		name = "New Button";
 		hasHoverTexture = false;
 		hasClickTexture = false;
 		hoverColor = glm::vec4(1.0f);
 		clickColor = glm::vec4(1.0f);
+
+		useClickTexture = false;
+		useHoverTexture = false;
+
+		applyHoverColor = true;
+		applyClickColor = true;
+		isInteractive = true;
 	}
 
 	Mesh& BtnButton::Draw(std::shared_ptr<Shader> shader) {

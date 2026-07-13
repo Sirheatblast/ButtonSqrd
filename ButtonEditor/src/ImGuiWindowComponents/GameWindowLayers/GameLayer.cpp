@@ -60,7 +60,9 @@ namespace BtnSqd {
 			BtnSqd::RenderCommand::DrawScene();
 			BtnSqd::Renderer::EndScene();
 
-			guiLayer->PullInput();
+			if (currentState == RuntimeState::Playing) {
+				guiLayer->PullInput();
+			}
 			guiLayer->OnUpdate();
 
 			gameViewport->UnBind();

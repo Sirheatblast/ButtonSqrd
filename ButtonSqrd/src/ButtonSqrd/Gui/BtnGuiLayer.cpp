@@ -1,6 +1,7 @@
 #include"BtnGuiLayer.h"
 #include"ButtonSqrd.h"
 #include"ButtonSqrd/Gui/Widgets/BtnTextBox.h"
+#include"ButtonSqrd/Gui/Widgets/BtnButton.h"
 
 namespace BtnSqd {
 	BtnGuiLayer::BtnGuiLayer(std::shared_ptr<BtnScene>& currentScene, glm::vec2 viewPortSize, std::string name) :currentScene(currentScene), viewPortSize(viewPortSize), name(name) {
@@ -56,7 +57,6 @@ namespace BtnSqd {
 
 			if (glm::all(glm::lessThanEqual(mousePos, endPos)) &&
 				glm::all(glm::greaterThanEqual(mousePos, startPos))) {
-
 				selected = widget;
 				widget->SetHover(true);
 			}
@@ -106,6 +106,9 @@ namespace BtnSqd {
 		case BtnWidgetType::Text:
 			RenderText(widget);
 			break;
+		case BtnWidgetType::Button:
+			RenderButton(widget);
+			break;
 		default:
 			RenderNormal(widget);
 			break;
@@ -121,6 +124,53 @@ namespace BtnSqd {
 			}
 			DrawChildren(child);
 		}
+	}
+
+	void BtnGuiLayer::RenderButton(BtnWidget* widget) {
+		widgetShader->Use();
+		widgetShader->SetMat4("VP", camera.projectionMatrix * camera.viewMatrix);
+		float level = widget->GetLevel() / 10.0f;
+
+		if (widget->HasParent()) {
+			level += widget->GetParent()->GetLevel() + 0.01f;
+		}
+
+		glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(widget->GetPos(), level)); //fix this so that it could render widgets not from fixed world positions
+		auto dimensions = widget->GetDimensions();
+
+		BtnButton* button = static_cast<BtnButton*>(widget);
+		glm::vec4 clearColor = button->GetColor();
+
+		auto buttonMesh = widget->Draw(widgetShader);
+		bool shouldMix = widget->GetMix();
+
+		if (button->GetClicked()) {
+			if (button->GetUseClickColor()) {
+				clearColor = button->GetClickColor();
+				shouldMix = true;
+			}
+			if (button->GetUseClickTexture() && button->GetClickTexture()) {
+				buttonMesh.GetMaterial()->albedo = button->GetClickTexture();
+			}
+		}
+		else if (button->GetHovered()) {
+			if (button->GetUseHoverColor()) {
+				clearColor = button->GetHoverColor();
+				shouldMix = true;
+			}
+			if (button->GetUseHoverTexture() && button->GetHoverTexture()) {
+				buttonMesh.GetMaterial()->albedo = button->GetHoverTexture();
+			}
+		}
+
+		widgetShader->SetMat4("model", modelMat);
+		widgetShader->SetVec4("clearColor", clearColor);
+		widgetShader->SetVec2("widgetSize", widget->GetDimensions());
+		widgetShader->SetBool("useAlbedoTexture", widget->GetHasTexture());
+		widgetShader->SetBool("mixTex", shouldMix);
+		RenderCommand::DrawMesh(buttonMesh);
+
+		widgetShader->Detatch();
 	}
 
 	void BtnGuiLayer::RenderNormal(BtnWidget* widget) {

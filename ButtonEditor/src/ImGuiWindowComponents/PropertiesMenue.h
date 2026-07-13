@@ -156,6 +156,8 @@ namespace BtnSqd {
 		bool showTextColorPicker = false;
 		bool showTextBackgroundColorPicker = false;
 		bool showImageClearColorPicker = false;
+		bool showButtonHoverColorPicker = false;
+		bool showButtonClickColorPicker = false;
 
 		std::shared_ptr<BtnScene>& currentScene;
 		std::vector<bool>showTexturePickerMain;

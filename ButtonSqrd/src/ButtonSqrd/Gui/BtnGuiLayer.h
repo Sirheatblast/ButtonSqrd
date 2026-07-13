@@ -44,6 +44,7 @@ namespace BtnSqd {
 		void GenWidgetPQ();
 		void SetUpCamera();
 
+		void RenderButton(BtnWidget* widget);
 		void RenderNormal(BtnWidget* widget);
 		void RenderText(BtnWidget* widget);
 

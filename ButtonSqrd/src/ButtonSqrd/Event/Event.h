@@ -13,7 +13,7 @@ namespace BtnSqd {
 		//KeyBoard Events
 		KeyDownEvent, KeyReleaseEvent,KeyHoldEvent,keyTypedEvent,
 		//Mouse Events
-		MouseMoveEvent,MouseClickEvent,MouseClickReleaseEvent,MouseScrollEvent,
+		MouseMoveEvent,MouseClickEvent,MouseDoubleClickEvent,MouseClickReleaseEvent,MouseScrollEvent,
 		//EditorEvents
 		SelectGameObjectEvent, SelectWindowEvent, CreateGameObjectEvent, DestroyGameObjectEvent, StartGameInEditor,EndGameInEditor,PauseGameInEditor,
 		//Camera Events
