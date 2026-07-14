@@ -158,6 +158,7 @@
     <ClInclude Include="src\ButtonSqrd\Core\Application.h" />
     <ClInclude Include="src\ButtonSqrd\Core\BtnTime.h" />
     <ClInclude Include="src\ButtonSqrd\Core\BtnTransform.h" />
+    <ClInclude Include="src\ButtonSqrd\Core\BtnUUID.h" />
     <ClInclude Include="src\ButtonSqrd\Core\CoreComponents.h" />
     <ClInclude Include="src\ButtonSqrd\Core\EntrePoint.h" />
     <ClInclude Include="src\ButtonSqrd\Core\GameObject.h" />
@@ -227,6 +228,7 @@
     <ClCompile Include="src\ButtonSqrd\Audio\SoundBuffer.cpp" />
     <ClCompile Include="src\ButtonSqrd\Core\Application.cpp" />
     <ClCompile Include="src\ButtonSqrd\Core\BtnTime.cpp" />
+    <ClCompile Include="src\ButtonSqrd\Core\BtnUUID.cpp" />
     <ClCompile Include="src\ButtonSqrd\Core\CoreComponents.cpp" />
     <ClCompile Include="src\ButtonSqrd\Core\GameObject.cpp" />
     <ClCompile Include="src\ButtonSqrd\Core\GameObjectRegister.cpp" />
