@@ -3,6 +3,7 @@
 #include<string>
 
 #include"ButtonSqrd/Render/Mesh.h"
+#include"ButtonSqrd/Core/BtnUUID.h"
 
 namespace BtnSqd {
 	enum class BtnWidgetType {
@@ -22,7 +23,7 @@ namespace BtnSqd {
 		virtual void OnClickUp(){}
 
 		inline unsigned int GetLevel() const { return level; }
-		inline unsigned int GetId()const { return id; }
+		inline BtnUUID GetId()const { return id; }
 		inline glm::vec2 GetPos()const { return pos; }
 		inline glm::vec2 GetLocalPos()const { return localPos; }
 		inline glm::vec2 GetPercentPos()const { return percentPos; }
@@ -35,7 +36,6 @@ namespace BtnSqd {
 		inline bool GetHovered()const { return isHovered; }
 		inline bool GetHasTexture()const { return hasTexture; }
 		
-		inline void SetId(unsigned int nId) { id = nId; }
 		inline void SetLevel(unsigned int nLevel) { level = nLevel; }
 		
 		inline void SetLocalPos(glm::vec2 nlPos) { localPos = nlPos; }
@@ -84,7 +84,7 @@ namespace BtnSqd {
 		void SetClicked(bool clicked) { isClicked = clicked; }
 
 	protected:
-		unsigned int id =0;
+		BtnUUID id;
 		unsigned int level=0;
 		float width=100;
 		float height = 100;

@@ -134,7 +134,7 @@ namespace BtnSqd {
 
 			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
 			ImGui::Indent(20.0f);
-			ImGui::Selectable(("Widgets##ShowBtnWidgetsSelectableForObj_" + std::to_string(gameObj->GetId())).c_str());
+			ImGui::Selectable(("Widgets##ShowBtnWidgetsSelectableForObj_" + std::to_string(gameObj->GetUUID())).c_str());
 			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
 				widgetComp.displayInEditor = !widgetComp.displayInEditor;
 			}
@@ -177,7 +177,7 @@ namespace BtnSqd {
 			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
 		}
 
-		std::string label = widget->GetName() + "##WidgetDisplayedID_" + std::to_string(gameObj->GetId()) + "_" + std::to_string(i);
+		std::string label = widget->GetName() + "##WidgetDisplayedID_" + std::to_string(gameObj->GetUUID()) + "_" + std::to_string(widget->GetId());
 		if (ImGui::Selectable(label.c_str())) {
 			widgetComp.selectedWidget = widgetSh;
 		}
