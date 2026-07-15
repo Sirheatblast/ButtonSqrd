@@ -19,7 +19,7 @@ void BtnSqd::PropertiesMenue::OnUpdate(GameObject& selectedObj) {
 		Application::GetApp()->PushEvent(new OnSelectWindowEvent(ActiveWindow::MainGUI));
 	}
 
-	if (currentScene->GetgameObjects()[selectedObj.GetId()]->IsValid()) {
+	if (selectedObj.IsValid()) {
 		ImGui::SetCursorPosX((ImGui::GetWindowWidth() / 2.0f) - 52.0f);
 		if (ImGui::Button("Add Component")) {
 			showAddCompWindow = !showAddCompWindow;
@@ -28,14 +28,14 @@ void BtnSqd::PropertiesMenue::OnUpdate(GameObject& selectedObj) {
 			ImGui::OpenPopup("Add Component ##PopupWind");
 			showAddCompWindow = false;
 		}
-		if (selectedObj.GetId() != selectedID) {
+		if (selectedObj.GetUUID() != selectedID) {
 			UpdateParticleCurves(selectedObj);
-			selectedID = selectedObj.GetId();
+			selectedID = selectedObj.GetUUID();
 		}
 
 		AddComponents(selectedObj);
 
-		ImGui::Text(currentScene->GetgameObjects()[selectedObj.GetId()]->GetComponent<TagComponenet>().tag.c_str());
+		ImGui::Text(currentScene->GetgameObjects()[selectedObj.GetUUID()]->GetComponent<TagComponenet>().tag.c_str());
 		ShowComponent<TagComponenet>(selectedObj);
 		ShowComponent<TransformComponent>(selectedObj);
 		ShowComponent<ModelComponent>(selectedObj);
@@ -99,7 +99,7 @@ void BtnSqd::PropertiesMenue::AddComponents(BtnSqd::GameObject& selectedObj) {
 		}
 		if (ImGui::Selectable("Bone Component")) {
 			BoneComponent& bone = selectedObj.AddComponent<BoneComponent>();
-			bone.targetId = selectedObj.GetId();
+			bone.targetId = selectedObj.GetUUID();
 		}
 		if (ImGui::Selectable("Audio Listener Component")) {
 			AudioListenerComponent& anim = selectedObj.AddComponent<AudioListenerComponent>();
@@ -214,9 +214,9 @@ void BtnSqd::PropertiesMenue::ShowVariableData(EditableData& data) {
 
 					std::string currentName = pData->name;
 					currentName.resize(currentName.size() - 6);
-					for (auto& [gameObj, tag] : currentScene->GetRegister().GetAllOfID<TagComponenet>()) {
+					for (auto& [gameObj, tag] : currentScene->GetRegister().GetAllOf<IDComponent,TagComponenet>()) {
 						if (tag.tag == currentName) {
-							temp = *currentScene->GetgameObjects()[gameObj];
+							temp = *currentScene->GetgameObjects()[gameObj.uuid];
 							break;
 						}
 					}
@@ -234,7 +234,7 @@ void BtnSqd::PropertiesMenue::ShowVariableData(EditableData& data) {
 }
 
 void BtnSqd::PropertiesMenue::ModelComp(BtnSqd::GameObject& selectedObj) {
-	ModelComponent& modelComp = currentScene->GetgameObjects()[selectedObj.GetId()]->GetComponent<ModelComponent>();
+	ModelComponent& modelComp = currentScene->GetgameObjects()[selectedObj.GetUUID()]->GetComponent<ModelComponent>();
 
 	if (modelComp.currentModel.GetMeshes()->size() != showTexturePickerMain.size()) {
 		showTexturePickerMain.clear();
@@ -419,7 +419,7 @@ void BtnSqd::PropertiesMenue::SetModel(std::string& fullPath, BtnSqd::ModelCompo
 	}
 }
 void BtnSqd::PropertiesMenue::TransformComp(BtnSqd::GameObject& selectedObj) {
-	TransformComponent& transform = currentScene->GetgameObjects()[selectedObj.GetId()]->GetComponent<TransformComponent>();
+	TransformComponent& transform = currentScene->GetgameObjects()[selectedObj.GetUUID()]->GetComponent<TransformComponent>();
 	ImGui::Text("Transform Component");
 	ImGui::Indent(20.0f);
 	ImGui::Text("Position: ");
@@ -466,7 +466,7 @@ void BtnSqd::PropertiesMenue::TransformComp(BtnSqd::GameObject& selectedObj) {
 	ImGui::Unindent(20.0f);
 }
 void BtnSqd::PropertiesMenue::TagComp(BtnSqd::GameObject& selectedObj) {
-	TagComponenet& tag = currentScene->GetgameObjects()[selectedObj.GetId()]->GetComponent<TagComponenet>();
+	TagComponenet& tag = currentScene->GetgameObjects()[selectedObj.GetUUID()]->GetComponent<TagComponenet>();
 	ImGui::Text("Tag Component");
 	ImGui::Indent(20.0f);
 	ImGui::Text("Tag: ");
@@ -483,7 +483,7 @@ void BtnSqd::PropertiesMenue::TagComp(BtnSqd::GameObject& selectedObj) {
 	ImGui::Unindent(20.0f);
 }
 void BtnSqd::PropertiesMenue::LightComp(BtnSqd::GameObject& selectedObj) {
-	LightComponent& light = currentScene->GetgameObjects()[selectedObj.GetId()]->GetComponent<LightComponent>();
+	LightComponent& light = currentScene->GetgameObjects()[selectedObj.GetUUID()]->GetComponent<LightComponent>();
 	ImGui::Text("Light Component");
 	ImGui::SameLine();
 	if (ImGui::Button("Remove ##RemoveLight")) {
@@ -509,7 +509,7 @@ void BtnSqd::PropertiesMenue::LightComp(BtnSqd::GameObject& selectedObj) {
 		lightColorPicker = !lightColorPicker;
 	}
 	if (lightColorPicker) {
-		ShowColorPicker(light.lightColor, selectedObj.GetId());
+		ShowColorPicker(light.lightColor, selectedObj.GetUUID());
 	}
 
 	if (light.lightType == LightType::SpotLight) {
@@ -524,7 +524,7 @@ void BtnSqd::PropertiesMenue::LightComp(BtnSqd::GameObject& selectedObj) {
 	ImGui::Unindent(20.0f);
 }
 void BtnSqd::PropertiesMenue::CameraComp(GameObject& selectedObj) {
-	CameraComponent& camera = currentScene->GetgameObjects()[selectedObj.GetId()]->GetComponent<CameraComponent>();
+	CameraComponent& camera = currentScene->GetgameObjects()[selectedObj.GetUUID()]->GetComponent<CameraComponent>();
 	ImGui::Text("Camera Component");
 	ImGui::SameLine();
 	if (ImGui::Button("Remove ##RemoveCamera")) {
@@ -558,7 +558,7 @@ void BtnSqd::PropertiesMenue::CameraComp(GameObject& selectedObj) {
 	ImGui::Unindent(20.0f);
 }
 void BtnSqd::PropertiesMenue::ScriptComp(GameObject& selectedObj) {
-	ScriptComponent& scripts = currentScene->GetgameObjects()[selectedObj.GetId()]->GetComponent<ScriptComponent>();
+	ScriptComponent& scripts = currentScene->GetgameObjects()[selectedObj.GetUUID()]->GetComponent<ScriptComponent>();
 	ImGui::Text("Script Component");
 	ImGui::SameLine();
 	if (ImGui::Button("Remove ##RemoveScript")) {

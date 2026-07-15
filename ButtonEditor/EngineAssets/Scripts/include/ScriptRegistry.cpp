@@ -7,7 +7,7 @@ const RawScriptEntry* GetRegisteredScripts(size_t* count) {
 
     view.clear();
     for (auto& e : internal)
-        view.push_back({ e.name.c_str(), e.create });
+        view.push_back({ e.name, e.create });
 
     *count = view.size();
     return view.data();

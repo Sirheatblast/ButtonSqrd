@@ -4,6 +4,8 @@
 #include<functional>
 #include<queue>
 
+#include"BtnUUID.h"
+
 #include"ButtonSqrd/Render/Model.h"
 #include"ButtonSqrd/Render/Light.h"
 
@@ -23,6 +25,12 @@ namespace BtnSqd {
 
 	enum ColliderType {
 		BoxCollider = 0, CircleCollider, CapsuleCollider, PlaneCollider, CustomCollider
+	};
+
+	struct IDComponent {
+		IDComponent() = default;
+		IDComponent(uint64_t id) :uuid(BtnUUID(id)){}
+		BtnUUID uuid;
 	};
 
 	struct TransformComponent {

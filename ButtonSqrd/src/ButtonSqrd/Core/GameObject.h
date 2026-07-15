@@ -1,6 +1,7 @@
 #pragma once
 #include"Scene.h"
 #include"CoreComponents.h"
+#include"BtnUUID.h"
 
 #include<entt.hpp>
 #include<typeinfo>
@@ -16,9 +17,9 @@ namespace BtnSqd {
 		}
 
 		void AddChild(GameObject& newChild) {
-			scene->GetgameObjects()[newChild.GetId()]->isChild = true;
-			scene->GetgameObjects()[newChild.GetId()]->parent = scene->GetgameObjects()[this->GetId()].get();
-			scene->GetgameObjects()[this->GetId()]->children.push_back(newChild);
+			scene->GetgameObjects()[newChild.GetUUID()]->isChild = true;
+			scene->GetgameObjects()[newChild.GetUUID()]->parent = scene->GetgameObjects()[this->GetUUID()].get();
+			scene->GetgameObjects()[this->GetUUID()]->children.push_back(newChild);
 		}
 
 		void RemoveChild(GameObject& oldChild) {
@@ -57,11 +58,6 @@ namespace BtnSqd {
 
 		template<typename ComponentType>
 		ComponentType& GetComponent() {
-			if (!scene->gameReg.GetNative().all_of<ComponentType>(gameObject)) {
-				std::string errorString = "GameObject doesn't have Component type: ";
-				errorString.append(std::string(typeid(ComponentType).name()));
-				BTNLOG_ERROR(errorString);
-			}
 			return scene->gameReg.GetNative().get<ComponentType>(gameObject);
 		}
 
@@ -85,6 +81,10 @@ namespace BtnSqd {
 			return registry.valid(gameObject);
 		}
 
+		BtnUUID GetUUID() {
+			const IDComponent& idComp = GetComponent<IDComponent>();
+			return idComp.uuid;
+		}
 
 		GameObject* GetParent()const { return parent; }
 

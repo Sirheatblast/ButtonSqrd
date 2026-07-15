@@ -390,9 +390,9 @@ namespace BtnSqd {
 			selectedObject = GameObject();
 			Application::GetApp()->PushEvent(new OnSelectGameObjectEvent(selectedObject));
 
-			for (auto& [gId, scriptComp] : currentScene->GetRegister().GetAllOfID<ScriptComponent>()) {
+			for (auto& [gId, scriptComp] : currentScene->GetRegister().GetAllOf<IDComponent,ScriptComponent>()) {
 				for (auto& script : scriptComp.scripts) {
-					script.script->SetGameObject(currentScene->GetgameObjects()[gId].get());
+					script.script->SetGameObject(currentScene->GetgameObjects()[gId.uuid].get());
 					script.script->SetScene(currentScene.get());
 
 					uint32_t count;
@@ -400,7 +400,7 @@ namespace BtnSqd {
 					for (uint32_t i = 0; i < count; i++) {
 						if (varArray[i].type == DataType::GameObject) {
 							auto gameObj = static_cast<GameObject*>(varArray[i].data);
-							uint32_t id = gameObj->GetId();
+							BtnUUID id = gameObj->GetUUID();
 							*gameObj = *currentScene->GetgameObjects()[id];
 						}
 					}

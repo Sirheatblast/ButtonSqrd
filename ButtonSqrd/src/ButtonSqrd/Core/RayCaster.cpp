@@ -35,7 +35,7 @@ namespace BtnSqd {
 		GameObject found = GameObject();
 		float lastHit = FLT_MAX;
 		float tHit = 0.0f;
-		for (auto [id,collider,transform]:currentScene->GetRegister().GetAllOfID<ColliderComponent,TransformComponent>()) {
+		for (auto [id,collider,transform]:currentScene->GetRegister().GetAllOf<IDComponent,ColliderComponent,TransformComponent>()) {
 			if (CheckShouldSkip(ray, transform, collider)) {
 				continue;
 			}
@@ -44,7 +44,7 @@ namespace BtnSqd {
 				auto handler = colliderFunc->second;
 				if (handler(ray, tHit, collider, transform) && tHit <= maxDistance && tHit > 0.0f &&tHit<lastHit) {
 					lastHit = tHit;
-					found = *currentScene->GetgameObjects()[id];
+					found = *currentScene->GetgameObjects()[id.uuid];
 				}
 			}
 		}

@@ -41,7 +41,7 @@ namespace BtnSqd {
 				}
 
 				for (auto& child : gameObj->GetChildren()) {
-					gameObjects[id]->AddChild(*gameObjects[child.GetId()]);
+					gameObjects[id]->AddChild(*gameObjects[child.GetUUID()]);
 				}
 			}
 		}
@@ -51,15 +51,17 @@ namespace BtnSqd {
 	GameObject& BtnScene::CreateNewGameObject() {
 		GameObject* newObject = gameReg.CreateNewGameObject();
 		std::string defName = "GameObject";
-		defName += std::to_string(newObject->GetId());
+		defName += std::to_string(newObject->GetUUID());
+		newObject->AddComponent<IDComponent>();
 		newObject->AddComponent<TagComponenet>(defName);
 		newObject->AddComponent<TransformComponent>();
-		gameObjects[newObject->GetId()] = std::shared_ptr<GameObject>(newObject);
-		return *gameObjects[newObject->GetId()].get();
+		gameObjects[newObject->GetUUID()] = std::shared_ptr<GameObject>(newObject);
+		return *gameObjects[newObject->GetUUID()].get();
 	}
 	GameObject& BtnScene::CreateNewGameObject(SuperGameObject* gTemplate) {
 		GameObject* newObject = gameReg.CreateNewGameObject();
-		newObject->AddComponent<TagComponenet>(gTemplate->GetTag().tag + std::to_string(newObject->GetId()));
+		newObject->AddComponent<IDComponent>();
+		newObject->AddComponent<TagComponenet>(gTemplate->GetTag().tag + std::to_string(newObject->GetUUID()));
 		TransformComponent& transform = newObject->AddComponent<TransformComponent>();
 		transform.transform.Scale(gTemplate->GetScale());
 
@@ -93,7 +95,6 @@ namespace BtnSqd {
 
 			for (auto spt : script.scripts) {
 				spt.script->SetGameObject(newObject);
-
 			}
 		}
 		if (flags.hasPhysics) {
@@ -112,47 +113,59 @@ namespace BtnSqd {
 			collider = gTemplate->GetCollider();
 		}
 
-		gameObjects[newObject->GetId()] = std::shared_ptr<GameObject>(newObject);
-		return *gameObjects[newObject->GetId()].get();
+		gameObjects[newObject->GetUUID()] = std::shared_ptr<GameObject>(newObject);
+		return *gameObjects[newObject->GetUUID()].get();
 	}
 	GameObject& BtnScene::CreateNewGameObject(std::string objectName) {
 		GameObject* newObject = gameReg.CreateNewGameObject();
 		for (auto& [tag] : gameReg.GetAllOf<TagComponenet>()) {
 			if (tag.tag == objectName) {
-				objectName.append(std::to_string(newObject->GetId()));
+				objectName.append(std::to_string(newObject->GetUUID()));
 			}
 		}
 
+		newObject->AddComponent<IDComponent>();
 		newObject->AddComponent<TagComponenet>(objectName);
 		newObject->AddComponent<TransformComponent>();
 
-		gameObjects[newObject->GetId()] = std::shared_ptr<GameObject>(newObject);
-		return *gameObjects[newObject->GetId()].get();
+		gameObjects[newObject->GetUUID()] = std::shared_ptr<GameObject>(newObject);
+		return *gameObjects[newObject->GetUUID()].get();
 	}
 
 	GameObject& BtnScene::CreateNewGameObject(std::string objectName, uint64_t gameObjId) {
-		GameObject* newObject = gameReg.CreateNewGameObject(gameObjId);
+		GameObject* newObject = gameReg.CreateNewGameObject();
 		for (auto& [tag] : gameReg.GetAllOf<TagComponenet>()) {
 			if (tag.tag == objectName) {
-				objectName.append(std::to_string(newObject->GetId()));
+				objectName.append(std::to_string(newObject->GetUUID()));
 			}
 		}
 
+		newObject->AddComponent<IDComponent>(gameObjId);
 		newObject->AddComponent<TagComponenet>(objectName);
 		newObject->AddComponent<TransformComponent>();
 
-		gameObjects[newObject->GetId()] = std::shared_ptr<GameObject>(newObject);
+		gameObjects[newObject->GetUUID()] = std::shared_ptr<GameObject>(newObject);
 
-		return *gameObjects[newObject->GetId()];
+		return *gameObjects[newObject->GetUUID()];
 	}
 
 	GameObject BtnScene::GetActiveCamera() {
-		return GameObject((entt::entity)activeCameraId, this);
+		if (gameObjects[activeCameraId]) {
+			return *gameObjects[activeCameraId];
+		}
+		return GameObject();
 	}
 
 	void BtnScene::ClearGameObjects() {
 		for (auto& [gId, gObj] : gameObjects) {
 			gObj->DestroyGameObject();
+		}
+		gameObjects.clear();
+	}
+
+	void BtnScene::UnLoadScene() {
+		for (auto& [id, comp] : gameReg.GetAllOf<IDComponent, TransformComponent>()) {
+			gameReg.GetNative().destroy(static_cast<entt::entity>(gameObjects[id.uuid]->GetId()));
 		}
 		gameObjects.clear();
 	}
@@ -172,14 +185,15 @@ namespace BtnSqd {
 		std::string objectName = gameObj->GetComponent<TagComponenet>().tag;
 		for (auto& [tag] : gameReg.GetAllOf<TagComponenet>()) {
 			if (tag.tag == objectName) {
-				objectName.append(std::to_string(newObject->GetId()));
+				objectName.append(std::to_string(newObject->GetUUID()));
 			}
 		}
 		newObject->AddComponent<TagComponenet>().tag = objectName;
+		newObject->AddComponent<IDComponent>();
 		CloneGameObject<TransformComponent, ModelComponent, LightComponent, CameraComponent, ArmatureComponent, AnimatorComponent, BoneComponent, AudioSourceComponent>(gameReg.GetNative(), static_cast<entt::entity>(gameObj->GetId()), static_cast<entt::entity>(newObject->GetId()));
 
-		gameObjects[newObject->GetId()] = std::shared_ptr<GameObject>(newObject);
-		return *gameObjects[newObject->GetId()].get();
+		gameObjects[newObject->GetUUID()] = std::shared_ptr<GameObject>(newObject);
+		return *gameObjects[newObject->GetUUID()].get();
 	}
 
 	void BtnScene::DeleteGameObject(GameObject* gameObject) {
@@ -311,13 +325,13 @@ namespace BtnSqd {
 	}
 
 	void BtnScene::SetActiveCamera(uint64_t cameraId) {
-		if (gameObjects[(unsigned int)cameraId]->IsValid()) {
-			if (gameObjects[(unsigned int)cameraId]->CheckObjectForComponent<CameraComponent>()) {
+		if (gameObjects[cameraId]->IsValid()) {
+			if (gameObjects[cameraId]->CheckObjectForComponent<CameraComponent>()) {
 				activeCameraId = cameraId;
-				gameObjects[(unsigned int)activeCameraId]->GetComponent<CameraComponent>().isMainCamera = true;
+				gameObjects[activeCameraId]->GetComponent<CameraComponent>().isMainCamera = true;
 			}
-			for (auto& [id, cam] : gameReg.GetAllOfID<CameraComponent>()) {
-				if (id != activeCameraId) {
+			for (auto& [id, cam] : gameReg.GetAllOf<IDComponent,CameraComponent>()) {
+				if (id.uuid != activeCameraId) {
 					cam.isMainCamera = false;
 				}
 			}

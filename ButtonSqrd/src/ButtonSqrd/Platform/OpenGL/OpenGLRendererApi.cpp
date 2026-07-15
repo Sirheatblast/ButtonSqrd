@@ -184,7 +184,8 @@ namespace BtnSqd {
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 
-		for (auto& [gameId, gameModels, gameTransform] : activeScene->GetRegister().GetAllOfID<ModelComponent, TransformComponent>()) {
+		for (auto& [idComp, gameModels, gameTransform] : activeScene->GetRegister().GetAllOf<IDComponent,ModelComponent, TransformComponent>()) {
+			uint64_t gameId = idComp.uuid;
 			Model& model = gameModels.currentModel;
 			std::shared_ptr<Shader> shader = model.GetShader();
 			if (model.GetMeshes()->size() == 0) {
@@ -297,7 +298,8 @@ namespace BtnSqd {
 		shader->SetFloat("farPlane", farPlane);
 
 		unsigned int i = 0;
-		for (auto& [gameObjId, gameModel, gameTransform] : activeScene->GetRegister().GetAllOfID<ModelComponent, TransformComponent>()) {
+		for (auto& [id, gameModel, gameTransform] : activeScene->GetRegister().GetAllOf<IDComponent,ModelComponent, TransformComponent>()) {
+			auto gameObjId = id.uuid;
 			Model& model = gameModel.currentModel;
 			shader->SetUnsignedInt("objectId", gameObjId);
 			shader->SetUnsignedInt("drawId", i + 1);

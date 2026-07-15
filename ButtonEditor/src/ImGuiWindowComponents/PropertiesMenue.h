@@ -51,7 +51,7 @@ namespace BtnSqd {
 		}
 		template<typename Component>
 		bool ShowComponent(GameObject& selectedObj) {
-			if (!currentScene->GetgameObjects()[selectedObj.GetId()]->CheckObjectForComponent<Component>()) {
+			if (!currentScene->GetgameObjects()[selectedObj.GetUUID()]->CheckObjectForComponent<Component>()) {
 				return false;
 			}
 			ImGui::Begin("Object properties");
@@ -169,7 +169,7 @@ namespace BtnSqd {
 		std::map<BtnWidgetType, std::function<void(std::shared_ptr<BtnWidget>)>> widgetTypeDrawCallbacks;
 
 		BtnPhysics& btnPhysics;
-		uint32_t selectedID = 0;
+		uint64_t selectedID = 0;
 		BtnCurve* selectedCurve = nullptr;
 	};
 }

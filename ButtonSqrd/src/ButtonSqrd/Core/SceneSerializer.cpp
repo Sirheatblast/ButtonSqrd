@@ -157,11 +157,11 @@ namespace BtnSqd {
 
 	static void SerializeGameObject(YAML::Emitter& out, GameObject gameObject) {
 		out << YAML::BeginMap;
-		out << YAML::Key << "GameObject" << YAML::Value << gameObject.GetId();
+		out << YAML::Key << "GameObject" << YAML::Value << gameObject.GetUUID();
 
 		out << YAML::Key << "ChildrenIds" << YAML::BeginSeq;
 		for (auto child:gameObject.GetChildren()) {
-			out << YAML::Value << child.GetId();
+			out << YAML::Value << child.GetUUID();
 		}
 		out << YAML::EndSeq;
 
@@ -513,7 +513,7 @@ namespace BtnSqd {
 		}
 		case DataType::GameObject: {
 			GameObject* gameObj = static_cast<GameObject*>(data.data);
-			out << YAML::Key << "value" << YAML::Value << gameObj->GetId();
+			out << YAML::Key << "value" << YAML::Value << gameObj->GetUUID();
 			break;
 		}
 		case DataType::SuperGameObject: {
@@ -545,7 +545,8 @@ namespace BtnSqd {
 		out << YAML::Key << "SkyBoxTexture" << YAML::Value << scene->skyboxId;
 		out << YAML::Key << "GameObjects" << YAML::Value << YAML::BeginSeq;
 		for (entt::entity entity : scene->gameReg.GetNative().view<entt::entity>()) {
-			GameObject gameObject = *scene->GetgameObjects()[static_cast<uint32_t>(entity)];
+			auto id = scene->gameReg.GetNative().get<IDComponent>(entity);
+			GameObject gameObject = *scene->GetgameObjects()[id.uuid];
 			if (!gameObject.IsValid())
 				return;
 			SerializeGameObject(out, gameObject);
@@ -861,7 +862,7 @@ namespace BtnSqd {
 				ScriptComponent& script = loadedGameObj.AddComponent < ScriptComponent>();
 				for (auto scriptNode : scriptComp["Scripts"]) {
 					std::string scriptName = scriptNode["name"].as<std::string>();
-					script.AddScript(scene->gameObjects[loadedGameObj.GetId()].get(), "../ButtonEditor/EngineAssets/Scripts/bin/BtnScripts.dll", scriptName, scene);
+					script.AddScript(scene->gameObjects[loadedGameObj.GetUUID()].get(), "../ButtonEditor/EngineAssets/Scripts/bin/BtnScripts.dll", scriptName, scene);
 					for (auto& spt : script.scripts) {
 						if (spt.name == scriptName) {
 							spt.isEnabled = scriptNode["isEnabled"].as<bool>();
@@ -902,7 +903,7 @@ namespace BtnSqd {
 				break;
 			}
 			case DataType::GameObject: {
-				*static_cast<GameObject*>(data.data) = *scene->GetgameObjects()[dataNode["value"].as<uint32_t>()];
+				*static_cast<GameObject*>(data.data) = *scene->GetgameObjects()[dataNode["value"].as<uint64_t>()];
 				break;
 			}
 			case DataType::SuperGameObject: {

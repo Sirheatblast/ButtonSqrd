@@ -37,7 +37,8 @@ namespace BtnSqd {
 	}
 
 	void BtnPhysics::Update() {
-		for (auto& [id,transform, physicsComp] : currentScene->GetRegister().GetAllOfID<TransformComponent, PhysicsComponet>()) {
+		for (auto& [idComp,transform, physicsComp] : currentScene->GetRegister().GetAllOf<IDComponent,TransformComponent, PhysicsComponet>()) {
+			BtnUUID id = idComp.uuid;
 			glm::vec3 btnPos = transform.transform.GetPosition();
 			glm::quat btnRot = transform.transform.GetRotationQ();
 			physx::PxVec3 position = glmToPxVec3(btnPos);
@@ -82,13 +83,13 @@ namespace BtnSqd {
 	}
 
 	void BtnPhysics::OnSceneLoad() {
-		for (auto [id, collider] : currentScene->GetRegister().GetAllOfID<ColliderComponent>()) {
-			GameObject gameObject = { (entt::entity)id,currentScene.get() };
+		for (auto [id, collider] : currentScene->GetRegister().GetAllOf<IDComponent,ColliderComponent>()) {
+			GameObject gameObject = { (entt::entity)currentScene->GetgameObjects()[id.uuid]->GetId(),currentScene.get() };
 			CreateCollider(gameObject, gameObject.GetComponent<ColliderComponent>());
 		}
 
-		for (auto[id,transform,physics]:currentScene->GetRegister().GetAllOfID<TransformComponent,PhysicsComponet>()) {
-			GameObject gameObject = { (entt::entity)id,currentScene.get() };
+		for (auto[id,transform,physics]:currentScene->GetRegister().GetAllOf<IDComponent,TransformComponent,PhysicsComponet>()) {
+			GameObject gameObject = { (entt::entity)currentScene->GetgameObjects()[id.uuid]->GetId(),currentScene.get() };
 			AddPhysicsObject(gameObject);
 		}
 	}
@@ -138,7 +139,7 @@ namespace BtnSqd {
 			physComp.rigidBody->attachShape(*shape);
 		}
 		if (pScene->addActor(*physComp.rigidBody)) {
-			physicsGameObjects.insert({ physComp.rigidBody,currentScene->GetgameObjects()[gameObject.GetId()] });
+			physicsGameObjects.insert({ physComp.rigidBody,currentScene->GetgameObjects()[gameObject.GetUUID()] });
 		}
 	}
 	void BtnPhysics::CreateCollider(GameObject& gameObject,ColliderComponent& collider) {
@@ -191,7 +192,7 @@ namespace BtnSqd {
 					collider.dActor = physics->createRigidStatic(physx::PxTransform(glmToPxVec3(gameObject.GetComponent<TransformComponent>().transform.GetPosition())));
 					collider.dActor->attachShape(*collider.pColliderShape);
 					if (pScene->addActor(*collider.dActor)) {
-						physicsGameObjects.insert({ collider.dActor,currentScene->GetgameObjects()[gameObject.GetId()] });
+						physicsGameObjects.insert({ collider.dActor,currentScene->GetgameObjects()[gameObject.GetUUID()] });
 					}
 				}
 			}
@@ -218,8 +219,8 @@ namespace BtnSqd {
 			physicsComp.rigidBody = nullptr;
 		}
 		pScene = physics->createScene(*sceneDesc);
-		for (auto [id,collider] : currentScene->GetRegister().GetAllOfID<ColliderComponent>()) {
-			GameObject current = *currentScene->GetgameObjects()[id];
+		for (auto [id,collider] : currentScene->GetRegister().GetAllOf<IDComponent,ColliderComponent>()) {
+			GameObject current = *currentScene->GetgameObjects()[id.uuid];
 			CreateCollider(current, collider);
 
 			if (current.CheckObjectForComponent<PhysicsComponet>()) {

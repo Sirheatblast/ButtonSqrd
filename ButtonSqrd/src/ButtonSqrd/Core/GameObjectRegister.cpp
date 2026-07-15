@@ -12,8 +12,9 @@ namespace BtnSqd {
 			for (auto entity = reg.gameReg.storage<entt::entity>()->begin(); entity != reg.gameReg.storage<entt::entity>()->end(); entity++) {
 				auto srcEntity = *entity;
 				if (reg.gameReg.valid(srcEntity)) {
+					BtnUUID id = reg.gameReg.get<IDComponent>(srcEntity).uuid;
 					std::string name = reg.gameReg.get<TagComponenet>(srcEntity).tag;
-					entityMap[srcEntity] = scene->CreateNewGameObject(name, (uint64_t)srcEntity);
+					entityMap[srcEntity] = scene->CreateNewGameObject(name,id);
 				}
 			}
 
@@ -103,11 +104,6 @@ namespace BtnSqd {
 	}
 	GameObject* GameObjectRegister::CreateNewGameObject(){
 		GameObject* newGameObject = new GameObject(gameReg.create(), scene);
-		return newGameObject;
-	}
-
-	GameObject* GameObjectRegister::CreateNewGameObject(uint64_t id) {
-		GameObject* newGameObject = new GameObject(gameReg.create((entt::entity)id), scene);
 		return newGameObject;
 	}
 

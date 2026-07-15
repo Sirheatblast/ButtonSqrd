@@ -68,7 +68,6 @@ namespace BtnSqd {
 
 		GameObjectRegister():scene(nullptr){}
 		GameObject* CreateNewGameObject();
-		GameObject* CreateNewGameObject(uint64_t id);
 
 		void SetScene(BtnScene* currentScene);
 
@@ -93,18 +92,6 @@ namespace BtnSqd {
 				components.emplace_back(std::ref(view.get<Component>(gameObject))...);
 			}
 
-			return components;
-		}
-
-		// Returns all of the Components and the gameobject ID
-		template<typename ... Component>
-		std::vector<std::tuple<unsigned int, Component ...>> GetAllOfID() {
-			auto view = gameReg.view<Component ...>();
-			std::vector<std::tuple<unsigned int, Component ...>> components;
-
-			for (auto gameObject : view) {
-				components.push_back(std::tuple<unsigned int, Component ...>(static_cast<unsigned int>(gameObject),view.get<Component>(gameObject)...));
-			}
 			return components;
 		}
 

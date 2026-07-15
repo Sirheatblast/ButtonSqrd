@@ -18,29 +18,17 @@ struct ApplicationInfo {
 };
 
 struct ScriptEntryInternal {
-    std::string name;
+    const char* name;
     CreateScriptFunc create;
 };
 
 static DataType GetType(const char* rawType) {
-    if (rawType=="float") {
-        return DataType::Float;
-    }
-    if (rawType=="double") {
-        return DataType::Double;
-    }
-    if (rawType =="std::string") {
-        return DataType::String;
-    }
-    if (rawType =="bool") {
-        return DataType::Bool;
-    }
-    if (rawType=="BtnSqd::GameObject") {
-        return DataType::GameObject;
-    }
-    if (rawType == "BtnSqd::SuperGameObject") {
-        return DataType::SuperGameObject;
-    }
+    if (std::strcmp(rawType, "float") == 0) return DataType::Float;
+    if (std::strcmp(rawType, "double") == 0) return DataType::Double;
+    if (std::strcmp(rawType, "std::string") == 0) return DataType::String;
+    if (std::strcmp(rawType, "bool") == 0) return DataType::Bool;
+    if (std::strcmp(rawType, "BtnSqd::GameObject") == 0) return DataType::GameObject;
+    if (std::strcmp(rawType, "BtnSqd::SuperGameObject") == 0) return DataType::SuperGameObject;
     return DataType::Int;
 }
 
@@ -55,7 +43,7 @@ inline std::vector<RawScriptEntry>& GetScriptRegistryView() {
 }
 
 struct ScriptRegistrar {
-    ScriptRegistrar(const std::string& name, CreateScriptFunc func) {
+    ScriptRegistrar(const const char* name, CreateScriptFunc func) {
         GetScriptRegistryInternal().push_back({ name, func });
     }
 };
@@ -65,8 +53,8 @@ struct AppInfo {
 };
 
 #define REGISTER_SCRIPT(CLASS_NAME) \
-    extern "C" BtnSqd::BtnScript* Create##CLASS_NAME(){return new CLASS_NAME();}\
-    static ScriptRegistrar registrar_##CLASS_NAME(#CLASS_NAME, Create##CLASS_NAME)
+extern "C" __declspec(dllexport) BtnSqd::BtnScript* Create##CLASS_NAME(){return new CLASS_NAME();}\
+static ScriptRegistrar registrar_##CLASS_NAME(#CLASS_NAME, Create##CLASS_NAME)
 
 extern "C" __declspec(dllexport)
 const RawScriptEntry* GetRegisteredScripts(size_t* count);

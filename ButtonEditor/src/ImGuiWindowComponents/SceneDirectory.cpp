@@ -59,7 +59,7 @@ namespace BtnSqd {
 				continue;
 			}
 			if (!gameObj->IsChild()) {
-				if (gameObj->GetId() == selectedObj.GetId()) {
+				if (selectedObj.IsValid()&&gameObj->GetUUID() == selectedObj.GetUUID()) {
 					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
 				}
 				else {
@@ -290,19 +290,19 @@ namespace BtnSqd {
 	}
 	void SceneDirectory::DisplayChildren(GameObject gameObj, GameObject& selectedObj) {
 		ImGui::Indent(20.0f);
-		for (auto& child : currentScene->GetgameObjects()[gameObj.GetId()]->GetChildren()) {
-			if (child.GetId() == selectedObj.GetId()) {
+		for (auto& child : currentScene->GetgameObjects()[gameObj.GetUUID()]->GetChildren()) {
+			if (selectedObj.IsValid() && child.GetUUID() == selectedObj.GetUUID()) {
 				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
 			}
 			else {
 				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
 			}
 
-			DisplayGameObject(currentScene->GetgameObjects()[child.GetId()], selectedObj);
+			DisplayGameObject(currentScene->GetgameObjects()[child.GetUUID()], selectedObj);
 
-			if (currentScene->GetgameObjects()[child.GetId()]->GetShowChildren()) {
-				DisplayChildren(*currentScene->GetgameObjects()[child.GetId()], selectedObj);
-				HandleDisplayWidgets(currentScene->GetgameObjects()[child.GetId()], selectedObj);
+			if (currentScene->GetgameObjects()[child.GetUUID()]->GetShowChildren()) {
+				DisplayChildren(*currentScene->GetgameObjects()[child.GetUUID()], selectedObj);
+				HandleDisplayWidgets(currentScene->GetgameObjects()[child.GetUUID()], selectedObj);
 			}
 			ImGui::PopStyleColor();
 		}

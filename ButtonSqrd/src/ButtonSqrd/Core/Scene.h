@@ -37,13 +37,7 @@ namespace BtnSqd {
 			return copy;
 		}
 
-		void UnLoadScene() {
-			gameObjects.clear();
-
-			for (auto& [id, comp] : gameReg.GetAllOfID<TransformComponent>()) {
-				gameReg.GetNative().destroy(static_cast<entt::entity>(id));
-			}
-		}
+		void UnLoadScene();
 
 		void SetName(std::string name) {
 			sceneName = name;
@@ -58,7 +52,7 @@ namespace BtnSqd {
 
 		GameObject GetActiveCamera();
 
-		std::map<uint32_t, std::shared_ptr<GameObject>> GetgameObjects()const { return gameObjects; }
+		std::map<uint64_t, std::shared_ptr<GameObject>> GetgameObjects()const { return gameObjects; }
 		void ClearGameObjects();
 		void DeleteGameObject(GameObject* gameObject);
 
@@ -91,7 +85,7 @@ namespace BtnSqd {
 
 		std::string sceneName;
 		std::string skyboxId;
-		std::map<uint32_t, std::shared_ptr<GameObject>>gameObjects;
+		std::map<uint64_t, std::shared_ptr<GameObject>>gameObjects;
 		unsigned int nextWidgetId = 0;
 		BtnPhysics* physics = nullptr;
 
