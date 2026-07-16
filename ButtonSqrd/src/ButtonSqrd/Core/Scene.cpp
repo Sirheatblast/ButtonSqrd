@@ -339,5 +339,6 @@ namespace BtnSqd {
 	}
 	void BtnScene::SetPhysics(BtnPhysics* pInstance) {
 		physics = pInstance;
+		physics->ReInit();
 	}
 }

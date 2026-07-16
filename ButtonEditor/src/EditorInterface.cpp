@@ -373,8 +373,8 @@ namespace BtnSqd {
 		selectedObject = GameObject();
 		currentScene->UnLoadScene();
 		*currentScene = *e->GetScene();
+		currentScene->SetPhysics(&btnPhysicObj);
 		editorScene = currentScene;
-
 		return false;
 	}
 
