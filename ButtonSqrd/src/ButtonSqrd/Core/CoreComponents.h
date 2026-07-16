@@ -227,8 +227,8 @@ namespace BtnSqd {
 
 	struct BoneComponent {
 		AniBone* selectedBone = nullptr;
-		uint32_t targetId = 0;
-		uint32_t armatureId = 0;
+		uint64_t targetId = 0;
+		uint64_t armatureId = 0;
 		std::string armatureName;
 		std::string boneName;
 		bool copyPos = false;

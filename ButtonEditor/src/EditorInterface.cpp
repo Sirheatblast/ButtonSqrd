@@ -362,8 +362,8 @@ namespace BtnSqd {
 	bool EditorInterface::OnSelectCamera(OnSetActiveCameraEvent* e) {
 		GameObject currentCam = currentScene->GetActiveCamera();
 		GameObject newCam = e->GetCamera();
-		if (!currentCam.IsValid() || e->GetCamera().GetId() != currentCam.GetId()) {
-			currentScene->SetActiveCamera(newCam.GetId());
+		if (!currentCam.IsValid() || e->GetCamera().GetUUID() != currentCam.GetUUID()) {
+			currentScene->SetActiveCamera(newCam.GetUUID());
 		}
 
 		return false;
@@ -390,23 +390,7 @@ namespace BtnSqd {
 			selectedObject = GameObject();
 			Application::GetApp()->PushEvent(new OnSelectGameObjectEvent(selectedObject));
 
-			for (auto& [gId, scriptComp] : currentScene->GetRegister().GetAllOf<IDComponent,ScriptComponent>()) {
-				for (auto& script : scriptComp.scripts) {
-					script.script->SetGameObject(currentScene->GetgameObjects()[gId.uuid].get());
-					script.script->SetScene(currentScene.get());
-
-					uint32_t count;
-					auto* varArray = script.script->GetEditables(count);
-					for (uint32_t i = 0; i < count; i++) {
-						if (varArray[i].type == DataType::GameObject) {
-							auto gameObj = static_cast<GameObject*>(varArray[i].data);
-							BtnUUID id = gameObj->GetUUID();
-							*gameObj = *currentScene->GetgameObjects()[id];
-						}
-					}
-					script.script->OnAwake();
-				}
-			}
+			ProcessScriptGameObjs();
 
 			for (auto& [boneComp] : currentScene->GetRegister().GetAllOfRef<BoneComponent>()) {
 				auto& bone = boneComp.get();
@@ -423,6 +407,26 @@ namespace BtnSqd {
 		return false;
 	}
 
+	void EditorInterface::ProcessScriptGameObjs() {
+		for (auto& [gId, scriptComp] : currentScene->GetRegister().GetAllOf<IDComponent, ScriptComponent>()) {
+			for (auto& script : scriptComp.scripts) {
+				script.script->SetGameObject(currentScene->GetgameObjects()[gId.uuid].get());
+				script.script->SetScene(currentScene.get());
+
+				uint32_t count;
+				auto* varArray = script.script->GetEditables(count);
+				for (uint32_t i = 0; i < count; i++) {
+					if (varArray[i].type == DataType::GameObject) {
+						auto gameObj = static_cast<GameObject*>(varArray[i].data);
+						BtnUUID id = gameObj->GetUUID();
+						*gameObj = *currentScene->GetgameObjects()[id];
+					}
+				}
+				script.script->OnAwake();
+			}
+		}
+	}
+
 	bool EditorInterface::OnPauseRuntime(OnPauseRuntimeEvent* e) {
 		if (runtimeState == RuntimeState::Playing) {
 			runtimeState = RuntimeState::Pause;
@@ -434,6 +438,7 @@ namespace BtnSqd {
 		btnPhysicObj.Reset();
 		currentScene = editorScene;
 		btnPhysicObj.ReInit();
+		ProcessScriptGameObjs();
 
 		selectedObject = GameObject();
 		Application::GetApp()->PushEvent(new OnSelectGameObjectEvent(selectedObject));

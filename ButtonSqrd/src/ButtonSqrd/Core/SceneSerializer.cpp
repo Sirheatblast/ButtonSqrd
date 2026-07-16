@@ -217,6 +217,8 @@ namespace BtnSqd {
 				out << YAML::Key << "Metallic" << YAML::Value << mat.metallic;
 				out << YAML::Key << "Reflectancce" << YAML::Value << mat.reflectance;
 				out << YAML::Key << "Roughness" << YAML::Value << mat.roughness;
+				out << YAML::Key << "UseTextureScale" << YAML::Value << mat.useTextureScale;
+				out << YAML::Key << "TextureScale" << YAML::Value << mat.textureScale;
 				out << YAML::EndMap;
 				meshCount++;
 			}
@@ -650,6 +652,8 @@ namespace BtnSqd {
 							mat.roughness = meshInfo["Roughness"].as<float>();
 							mat.reflectance = meshInfo["Reflectancce"].as<float>();
 							mat.metallic = meshInfo["Metallic"].as<float>();
+							mat.useTextureScale = meshInfo["UseTextureScale"].as<bool>();
+							mat.textureScale = meshInfo["TextureScale"].as<float>();
 						}
 					}
 				}

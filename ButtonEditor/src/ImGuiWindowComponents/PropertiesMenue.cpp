@@ -892,7 +892,7 @@ void BtnSqd::PropertiesMenue::BoneComp(GameObject& selectedObj) {
 
 	if (bone.useParentArmature) {
 		if (selectedObj.GetParent()) {
-			bone.armatureId = selectedObj.GetParent()->GetId();
+			bone.armatureId = selectedObj.GetParent()->GetUUID();
 		}
 	}
 	else {
@@ -904,7 +904,7 @@ void BtnSqd::PropertiesMenue::BoneComp(GameObject& selectedObj) {
 		if (ImGui::BeginDragDropTarget()) {
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GAMEOBJECT_INFO")) {
 				GameObjectPayload* pData = static_cast<GameObjectPayload*>(payload->Data);
-				bone.armatureId = pData->gameObject->GetId();
+				bone.armatureId = pData->gameObject->GetUUID();
 				bone.armatureName = pData->name;
 				bone.selectedBone = nullptr;
 			}

@@ -51,6 +51,7 @@ namespace BtnSqd {
 		bool OnSelectCamera(OnSetActiveCameraEvent* e);
 		bool OnChangeScene(OnChangeSceneEvent* e);
 		bool OnStartRuntime(OnStartRuntimeEvent* e);
+		void ProcessScriptGameObjs();
 		bool OnPauseRuntime(OnPauseRuntimeEvent* e);
 		bool OnEndRuntime(OnEndRuntimeEvent* e);
 
