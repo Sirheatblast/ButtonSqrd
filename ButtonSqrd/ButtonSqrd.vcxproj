@@ -190,6 +190,7 @@
     <ClInclude Include="src\ButtonSqrd\Gui\BtnWidget.h" />
     <ClInclude Include="src\ButtonSqrd\Gui\Widgets\BtnButton.h" />
     <ClInclude Include="src\ButtonSqrd\Gui\Widgets\BtnImage.h" />
+    <ClInclude Include="src\ButtonSqrd\Gui\Widgets\BtnSlider.h" />
     <ClInclude Include="src\ButtonSqrd\Gui\Widgets\BtnTextBox.h" />
     <ClInclude Include="src\ButtonSqrd\Physics\BtnPhysics.h" />
     <ClInclude Include="src\ButtonSqrd\Platform\OpenGL\OpenGLBuffers.h" />
@@ -247,6 +248,7 @@
     <ClCompile Include="src\ButtonSqrd\Gui\BtnWidget.cpp" />
     <ClCompile Include="src\ButtonSqrd\Gui\Widgets\BtnButton.cpp" />
     <ClCompile Include="src\ButtonSqrd\Gui\Widgets\BtnImage.cpp" />
+    <ClCompile Include="src\ButtonSqrd\Gui\Widgets\BtnSlider.cpp" />
     <ClCompile Include="src\ButtonSqrd\Gui\Widgets\BtnTextBox.cpp" />
     <ClCompile Include="src\ButtonSqrd\Physics\BtnPhysics.cpp" />
     <ClCompile Include="src\ButtonSqrd\Platform\OpenGL\OpenGLBuffers.cpp" />

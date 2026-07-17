@@ -9,7 +9,11 @@ enum DataType:int {
     Float,
     Double,
     GameObject,
-    SuperGameObject
+    SuperGameObject,
+    TextBox,
+    BtnImage,
+    Button,
+    Slider
 };
 
 struct EditableData {
