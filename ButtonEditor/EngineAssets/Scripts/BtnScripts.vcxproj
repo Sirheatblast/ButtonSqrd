@@ -105,6 +105,7 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Assets\Scripts\LightPlayerController.h" />
     <ClInclude Include="..\..\Assets\Scripts\PlayerController.h" />
     <ClInclude Include="..\..\Assets\Scripts\Projectile.h" />
     <ClInclude Include="..\..\Assets\Scripts\TestScript.h" />
@@ -113,6 +114,7 @@
     <ClInclude Include="include\ScriptRegistry.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Assets\Scripts\LightPlayerController.cpp" />
     <ClCompile Include="..\..\Assets\Scripts\PlayerController.cpp" />
     <ClCompile Include="..\..\Assets\Scripts\Projectile.cpp" />
     <ClCompile Include="..\..\Assets\Scripts\TestScript.cpp" />

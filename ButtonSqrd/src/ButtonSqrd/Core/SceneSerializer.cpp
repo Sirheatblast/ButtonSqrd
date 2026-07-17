@@ -165,6 +165,25 @@ namespace BtnSqd {
 		}
 		out << YAML::EndSeq;
 
+		SerializeTagComp(gameObject, out);
+		SerializeTransformComp(gameObject, out);
+		SerializeModelComp(gameObject, out);
+		SerializeLightComp(gameObject, out);
+		SerializeCameraComp(gameObject, out);
+		SerializePhysicsComp(gameObject, out);
+		SerializeColliderComp(gameObject, out);
+		SerializeScriptComp(gameObject, out);
+		SerializeArmatureComp(gameObject, out);
+		SerializeAnimatorComp(gameObject, out);
+		SerializeBoneComp(gameObject, out);
+		SerializeAudioListenerComp(gameObject, out);
+		SerializeAudioComp(gameObject, out);
+		SerializeParticleComp(gameObject, out);
+		SerializeWidgetCanvasComp(gameObject, out);
+		out << YAML::EndMap;
+	}
+
+	void SerializeTagComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out) {
 		if (gameObject.CheckObjectForComponent<TagComponenet>()) {
 			TagComponenet& tag = gameObject.GetComponent<TagComponenet>();
 			out << YAML::Key << "TagComponent";
@@ -174,6 +193,9 @@ namespace BtnSqd {
 
 			out << YAML::EndMap;
 		}
+	}
+
+	void SerializeTransformComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out) {
 		if (gameObject.CheckObjectForComponent<TransformComponent>()) {
 			TransformComponent& transform = gameObject.GetComponent<TransformComponent>();
 			out << YAML::Key << "TransformComponent";
@@ -193,11 +215,14 @@ namespace BtnSqd {
 
 			out << YAML::EndMap;
 		}
+	}
+
+	void SerializeModelComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out) {
 		if (gameObject.CheckObjectForComponent<ModelComponent>()) {
 			ModelComponent& model = gameObject.GetComponent<ModelComponent>();
 			out << YAML::Key << "ModelComponent";
 			out << YAML::BeginMap;
-			
+
 			out << YAML::Key << "directory" << YAML::Value << model.currentModel.GetDirectory();
 			out << YAML::Key << "base shader" << YAML::Value << model.currentModel.GetShader()->GetShaderName();
 
@@ -225,6 +250,9 @@ namespace BtnSqd {
 			out << YAML::EndSeq;
 			out << YAML::EndMap;
 		}
+	}
+
+	void SerializeLightComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out) {
 		if (gameObject.CheckObjectForComponent<LightComponent>()) {
 			LightComponent& light = gameObject.GetComponent<LightComponent>();
 			out << YAML::Key << "LightComponent";
@@ -239,6 +267,9 @@ namespace BtnSqd {
 
 			out << YAML::EndMap;
 		}
+	}
+
+	void SerializeCameraComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out) {
 		if (gameObject.CheckObjectForComponent<CameraComponent>()) {
 			CameraComponent& camera = gameObject.GetComponent<CameraComponent>();
 			out << YAML::Key << "CameraComponent";
@@ -254,6 +285,9 @@ namespace BtnSqd {
 
 			out << YAML::EndMap;
 		}
+	}
+
+	void SerializePhysicsComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out) {
 		if (gameObject.CheckObjectForComponent<PhysicsComponet>()) {
 			PhysicsComponet& physics = gameObject.GetComponent<PhysicsComponet>();
 
@@ -270,9 +304,12 @@ namespace BtnSqd {
 
 			out << YAML::EndMap;
 		}
+	}
+
+	void SerializeColliderComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out) {
 		if (gameObject.CheckObjectForComponent<ColliderComponent>()) {
 			ColliderComponent& collider = gameObject.GetComponent<ColliderComponent>();
-	
+
 			out << YAML::Key << "ColliderComponent";
 			out << YAML::BeginMap;
 
@@ -291,21 +328,24 @@ namespace BtnSqd {
 			out << YAML::Key << "colliderType" << YAML::Value << collider.colliderType;
 			out << YAML::EndMap;
 		}
+	}
+
+	void SerializeScriptComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out) {
 		if (gameObject.CheckObjectForComponent<ScriptComponent>()) {
 			ScriptComponent& scripts = gameObject.GetComponent<ScriptComponent>();
 			out << YAML::Key << "ScriptComponent";
 			out << YAML::BeginMap;
 
-			out <<YAML::Key<<"Scripts" <<YAML::Value<< YAML::BeginSeq;
-			for (auto& script:scripts.scripts) {
+			out << YAML::Key << "Scripts" << YAML::Value << YAML::BeginSeq;
+			for (auto& script : scripts.scripts) {
 				out << YAML::BeginMap;
-				out<<YAML::Key<<"name"<< YAML::Value << script.name;
-				out<<YAML::Key<<"isEnabled"<< YAML::Value << script.isEnabled;
+				out << YAML::Key << "name" << YAML::Value << script.name;
+				out << YAML::Key << "isEnabled" << YAML::Value << script.isEnabled;
 
-				uint32_t count=0;
+				uint32_t count = 0;
 				EditableData* scriptVars = script.script->GetEditables(count);
 				out << YAML::Key << "EditableVars" << YAML::Value << YAML::BeginSeq;
-				for (uint32_t i = 0; i < count;i++) {
+				for (uint32_t i = 0; i < count; i++) {
 					EditableData data = scriptVars[i];
 					out << YAML::BeginMap;
 					out << YAML::Key << "name" << YAML::Value << data.name;
@@ -313,13 +353,16 @@ namespace BtnSqd {
 					SerializeDataType(data, out);
 					out << YAML::EndMap;
 				}
-					out << YAML::EndSeq;
+				out << YAML::EndSeq;
 
 				out << YAML::EndMap;
 			}
 			out << YAML::EndSeq;
 			out << YAML::EndMap;
 		}
+	}
+
+	void SerializeArmatureComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out) {
 		if (gameObject.CheckObjectForComponent<ArmatureComponent>()) {
 			ArmatureComponent& arm = gameObject.GetComponent<ArmatureComponent>();
 			out << YAML::Key << "ArmatureComponent";
@@ -327,6 +370,9 @@ namespace BtnSqd {
 			out << YAML::Key << "armatureName" << YAML::Value << arm.armatureName;
 			out << YAML::EndMap;
 		}
+	}
+
+	void SerializeAnimatorComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out) {
 		if (gameObject.CheckObjectForComponent<AnimatorComponent>()) {
 			AnimatorComponent& anim = gameObject.GetComponent<AnimatorComponent>();
 			out << YAML::Key << "AnimatorComponent";
@@ -339,17 +385,17 @@ namespace BtnSqd {
 			out << YAML::EndSeq;
 
 			out << YAML::Key << "Animations" << YAML::Value << YAML::BeginSeq;
-			for (auto animation:anim.animations) {
+			for (auto animation : anim.animations) {
 				if (animation.has_value()) {
 					out << YAML::BeginMap;
 					out << YAML::Key << "name" << YAML::Value << animation.value().animation.GetName();
 					out << YAML::Key << "isDefault" << YAML::Value << animation.value().isDefault;
 					out << YAML::Key << "isLooping" << YAML::Value << animation.value().isLooping;
 					out << YAML::Key << "playbackSpeed" << YAML::Value << animation.value().playbackSpeed;
-					out<<YAML::Key<<"nodePos"<<YAML::Value << animation.value().nodePos;
+					out << YAML::Key << "nodePos" << YAML::Value << animation.value().nodePos;
 
-					out <<YAML::Key<<"connections"<<YAML::Value << YAML::BeginSeq;
-					for (auto [state,animTo] : animation.value().connections) {
+					out << YAML::Key << "connections" << YAML::Value << YAML::BeginSeq;
+					for (auto [state, animTo] : animation.value().connections) {
 						out << YAML::BeginMap;
 						out << YAML::Key << "state" << YAML::Value << state;
 						out << YAML::Key << "animTo" << YAML::Value << animTo.toAnim;
@@ -363,6 +409,9 @@ namespace BtnSqd {
 			out << YAML::EndSeq;
 			out << YAML::EndMap;
 		}
+	}
+
+	void SerializeBoneComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out) {
 		if (gameObject.CheckObjectForComponent<BoneComponent>()) {
 			BoneComponent& bone = gameObject.GetComponent<BoneComponent>();
 			out << YAML::Key << "BoneComponent";
@@ -381,12 +430,16 @@ namespace BtnSqd {
 			}
 			out << YAML::EndMap;
 		}
+	}
 
+	void SerializeAudioListenerComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out) {
 		if (gameObject.CheckObjectForComponent<AudioListenerComponent>()) {
 			AudioListenerComponent& listener = gameObject.GetComponent<AudioListenerComponent>();
-			out << YAML::Key << "AudioListenerComponent"<<YAML::BeginMap<<YAML::EndMap;
+			out << YAML::Key << "AudioListenerComponent" << YAML::BeginMap << YAML::EndMap;
 		}
+	}
 
+	void SerializeAudioComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out) {
 		if (gameObject.CheckObjectForComponent<AudioSourceComponent>()) {
 			AudioSourceComponent& aSource = gameObject.GetComponent<AudioSourceComponent>();
 			out << YAML::Key << "AudioSourceComponent";
@@ -396,9 +449,9 @@ namespace BtnSqd {
 
 			out << YAML::Key << "audioBuffers" << YAML::Value << YAML::BeginSeq;
 
-			for (const auto&[key,buffer]:aSource.audioBuffers) {
+			for (const auto& [key, buffer] : aSource.audioBuffers) {
 				out << YAML::BeginMap;
-				out <<YAML::Key<<"key"<< YAML::Value << key;
+				out << YAML::Key << "key" << YAML::Value << key;
 				out << YAML::Key << "isLooping" << YAML::Value << buffer.isLooping;
 				out << YAML::Key << "gain" << YAML::Value << buffer.gain;
 				out << YAML::Key << "pitch" << YAML::Value << buffer.pitch;
@@ -408,18 +461,26 @@ namespace BtnSqd {
 			out << YAML::EndSeq;
 			out << YAML::EndMap;
 		}
+	}
 
+	void SerializeWidgetCanvasComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out) {
+		if (gameObject.CheckObjectForComponent<WidgetCanvasComponent>()) {
+			WidgetCanvasComponent& wCanvas = gameObject.GetComponent<WidgetCanvasComponent>();
+		}
+	}
+
+	void SerializeParticleComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out) {
 		if (gameObject.CheckObjectForComponent<ParticleEmitterComponent>()) {
 			ParticleEmitterComponent& particEmitter = gameObject.GetComponent<ParticleEmitterComponent>();
 			out << YAML::Key << "ParticleEmitterComponent";
 			out << YAML::BeginMap;
-			out << YAML::Key << "maxParticles" <<YAML::Value<< particEmitter.maxParticles;
+			out << YAML::Key << "maxParticles" << YAML::Value << particEmitter.maxParticles;
 			out << YAML::Key << "selectedParticleID" << YAML::Value << particEmitter.selectedParticleID;
 			out << YAML::Key << "isRepeating" << particEmitter.isRepeating;
 			out << YAML::Key << "repeatMaxTime" << particEmitter.repeatMaxTime;
 
 			out << YAML::Key << "particles" << YAML::Value << YAML::BeginSeq;
-			for (const auto& particle:particEmitter.particles) {
+			for (const auto& particle : particEmitter.particles) {
 				out << YAML::BeginMap;
 				out << YAML::Key << "initialVelocity" << YAML::Value << particle.initialVelocity;
 				out << YAML::Key << "clearColor" << YAML::Value << particle.clearColor;
@@ -448,7 +509,7 @@ namespace BtnSqd {
 				out << YAML::Key << "useVelCurve" << YAML::Value << particle.useVelCurve;
 
 				out << YAML::Key << "fadeCurvePoints" << YAML::BeginSeq;
-				for (const glm::vec2 point:particle.fadeCurvePoints) {
+				for (const glm::vec2 point : particle.fadeCurvePoints) {
 					out << YAML::Value << point;
 				}
 				out << YAML::EndSeq;
@@ -488,7 +549,6 @@ namespace BtnSqd {
 			out << YAML::EndSeq;
 			out << YAML::EndMap;
 		}
-		out << YAML::EndMap;
 	}
 
 	void SerializeDataType(EditableData& data, YAML::Emitter& out) {
@@ -521,6 +581,18 @@ namespace BtnSqd {
 		case DataType::SuperGameObject: {
 			SuperGameObject* super = static_cast<SuperGameObject*>(data.data);
 			out << YAML::Key << "value" << YAML::Value << super->GetPath();
+		}
+		case DataType::TextBox: {
+			
+		}
+		case DataType::BtnImage: {
+
+		}
+		case DataType::Button: {
+
+		}
+		case DataType::Slider: {
+
 		}
 		}
 	}

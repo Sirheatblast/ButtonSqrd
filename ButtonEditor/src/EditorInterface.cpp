@@ -29,7 +29,7 @@ namespace BtnSqd {
 		RenderCommand::InitSkybox();
 
 		SceneSerializer sceneSave(currentScene.get());
-		sceneSave.Deserialize("./Assets/Scenes/ColliderTest.BtnScn");
+		sceneSave.Deserialize("./Assets/Scenes/WidgetTest.BtnScn");
 		btnPhysicObj.OnSceneLoad();
 		currentScene->SetPhysics(&btnPhysicObj);
 		editorScene = currentScene;

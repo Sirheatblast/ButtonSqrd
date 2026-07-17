@@ -26,4 +26,20 @@ namespace BtnSqd {
 		BtnScene* scene;
 	};
 	static void SerializeDataType(EditableData& data, YAML::Emitter& out);
+
+	static void SerializeWidgetCanvasComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out);
+	static void SerializeParticleComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out);
+	static void SerializeAudioComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out);
+	static void SerializeAudioListenerComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out);
+	static void SerializeBoneComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out);
+	static void SerializeAnimatorComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out);
+	static void SerializeArmatureComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out);
+	static void SerializeScriptComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out);
+	static void SerializeColliderComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out);
+	static void SerializePhysicsComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out);
+	static void SerializeCameraComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out);
+	static void SerializeLightComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out);
+	static void SerializeModelComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out);
+	static void SerializeTransformComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out);
+	static void SerializeTagComp(BtnSqd::GameObject& gameObject, YAML::Emitter& out);
 }

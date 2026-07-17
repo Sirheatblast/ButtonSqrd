@@ -12,6 +12,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Assets\Scripts\LightPlayerController.h">
+      <Filter>Assets\Scripts</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Assets\Scripts\PlayerController.h">
       <Filter>Assets\Scripts</Filter>
     </ClInclude>
@@ -32,6 +35,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Assets\Scripts\LightPlayerController.cpp">
+      <Filter>Assets\Scripts</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Assets\Scripts\PlayerController.cpp">
       <Filter>Assets\Scripts</Filter>
     </ClCompile>
