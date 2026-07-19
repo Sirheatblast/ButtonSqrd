@@ -1546,8 +1546,6 @@ void BtnSqd::PropertiesMenue::CreateCollider(BtnSqd::GameObject& selectedObj, Bt
 	}
 	if (selectedObj.CheckObjectForComponent<PhysicsComponet>()) {
 		PhysicsComponet& physicsComp = selectedObj.GetComponent<PhysicsComponet>();
-		if (physicsComp.rigidBody)
-			physicsComp.rigidBody->detachShape(*collider.pColliderShape);
 
 		btnPhysics.CreateCollider(selectedObj, collider);
 		btnPhysics.AddPhysicsObject(selectedObj);

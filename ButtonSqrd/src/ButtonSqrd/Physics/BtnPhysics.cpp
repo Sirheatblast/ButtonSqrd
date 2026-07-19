@@ -99,8 +99,9 @@ namespace BtnSqd {
 		ColliderComponent& collider = gameObject.GetComponent<ColliderComponent>();
 		
 		if (physComp.rigidBody) {
-			if(physComp.rigidBody->getScene() == pScene)
+			if (physComp.rigidBody->getScene() == pScene) {
 				pScene->removeActor(*physComp.rigidBody);
+			}
 		}
 		
 		if (!collider.pColliderShape) {
@@ -143,15 +144,17 @@ namespace BtnSqd {
 		}
 	}
 	void BtnPhysics::CreateCollider(GameObject& gameObject,ColliderComponent& collider) {
+
+		if (collider.pColliderShape) {
+			collider.pColliderShape->release(); //Crashing here
+		}
 		if (collider.dActor) {
 			collider.dActor->release();
 		}
 		if (collider.physicsMat) {
 			collider.physicsMat->release();
 		}
-		if (collider.pColliderShape) {
-			collider.pColliderShape->release();
-		}
+		
 		collider.physicsMat = physics->createMaterial(collider.staticFriction,collider.dynamicFriction,collider.resitution);
 		physx::PxVec3 halfScale = physx::PxVec3(collider.scale.x, collider.scale.y, collider.scale.z);
 		switch (collider.colliderType) {
@@ -203,24 +206,65 @@ namespace BtnSqd {
 		}
 	}
 	void BtnPhysics::Reset() {
+		if (!pScene) {
+			return;
+		}
+
+		for (auto [colliderRef] : currentScene->GetRegister().GetAllOfRef<ColliderComponent>()) {
+			auto& collider = colliderRef.get();
+			if (collider.pColliderShape) {
+				physx::PxRigidActor* oldActor = collider.pColliderShape->getActor();
+				if (oldActor) {
+					oldActor->detachShape(*collider.pColliderShape);
+				}
+				collider.pColliderShape->release();
+				collider.pColliderShape = nullptr;
+			}
+			if (collider.dActor) {
+				collider.dActor->release();
+				collider.dActor = nullptr;
+			}
+			if (collider.physicsMat) {
+				collider.physicsMat->release();
+				collider.physicsMat = nullptr;
+			}
+		}
+
+		for (auto [physicsCompRef] : currentScene->GetRegister().GetAllOfRef<PhysicsComponet>()) {
+			auto& physicsComp = physicsCompRef.get();
+			if (physicsComp.rigidBody) {
+				physx::PxU32 shapeCount = physicsComp.rigidBody->getNbShapes();
+				std::vector<physx::PxShape*> shapes(shapeCount);
+				physicsComp.rigidBody->getShapes(shapes.data(), shapeCount);
+				for (physx::PxShape* shape : shapes) {
+					physicsComp.rigidBody->detachShape(*shape);
+				}
+				physicsComp.rigidBody->release();
+				physicsComp.rigidBody = nullptr;
+			}
+		}
+
 		physx::PxU32 actorCount = pScene->getNbActors(physx::PxActorTypeFlag::eRIGID_DYNAMIC | physx::PxActorTypeFlag::eRIGID_STATIC);
 		std::vector<physx::PxActor*> actors(actorCount);
 		pScene->getActors(physx::PxActorTypeFlag::eRIGID_DYNAMIC | physx::PxActorTypeFlag::eRIGID_STATIC, actors.data(), actorCount);
 
 		for (physx::PxActor* actor : actors) {
 			pScene->removeActor(*actor);
+			actor->release();
 		}
 
 		pScene->release();
+		pScene = nullptr;
 		physicsGameObjects.clear();
 	}
+
+
 	void BtnPhysics::ReInit() {
-		for (auto& [physicsComp] : currentScene->GetRegister().GetAllOf<PhysicsComponet>()) {
-			physicsComp.rigidBody = nullptr;
-		}
 		pScene = physics->createScene(*sceneDesc);
-		for (auto [id,collider] : currentScene->GetRegister().GetAllOf<IDComponent,ColliderComponent>()) {
+
+		for (auto [id, collider] : currentScene->GetRegister().GetAllOf<IDComponent, ColliderComponent>()) {
 			GameObject current = *currentScene->GetgameObjects()[id.uuid];
+
 			CreateCollider(current, collider);
 
 			if (current.CheckObjectForComponent<PhysicsComponet>()) {

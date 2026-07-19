@@ -22,6 +22,7 @@
 # Your specific vendor/test folders
 .gitmodules
 ButtonEditor/Assets/
+ButtonEditor/Crashes/
 ButtonSqrd/ButtonEditor/EngineAssets/Scripts/.vs/
 
 ButtonSqrd/vendor/assimp/assimp/test/

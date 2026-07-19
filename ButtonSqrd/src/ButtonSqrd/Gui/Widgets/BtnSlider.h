@@ -11,11 +11,14 @@ namespace BtnSqd {
 	public:
 		Mesh& Draw(std::shared_ptr<Shader> shader) override;
 	private:
+		std::vector<Vertices> GenerateVerts();
+		void UpdateMesh();
+
 		float currentPercentange = 0.0f;
 		float minRange = 0.0f;
 		float maxRange = 1.0f;
 		SliderType sType=SliderType::Dot;
-
+		std::shared_ptr<Mesh>sliderMesh;
 		glm::vec2 lastDimensions;
 		BtnSmartRect rect;
 		

@@ -33,6 +33,19 @@ namespace BtnSqd {
 			gameReg = copyScene.gameReg;
 			for (auto& [id, gameObj] : copyScene.GetgameObjects()) {
 				if (!gameObj)continue;
+
+				for (auto [colliderRef] : gameReg.GetAllOfRef<ColliderComponent>()) {
+					auto& collider = colliderRef.get();
+					collider.pColliderShape = nullptr;
+					collider.dActor = nullptr;
+					collider.physicsMat = nullptr;
+				}
+
+				for (auto [physicsCompRef] : gameReg.GetAllOfRef<PhysicsComponet>()) {
+					auto& physicsComp = physicsCompRef.get();
+					physicsComp.rigidBody = nullptr;
+				}
+
 				if (gameObj->CheckObjectForComponent<CameraComponent>()) {
 					const auto& camera = gameObj->GetComponent<CameraComponent>();
 					if (camera.isMainCamera) {
@@ -339,6 +352,7 @@ namespace BtnSqd {
 	}
 	void BtnScene::SetPhysics(BtnPhysics* pInstance) {
 		physics = pInstance;
+		physics->Reset();
 		physics->ReInit();
 	}
 }

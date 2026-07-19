@@ -387,6 +387,7 @@ namespace BtnSqd {
 			}
 
 			currentScene = BtnScene::CopyToShared(editorScene);
+			btnPhysicObj.ReInit();
 			selectedObject = GameObject();
 			Application::GetApp()->PushEvent(new OnSelectGameObjectEvent(selectedObject));
 
@@ -435,15 +436,18 @@ namespace BtnSqd {
 	}
 
 	bool EditorInterface::OnEndRuntime(OnEndRuntimeEvent* e) {
-		btnPhysicObj.Reset();
-		currentScene = editorScene;
-		btnPhysicObj.ReInit();
-		ProcessScriptGameObjs();
+		if (runtimeState != RuntimeState::End) {
+			btnPhysicObj.Reset();
+			currentScene = editorScene;
+			btnPhysicObj.ReInit();
+			ProcessScriptGameObjs();
 
-		selectedObject = GameObject();
-		Application::GetApp()->PushEvent(new OnSelectGameObjectEvent(selectedObject));
-		runtimeState = RuntimeState::End;
-		isCompiled = false;
+			selectedObject = GameObject();
+			Application::GetApp()->PushEvent(new OnSelectGameObjectEvent(selectedObject));
+			runtimeState = RuntimeState::End;
+			isCompiled = false;
+		}
+		
 		return false;
 	}
 
