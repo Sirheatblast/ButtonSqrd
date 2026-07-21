@@ -214,7 +214,7 @@ void BtnSqd::PropertiesMenue::ShowVariableData(EditableData& data) {
 
 					std::string currentName = pData->name;
 					currentName.resize(currentName.size() - 6);
-					for (auto& [gameObj, tag] : currentScene->GetRegister().GetAllOf<IDComponent,TagComponenet>()) {
+					for (auto& [gameObj, tag] : currentScene->GetRegister().GetAllOf<IDComponent, TagComponenet>()) {
 						if (tag.tag == currentName) {
 							temp = *currentScene->GetgameObjects()[gameObj.uuid];
 							break;
@@ -346,7 +346,7 @@ void BtnSqd::PropertiesMenue::ModelComp(BtnSqd::GameObject& selectedObj) {
 		if (ImGui::BeginDragDropTarget()) {
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_INFO")) {
 				AssetPayloadType* pData = static_cast<AssetPayloadType*>(payload->Data);
-				mesh->SetTexture(ResourceManager::GetLoadedTextures()[pData->path],TextureSlot::Normal);
+				mesh->SetTexture(ResourceManager::GetLoadedTextures()[pData->path], TextureSlot::Normal);
 			}
 			ImGui::EndDragDropTarget();
 		}
@@ -385,7 +385,7 @@ void BtnSqd::PropertiesMenue::ModelComp(BtnSqd::GameObject& selectedObj) {
 		tag = "##TextureScale";
 		tag += std::to_string(i);
 		ImGui::DragFloat((tag + "_DragTextureScale").c_str(), &mesh->GetMaterial()->textureScale, 0.1f, 0.01f, FLT_MAX);
-		
+
 
 		ImGui::Unindent(20.0f);
 		i++;
@@ -620,7 +620,7 @@ void BtnSqd::PropertiesMenue::PhysicsComp(GameObject& selectedObj) {
 	if (ImGui::Checkbox("##LockX", &physicsComp.lockX)) {
 		btnPhysics.AddPhysicsObject(selectedObj);
 	}
-	ImGui::EndGroup();	
+	ImGui::EndGroup();
 	ImGui::SameLine();
 	ImGui::BeginGroup();
 	ImGui::Text(" Y ");
@@ -700,8 +700,20 @@ void BtnSqd::PropertiesMenue::ColliderComp(GameObject& selectedObj) {
 	ImGui::Text("Colider Type: ");
 	ImGui::SameLine();
 	if (ImGui::Combo("##ColiderType", &choice, items, IM_ARRAYSIZE(items))) {
-		collider.colliderType = ColliderType(choice);
-		CreateCollider(selectedObj, collider);
+		if (ColliderType(choice) == ColliderType::CustomCollider
+			&& selectedObj.CheckObjectForComponent<ModelComponent>()
+			&& selectedObj.CheckObjectForComponent<PhysicsComponet>()
+			&& selectedObj.GetComponent<PhysicsComponet>().isKinematic) {
+			collider.colliderType = ColliderType(choice);
+			CreateCollider(selectedObj, collider);
+		}
+		else if (ColliderType(choice) != ColliderType::CustomCollider) {
+			collider.colliderType = ColliderType(choice);
+			CreateCollider(selectedObj, collider);
+		}
+		else {
+			BTNLOG_ERROR("Cannot assign a custom collider to a GameObject that doesn't have a mesh or isn't kinematic")
+		}
 	}
 	glm::vec3 transformScale = selectedObj.GetComponent<TransformComponent>().transform.scale;
 	switch (collider.colliderType) {
@@ -1195,7 +1207,7 @@ void BtnSqd::PropertiesMenue::WidgetCanvasComp(GameObject& selectedObj) {
 		ImGui::Text("Enabled: ");
 		ImGui::SameLine();
 		bool isWidgetEnabled = wCanvas.selectedWidget->GetIsEnabled();
-		if (ImGui::Checkbox("##WidgetIsEnabled",&isWidgetEnabled)) {
+		if (ImGui::Checkbox("##WidgetIsEnabled", &isWidgetEnabled)) {
 			wCanvas.selectedWidget->SetIsEnabled(isWidgetEnabled);
 		}
 
@@ -1209,7 +1221,7 @@ void BtnSqd::PropertiesMenue::WidgetCanvasComp(GameObject& selectedObj) {
 		ImGui::Text("Level: ");
 		ImGui::SameLine();
 		int cLevel = wCanvas.selectedWidget->GetLevel();
-		if (ImGui::DragInt("##WidgetDragWidgetLevel", &cLevel,1,0,10)) {
+		if (ImGui::DragInt("##WidgetDragWidgetLevel", &cLevel, 1, 0, 10)) {
 			wCanvas.selectedWidget->SetLevel(cLevel);
 		}
 
@@ -1222,7 +1234,7 @@ void BtnSqd::PropertiesMenue::WidgetCanvasComp(GameObject& selectedObj) {
 
 		ImGui::Text("Position: ");
 		ImGui::SameLine();
-		if (wCanvas.selectedWidget->GetUseScreenDim()&&!wCanvas.selectedWidget->HasParent()) {
+		if (wCanvas.selectedWidget->GetUseScreenDim() && !wCanvas.selectedWidget->HasParent()) {
 			float max = 100.0f;
 			glm::vec2 windSize;
 			ImGui::Begin("Game Viewport");
@@ -1751,7 +1763,7 @@ void BtnSqd::PropertiesMenue::DrawBtnImageData(std::shared_ptr<BtnWidget> widget
 	bool shouldSlice = image->GetUseNineSlice();
 	ImGui::Text("Nine-Slice: ");
 	ImGui::SameLine();
-	if (ImGui::Checkbox("##WidgetImageSetUseNineSliceCheckbox",&shouldSlice)) {
+	if (ImGui::Checkbox("##WidgetImageSetUseNineSliceCheckbox", &shouldSlice)) {
 		image->SetUseNineSlice(shouldSlice);
 	}
 
@@ -1762,8 +1774,8 @@ void BtnSqd::PropertiesMenue::DrawBtnImageData(std::shared_ptr<BtnWidget> widget
 		if (ImGui::DragFloat("##WidgetImageTextureScaleDragFloat", &texScale, 0.1f, 0.0f, FLT_MAX)) {
 			image->SetTextureScale(texScale);
 		}
-	}	
-	
+	}
+
 	ImGui::EndChild();
 }
 
@@ -1825,7 +1837,7 @@ void BtnSqd::PropertiesMenue::DrawBtnButtonData(std::shared_ptr<BtnWidget> widge
 			ImGui::EndDragDropTarget();
 		}
 		ImGui::Unindent(20.0f);
-	}	
+	}
 
 	ImGui::Text("Click Texture:");
 	ImGui::SameLine();
@@ -1861,7 +1873,7 @@ void BtnSqd::PropertiesMenue::DrawBtnButtonData(std::shared_ptr<BtnWidget> widge
 	ImGui::Text("Use Hover Tint: ");
 	ImGui::SameLine();
 	bool useHoverColor = button->GetUseHoverColor();
-	if (ImGui::Checkbox("##UseHoverColorButton",&useHoverColor)) {
+	if (ImGui::Checkbox("##UseHoverColorButton", &useHoverColor)) {
 		button->SetUseHoverColor(useHoverColor);
 	}
 
