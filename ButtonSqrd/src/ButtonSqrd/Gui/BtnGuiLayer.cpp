@@ -2,6 +2,7 @@
 #include"ButtonSqrd.h"
 #include"ButtonSqrd/Gui/Widgets/BtnTextBox.h"
 #include"ButtonSqrd/Gui/Widgets/BtnButton.h"
+#include"ButtonSqrd/Gui/Widgets/BtnSlider.h"
 
 namespace BtnSqd {
 	BtnGuiLayer::BtnGuiLayer(std::shared_ptr<BtnScene>& currentScene, glm::vec2 viewPortSize, std::string name) :currentScene(currentScene), viewPortSize(viewPortSize), name(name) {
@@ -109,6 +110,8 @@ namespace BtnSqd {
 		case BtnWidgetType::Button:
 			RenderButton(widget);
 			break;
+		case BtnWidgetType::Slider:
+			RenderSlider(widget);
 		default:
 			RenderNormal(widget);
 			break;
@@ -170,6 +173,38 @@ namespace BtnSqd {
 		widgetShader->SetBool("mixTex", shouldMix);
 		RenderCommand::DrawMesh(buttonMesh);
 
+		widgetShader->Detatch();
+	}
+
+	void BtnGuiLayer::RenderSlider(BtnWidget* widget) {
+		widgetShader->Use();
+		widgetShader->SetMat4("VP", camera.projectionMatrix * camera.viewMatrix);
+
+		float level = widget->GetLevel() / 10.0f;
+
+		if (widget->HasParent()) {
+			level += widget->GetParent()->GetLevel() + 0.01f;
+		}
+
+		glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(widget->GetPos(), level)); //fix this so that it could render widgets not from fixed world positions
+		auto dimensions = widget->GetDimensions();
+
+		BtnSlider* slider = static_cast<BtnSlider*>(widget);
+
+		widgetShader->SetMat4("model", modelMat);
+		widgetShader->SetVec4("clearColor", slider->GetColor());
+		widgetShader->SetVec2("widgetSize", slider->GetDimensions());
+		widgetShader->SetBool("useAlbedoTexture", slider->GetHasTexture());
+		widgetShader->SetBool("mixTex", slider->GetMix());
+		RenderCommand::DrawMesh(slider->Draw(widgetShader));
+
+		modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(widget->GetPos(), level+0.01f)); //fix this so that it could render widgets not from fixed world positions
+		widgetShader->SetMat4("model", modelMat);
+		widgetShader->SetVec4("clearColor", slider->GetSliderColor());
+		widgetShader->SetVec2("widgetSize", slider->GetSliderDimensions());
+		widgetShader->SetBool("useAlbedoTexture", slider->GetHasSliderTexture());
+
+		RenderCommand::DrawMesh(slider->DrawSlider(widgetShader));
 		widgetShader->Detatch();
 	}
 

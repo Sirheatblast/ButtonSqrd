@@ -10,6 +10,9 @@ BtnSqd::PropertiesMenue::PropertiesMenue(std::shared_ptr<BtnScene>& scene, BtnPh
 	widgetTypeDrawCallbacks[BtnWidgetType::Button] = [this](std::shared_ptr<BtnWidget> widget) {
 		this->DrawBtnButtonData(widget);
 		};
+	widgetTypeDrawCallbacks[BtnWidgetType::Slider] = [this](std::shared_ptr<BtnWidget> widget) {
+		this->DrawBtnSliderData(widget);
+		};
 }
 
 void BtnSqd::PropertiesMenue::OnUpdate(GameObject& selectedObj) {
@@ -1308,7 +1311,7 @@ void BtnSqd::PropertiesMenue::CreateWidgetPopup(WidgetCanvasComponent& wCanvas) 
 			wCanvas.Widgets.push_back(std::make_shared<BtnImage>());
 		}
 		if (ImGui::Selectable("Slider")) {
-
+			wCanvas.Widgets.push_back(std::make_shared<BtnSlider>());
 		}
 		ImGui::EndPopup();
 	}
@@ -1951,6 +1954,43 @@ void BtnSqd::PropertiesMenue::DrawBtnButtonData(std::shared_ptr<BtnWidget> widge
 		}
 	}
 
+	ImGui::EndChild();
+}
+
+void BtnSqd::PropertiesMenue::DrawBtnSliderData(std::shared_ptr<BtnWidget> widget) {
+	std::shared_ptr<BtnSlider> slider = std::dynamic_pointer_cast<BtnSlider>(widget);
+	ImGui::BeginChild("DisplayWidgetTypePropertiesWindow", ImVec2(0.0f, 0.0f),
+					  ImGuiChildFlags_AlwaysAutoResize | ImGuiChildFlags_AutoResizeY | ImGuiChildFlags_Border);
+	ImGui::Text("Slider:");
+
+	ImGui::Text("Value: ");
+	ImGui::SameLine();
+	float sliderValue = slider->GetSliderPercentage();
+	if (ImGui::SliderFloat("##BtnSliderSliderValue", &sliderValue, 0.0f, 1.0f)) {
+		slider->SetSliderPercentage(sliderValue);
+	}
+
+	ImGui::Text("Slider Head: ");
+	ImGui::Text("Size: ");
+	ImGui::SameLine();
+	glm::vec2 sliderDim = slider->GetSliderDimensions();
+	if (ImGui::DragFloat2("##BtnSliderSetSliderDimensions",glm::value_ptr<float>(sliderDim),0.1f,0.0f,FLT_MAX)) {
+		slider->SetSliderDimensiosn(sliderDim);
+	}
+	ImGui::Text("Slider Type: ");
+	ImGui::SameLine();
+
+	std::string currentSliderType = (slider->GetSliderType()== SliderType::Dot) ?"Dot" :"Bar";
+
+	if (ImGui::BeginCombo("##BtnSliderSetSliderTypeCombo",currentSliderType.c_str())) {
+		if (ImGui::Selectable("Dot##BtnSliderSetDotComboEntry")) {
+			slider->SetSliderType(SliderType::Dot);
+		}
+		if (ImGui::Selectable("Bar##BtnSliderSetBarComboEntry")) {
+			slider->SetSliderType(SliderType::Bar);
+		}
+		ImGui::EndCombo();
+	}
 	ImGui::EndChild();
 }
 
