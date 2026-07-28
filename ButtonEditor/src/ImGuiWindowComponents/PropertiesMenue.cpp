@@ -1977,6 +1977,14 @@ void BtnSqd::PropertiesMenue::DrawBtnSliderData(std::shared_ptr<BtnWidget> widge
 	if (ImGui::DragFloat2("##BtnSliderSetSliderDimensions",glm::value_ptr<float>(sliderDim),0.1f,0.0f,FLT_MAX)) {
 		slider->SetSliderDimensiosn(sliderDim);
 	}
+
+	ImGui::Text("Padding: ");
+	ImGui::SameLine();
+	float sliderPadding = slider->GetPadding();
+	if (ImGui::DragFloat("##BtnSliderWidgetPaddingDragFloat", &sliderPadding, 0.5f, 0.0f, FLT_MAX)) {
+		slider->SetPadding(sliderPadding);
+	}
+
 	ImGui::Text("Slider Type: ");
 	ImGui::SameLine();
 

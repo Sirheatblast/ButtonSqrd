@@ -26,6 +26,12 @@ namespace BtnSqd {
 			sliderDimensions = sliderDim;
 		}
 
+		const float GetPadding() { return padding; }
+		void SetPadding(float nPadding){
+			shouldRemake = true;
+			padding = nPadding;
+		}
+
 		const glm::vec4 GetSliderColor() { return sliderColor; }
 		void SetSliderColor(glm::vec4 nColor) { sliderColor = nColor; }
 
@@ -65,6 +71,7 @@ namespace BtnSqd {
 		float sliderPercentage;
 		float minRange;
 		float maxRange;
+		float padding;
 
 		SliderType sType;
 		SliderDirection sDir;

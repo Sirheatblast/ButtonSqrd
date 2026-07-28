@@ -16,6 +16,7 @@ namespace BtnSqd {
 		isInteractive = true;
 		shouldRemake = true;
 
+		padding = 0.0f;
 		sliderPercentage = 0.0f;
 		hasSliderTexture = false;
 		maxRange = 1.0f;
@@ -96,10 +97,10 @@ namespace BtnSqd {
 		verts.reserve(4);
 
 		float sliderFullWidth = (width * sliderDimensions.x);
-		float sliderMax = width;
-		float sliderBackMax = sliderMax - sliderFullWidth;
+		float sliderMax = width-padding;
+		float sliderBackMax = (sliderMax - sliderFullWidth);
 
-		float sliderBack = (sType==SliderType::Dot) ? 0.0f + (width * sliderPercentage):0.0f;
+		float sliderBack = (sType==SliderType::Dot) ? padding + (width * sliderPercentage):padding;
 		float sliderWidth = (sType == SliderType::Dot) ? sliderBack + sliderFullWidth: (width * sliderPercentage);
 		float sliderHight =height* sliderDimensions.y;
 		float sliderTop = height - (height * sliderDimensions.y);
