@@ -26,6 +26,12 @@ namespace BtnSqd {
 			sliderDimensions = sliderDim;
 		}
 
+		const SliderDirection GetDirection(){return sDir;}
+		void SetSliderDirection(SliderDirection dir) {
+			shouldRemake = true;
+			sDir = dir;
+		}
+
 		const float GetPadding() { return padding; }
 		void SetPadding(float nPadding){
 			shouldRemake = true;

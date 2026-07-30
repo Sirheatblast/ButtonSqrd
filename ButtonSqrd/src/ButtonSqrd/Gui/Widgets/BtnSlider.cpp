@@ -96,17 +96,37 @@ namespace BtnSqd {
 		std::vector<Vertices> verts;
 		verts.reserve(4);
 
-		float sliderFullWidth = (width * sliderDimensions.x);
-		float sliderMax = width-padding;
-		float sliderBackMax = (sliderMax - sliderFullWidth);
+		float sliderBack=0.0f;
+		float sliderWidth=0.0f;
+		float sliderHight=0.0f;
+		float sliderTop=0.0f;
 
-		float sliderBack = (sType==SliderType::Dot) ? padding + (width * sliderPercentage):padding;
-		float sliderWidth = (sType == SliderType::Dot) ? sliderBack + sliderFullWidth: (width * sliderPercentage);
-		float sliderHight =height* sliderDimensions.y;
-		float sliderTop = height - (height * sliderDimensions.y);
+		if (sDir == SliderDirection::XAxis) {
+			float sliderFullArea = (width * sliderDimensions.x);
+			float sliderMax = width - padding;
+			float sliderBackMax = (sliderMax - sliderFullArea);
 
-		sliderWidth = glm::clamp(sliderWidth, 0.0f, sliderMax);
-		sliderBack = glm::clamp(sliderBack, 0.0f, sliderBackMax);
+			sliderBack = (sType == SliderType::Dot) ? padding + (width * sliderPercentage) : padding;
+			sliderWidth = (sType == SliderType::Dot) ? sliderBack + sliderFullArea : (width * sliderPercentage);
+			sliderHight = height * sliderDimensions.y;
+			sliderTop = height - (height * sliderDimensions.y);
+
+			sliderWidth = glm::clamp(sliderWidth, 0.0f, sliderMax);
+			sliderBack = glm::clamp(sliderBack, 0.0f, sliderBackMax);
+		}
+		else {
+			float sliderFullArea = height * sliderDimensions.x;
+			float sliderMax = height - padding;
+			float sliderTopMax = sliderMax - sliderFullArea;
+			
+			sliderTop = (sType == SliderType::Dot) ? padding + (height * sliderPercentage) : padding;
+			sliderHight = (sType == SliderType::Dot) ? sliderTop + sliderFullArea : (height * sliderPercentage);
+			sliderWidth = width * sliderDimensions.y;
+			sliderBack = width - (width * sliderDimensions.y);
+
+			sliderHight = glm::clamp(sliderHight, 0.0f, sliderMax);
+			sliderTop = glm::clamp(sliderTop, 0.0f, sliderTopMax);
+		}	
 
 		verts.push_back({ glm::vec3(sliderBack,   sliderTop,    0.0f), glm::vec2(0.0f, 0.0f) });
 		verts.push_back({ glm::vec3(sliderWidth,  sliderTop,    0.0f), glm::vec2(1.0f, 0.0f) });

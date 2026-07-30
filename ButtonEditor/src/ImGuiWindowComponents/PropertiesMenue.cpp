@@ -1985,6 +1985,19 @@ void BtnSqd::PropertiesMenue::DrawBtnSliderData(std::shared_ptr<BtnWidget> widge
 		slider->SetPadding(sliderPadding);
 	}
 
+	ImGui::Text("Slider Direction: ");
+	ImGui::SameLine();
+	std::string sDir = (slider->GetDirection() == SliderDirection::XAxis) ? "X-Axis" : "Y-Axis";
+	if (ImGui::BeginCombo("##BtnSliderSetDirCombo",sDir.c_str())) {
+		if (ImGui::Selectable("X-Axis##X-AxisBtnSliderDirComboEntry")) {
+			slider->SetSliderDirection(SliderDirection::XAxis);
+		}
+		if (ImGui::Selectable("Y-Axis##Y-AxisBtnSliderDirComboEntry")) {
+			slider->SetSliderDirection(SliderDirection::YAxis);
+		}
+		ImGui::EndCombo();
+	}
+
 	ImGui::Text("Slider Type: ");
 	ImGui::SameLine();
 
