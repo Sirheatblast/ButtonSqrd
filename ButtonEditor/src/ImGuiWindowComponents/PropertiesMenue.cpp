@@ -1970,12 +1970,31 @@ void BtnSqd::PropertiesMenue::DrawBtnSliderData(std::shared_ptr<BtnWidget> widge
 		slider->SetSliderPercentage(sliderValue);
 	}
 
+	ImGui::Separator();
 	ImGui::Text("Slider Head: ");
-	ImGui::Text("Size: ");
+
+	ImGui::Text("Resize With body: ");
 	ImGui::SameLine();
-	glm::vec2 sliderDim = slider->GetSliderDimensions();
-	if (ImGui::DragFloat2("##BtnSliderSetSliderDimensions",glm::value_ptr<float>(sliderDim),0.1f,0.0f,FLT_MAX)) {
-		slider->SetSliderDimensiosn(sliderDim);
+	bool sResize = slider->GetResizeWithBody();
+	if (ImGui::Checkbox("##BtnSliderWidgetShouldResizeCheckbox",&sResize)) {
+		slider->SetResizeWithBody(sResize);
+	}
+
+	if (slider->GetResizeWithBody()) {
+		ImGui::Text("Dimensions: ");
+		ImGui::SameLine();
+		glm::vec2 sliderDim = slider->GetSliderDimensions();
+		if (ImGui::DragFloat2("##BtnSliderSetSliderDimensions", glm::value_ptr<float>(sliderDim), 0.1f, 0.0f, FLT_MAX)) {
+			slider->SetSliderDimension(sliderDim);
+		}
+	}
+	else {
+		ImGui::Text("Size: ");
+		ImGui::SameLine();
+		glm::vec2 sliderSize = slider->GetSliderSize();
+		if (ImGui::DragFloat2("##BtnSliderSetSliderSize", glm::value_ptr<float>(sliderSize), 0.1f, 0.0f, FLT_MAX)) {
+			slider->SetSliderSize(sliderSize);
+		}
 	}
 
 	ImGui::Text("Padding: ");
@@ -2012,6 +2031,10 @@ void BtnSqd::PropertiesMenue::DrawBtnSliderData(std::shared_ptr<BtnWidget> widge
 		}
 		ImGui::EndCombo();
 	}
+
+	ImGui::Separator();
+	ImGui::Text("Body:");
+
 	ImGui::EndChild();
 }
 

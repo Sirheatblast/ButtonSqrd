@@ -20,10 +20,19 @@ namespace BtnSqd {
 
 		Mesh& Draw(std::shared_ptr<Shader> shader) override;
 		Mesh& DrawSlider(std::shared_ptr<Shader>shader);
+		glm::vec2 GetSliderSize() {
+			return sliderSize;
+		}
+		void SetSliderSize(glm::vec2 sSize) {
+			shouldRemake = true;
+			sliderSize = sSize;
+		}
+
 		glm::vec2 GetSliderDimensions();
-		void SetSliderDimensiosn(glm::vec2 sliderDim) {
+		void SetSliderDimension(glm::vec2 sliderDim) {
 			shouldRemake = true;
 			sliderDimensions = sliderDim;
+			SetSliderSize(glm::vec2(width*sliderDim.x,height*sliderDim.y));
 		}
 
 		const SliderDirection GetDirection(){return sDir;}
@@ -36,6 +45,15 @@ namespace BtnSqd {
 		void SetPadding(float nPadding){
 			shouldRemake = true;
 			padding = nPadding;
+		}
+
+		bool GetResizeWithBody() {
+			return resizeWithBody;
+		}
+
+		void SetResizeWithBody(bool shouldResize) {
+			SetSliderDimension(sliderDimensions);
+			resizeWithBody = shouldResize;
 		}
 
 		const glm::vec4 GetSliderColor() { return sliderColor; }
@@ -69,9 +87,11 @@ namespace BtnSqd {
 		bool hasSliderTexture;
 		bool mixSlider;
 		bool shouldRemake;
+		bool resizeWithBody;
 
 		glm::vec4 sliderColor;
 		glm::vec2 sliderDimensions;
+		glm::vec2 sliderSize;
 		glm::vec2 lastDimensions;
 
 		float sliderPercentage;

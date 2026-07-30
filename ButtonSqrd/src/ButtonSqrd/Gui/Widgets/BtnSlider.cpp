@@ -15,6 +15,7 @@ namespace BtnSqd {
 		isSliderHover = false;
 		isInteractive = true;
 		shouldRemake = true;
+		resizeWithBody = false;
 
 		padding = 0.0f;
 		sliderPercentage = 0.0f;
@@ -24,6 +25,7 @@ namespace BtnSqd {
 		mixSlider = false;
 		sliderColor = glm::vec4(0.9f, 0.9f, 0.9f, 1.0f);
 		sliderDimensions = glm::vec2(0.1f, 1.0f);
+		sliderSize = glm::vec2(20.0f,20.0f);
 		sType = SliderType::Dot;
 		sDir = SliderDirection::XAxis;
 	}
@@ -101,32 +103,53 @@ namespace BtnSqd {
 		float sliderHight=0.0f;
 		float sliderTop=0.0f;
 
+		float realWidth = (resizeWithBody) ? width*sliderDimensions.x: sliderSize.x;
+		float realHeight = (resizeWithBody) ? height*sliderDimensions.y: sliderSize.y;
+
 		if (sDir == SliderDirection::XAxis) {
-			float sliderFullArea = (width * sliderDimensions.x);
+			float sliderFullArea = realWidth;
 			float sliderMax = width - padding;
 			float sliderBackMax = (sliderMax - sliderFullArea);
+			float sliderPos = (width - padding) * sliderPercentage;
 
-			sliderBack = (sType == SliderType::Dot) ? padding + (width * sliderPercentage) : padding;
-			sliderWidth = (sType == SliderType::Dot) ? sliderBack + sliderFullArea : (width * sliderPercentage);
-			sliderHight = height * sliderDimensions.y;
-			sliderTop = height - (height * sliderDimensions.y);
+			if (sType == SliderType::Dot) {
+				sliderBack = sliderPos - realWidth / 2.0f;
+				sliderWidth = sliderPos + realWidth / 2.0f;
+				sliderBack = glm::clamp(sliderBack, padding, sliderBackMax);
+				sliderWidth = glm::clamp(sliderWidth, realWidth + padding, sliderMax);
+			}
+			else {
+				sliderBack = padding;
+				sliderWidth = glm::clamp(sliderPos, padding, sliderMax);
+			}
 
-			sliderWidth = glm::clamp(sliderWidth, 0.0f, sliderMax);
-			sliderBack = glm::clamp(sliderBack, 0.0f, sliderBackMax);
+			sliderHight = height / 2.0f + (realHeight*0.5f);
+			sliderTop = height/2.0f - (realHeight * 0.5f);			
 		}
 		else {
-			float sliderFullArea = height * sliderDimensions.x;
+			float sliderFullArea = realHeight;
 			float sliderMax = height - padding;
-			float sliderTopMax = sliderMax - sliderFullArea;
-			
-			sliderTop = (sType == SliderType::Dot) ? padding + (height * sliderPercentage) : padding;
-			sliderHight = (sType == SliderType::Dot) ? sliderTop + sliderFullArea : (height * sliderPercentage);
-			sliderWidth = width * sliderDimensions.y;
-			sliderBack = width - (width * sliderDimensions.y);
+			float sliderTopMax = sliderMax - sliderFullArea;			
+			float sliderPos = (height - padding) * sliderPercentage;
+
+			if (sType == SliderType::Dot) {
+				sliderTop = sliderPos - realHeight / 2.0f;
+				sliderHight = sliderPos + realHeight / 2.0f;
+
+				sliderTop = glm::clamp(sliderTop, padding, sliderTopMax);
+				sliderHight = glm::clamp(sliderHight, realHeight + padding, sliderMax);
+			}
+			else {
+				sliderTop = padding;
+				sliderHight = glm::clamp(sliderPos, padding, sliderMax);
+			}
+
+			sliderWidth = width / 2.0f + (realWidth*0.5f);
+			sliderBack = width / 2.0f - (realWidth * 0.5f);
 
 			sliderHight = glm::clamp(sliderHight, 0.0f, sliderMax);
 			sliderTop = glm::clamp(sliderTop, 0.0f, sliderTopMax);
-		}	
+		}
 
 		verts.push_back({ glm::vec3(sliderBack,   sliderTop,    0.0f), glm::vec2(0.0f, 0.0f) });
 		verts.push_back({ glm::vec3(sliderWidth,  sliderTop,    0.0f), glm::vec2(1.0f, 0.0f) });
