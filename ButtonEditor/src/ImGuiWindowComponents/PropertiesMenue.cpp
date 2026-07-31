@@ -2003,6 +2003,18 @@ void BtnSqd::PropertiesMenue::DrawBtnSliderData(std::shared_ptr<BtnWidget> widge
 	ImGui::Separator();
 	ImGui::Text("Slider Head: ");
 
+	ImGui::Text("Color: ");
+	ImGui::SameLine();
+	glm::vec4 sliderHeadColor = slider->GetSliderColor();
+	if (ImGui::ColorButton("##WidgetImageClearColor", ImVec4(sliderHeadColor.x, sliderHeadColor.y, sliderHeadColor.z, 1.0f))) {
+		showSliderHeadColorPicker = !showSliderHeadColorPicker;
+	}
+
+	if (showSliderHeadColorPicker) {
+		ShowColorPicker(sliderHeadColor, "##SliderHeadClearColorPicker");
+		slider->SetSliderColor(sliderHeadColor);
+	}
+
 	ImGui::Text("Resize With body: ");
 	ImGui::SameLine();
 	bool sResize = slider->GetResizeWithBody();
@@ -2080,6 +2092,18 @@ void BtnSqd::PropertiesMenue::DrawBtnSliderData(std::shared_ptr<BtnWidget> widge
 
 	ImGui::Separator();
 	ImGui::Text("Body:");
+
+	ImGui::Text("Color: ");
+	ImGui::SameLine();
+	glm::vec4 sliderColor = slider->GetColor();
+	if (ImGui::ColorButton("##SliderBodyClearColor", ImVec4(sliderColor.x, sliderColor.y, sliderColor.z, 1.0f))) {
+		showSliderBodyColorPicker = !showSliderBodyColorPicker;
+	}
+
+	if (showSliderBodyColorPicker) {
+		ShowColorPicker(sliderColor, "##SliderBodyClearColorPicker");
+		slider->SetColor(sliderColor);
+	}
 
 	ImGui::EndChild();
 }
