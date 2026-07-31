@@ -16,12 +16,15 @@ namespace BtnSqd {
 		isInteractive = true;
 		shouldRemake = true;
 		resizeWithBody = false;
+		usesSteps = false;
 
 		padding = 0.0f;
 		sliderPercentage = 0.0f;
 		hasSliderTexture = false;
 		maxRange = 1.0f;
 		minRange = 0.0f;
+		numSteps = 2;
+		stepSize = 0.5f;
 		mixSlider = false;
 		sliderColor = glm::vec4(0.9f, 0.9f, 0.9f, 1.0f);
 		sliderDimensions = glm::vec2(0.1f, 1.0f);
@@ -168,5 +171,15 @@ namespace BtnSqd {
 
 		std::vector<Vertices> sVerts = GenerateSliderVerts();
 		sliderMesh.reset(new Mesh(sVerts, indices, Material()));
+	}
+	void BtnSlider::SetSliderPercentage(float percent) {
+		float nPercentage = percent;
+		if (usesSteps) {
+			float steps = static_cast<float>(numSteps - 1);
+			nPercentage = std::roundf(percent * steps) / steps;
+		}
+
+		shouldRemake = true;
+		sliderPercentage = nPercentage;
 	}
 }

@@ -1976,7 +1976,7 @@ void BtnSqd::PropertiesMenue::DrawBtnSliderData(std::shared_ptr<BtnWidget> widge
 	ImGui::Text("Resize With body: ");
 	ImGui::SameLine();
 	bool sResize = slider->GetResizeWithBody();
-	if (ImGui::Checkbox("##BtnSliderWidgetShouldResizeCheckbox",&sResize)) {
+	if (ImGui::Checkbox("##BtnSliderWidgetShouldResizeCheckbox", &sResize)) {
 		slider->SetResizeWithBody(sResize);
 	}
 
@@ -2007,7 +2007,7 @@ void BtnSqd::PropertiesMenue::DrawBtnSliderData(std::shared_ptr<BtnWidget> widge
 	ImGui::Text("Slider Direction: ");
 	ImGui::SameLine();
 	std::string sDir = (slider->GetDirection() == SliderDirection::XAxis) ? "X-Axis" : "Y-Axis";
-	if (ImGui::BeginCombo("##BtnSliderSetDirCombo",sDir.c_str())) {
+	if (ImGui::BeginCombo("##BtnSliderSetDirCombo", sDir.c_str())) {
 		if (ImGui::Selectable("X-Axis##X-AxisBtnSliderDirComboEntry")) {
 			slider->SetSliderDirection(SliderDirection::XAxis);
 		}
@@ -2020,9 +2020,9 @@ void BtnSqd::PropertiesMenue::DrawBtnSliderData(std::shared_ptr<BtnWidget> widge
 	ImGui::Text("Slider Type: ");
 	ImGui::SameLine();
 
-	std::string currentSliderType = (slider->GetSliderType()== SliderType::Dot) ?"Dot" :"Bar";
+	std::string currentSliderType = (slider->GetSliderType() == SliderType::Dot) ? "Dot" : "Bar";
 
-	if (ImGui::BeginCombo("##BtnSliderSetSliderTypeCombo",currentSliderType.c_str())) {
+	if (ImGui::BeginCombo("##BtnSliderSetSliderTypeCombo", currentSliderType.c_str())) {
 		if (ImGui::Selectable("Dot##BtnSliderSetDotComboEntry")) {
 			slider->SetSliderType(SliderType::Dot);
 		}
@@ -2030,6 +2030,22 @@ void BtnSqd::PropertiesMenue::DrawBtnSliderData(std::shared_ptr<BtnWidget> widge
 			slider->SetSliderType(SliderType::Bar);
 		}
 		ImGui::EndCombo();
+	}
+
+	ImGui::Text("Use Steps: ");
+	ImGui::SameLine();
+	bool useSteps = slider->GetUseSteps();
+	if (ImGui::Checkbox("##SliderUseStepsWidgetCheckbox",&useSteps)) {
+		slider->SetUseSteps(useSteps);
+	}
+
+	if (useSteps) {
+		ImGui::Text("Number Steps: ");
+		ImGui::SameLine();
+		int stepCount = slider->GetNumSteps();
+		if (ImGui::DragInt("##SliderNumStepsDragInt",&stepCount,1.0f,0,INT_MAX)) {
+			slider->SetNumSteps(stepCount);
+		}
 	}
 
 	ImGui::Separator();

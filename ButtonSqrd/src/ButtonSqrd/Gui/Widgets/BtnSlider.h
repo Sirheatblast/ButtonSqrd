@@ -59,10 +59,7 @@ namespace BtnSqd {
 		const glm::vec4 GetSliderColor() { return sliderColor; }
 		void SetSliderColor(glm::vec4 nColor) { sliderColor = nColor; }
 
-		void SetSliderPercentage(float percent) {
-			shouldRemake = true;
-			sliderPercentage = percent;
-		}
+		void SetSliderPercentage(float percent);
 		const float GetSliderPercentage() { return sliderPercentage; }
 
 		const bool GetHasSliderTexture() { return hasSliderTexture; }
@@ -77,6 +74,21 @@ namespace BtnSqd {
 			sType = nSType;
 		}
 
+		const float GetMinRange() { return minRange; }
+		void SetMinRange(float min) { minRange = min; }
+
+		const float GetMaxRange() { return maxRange; }
+		void SetMaxRange(float max) { maxRange = max; }
+
+		const bool GetUseSteps() { return usesSteps; }
+		void SetUseSteps(bool useStep) { usesSteps = useStep; }
+
+		const unsigned int GetNumSteps() { return numSteps; }
+		void SetNumSteps(unsigned int steps) {
+			numSteps = steps;
+			stepSize = 1.0f / static_cast<float>(steps);
+		}
+
 	private:
 		std::vector<Vertices> GenerateBodyVerts();
 		std::vector<Vertices> GenerateSliderVerts();
@@ -88,6 +100,7 @@ namespace BtnSqd {
 		bool mixSlider;
 		bool shouldRemake;
 		bool resizeWithBody;
+		bool usesSteps;
 
 		glm::vec4 sliderColor;
 		glm::vec2 sliderDimensions;
@@ -98,6 +111,8 @@ namespace BtnSqd {
 		float minRange;
 		float maxRange;
 		float padding;
+		unsigned int numSteps;
+		float stepSize;
 
 		SliderType sType;
 		SliderDirection sDir;
