@@ -1984,8 +1984,6 @@ void BtnSqd::PropertiesMenue::DrawBtnSliderData(std::shared_ptr<BtnWidget> widge
 		slider->SetMaxRange(sliderMax);
 	}
 
-	BTNLOG_INFO(slider->GetSliderValue())
-
 	ImGui::Separator();
 	ImGui::Text("Slider Head: ");
 

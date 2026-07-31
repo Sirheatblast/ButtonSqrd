@@ -150,6 +150,7 @@ namespace BtnSqd {
 	}
 	void WindowsWindow::SetIcon(std::string path) {
 		GLFWimage images[1];
+		stbi_set_flip_vertically_on_load(false);
 		images[0].pixels = stbi_load(path.c_str(), &images[0].width, &images[0].height, 0, 4); // 4 for RGBA
 		glfwSetWindowIcon(window, 1, images);
 		glfwPollEvents();
