@@ -1980,7 +1980,7 @@ void BtnSqd::PropertiesMenue::DrawBtnSliderData(std::shared_ptr<BtnWidget> widge
 	ImGui::Text("Max value: ");
 	ImGui::SameLine();
 	float sliderMax = slider->GetMaxRange();
-	if (ImGui::DragFloat("##BtnSliderMinRangeDragFloatWidget", &sliderMax)) {
+	if (ImGui::DragFloat("##BtnSliderMaxRangeDragFloatWidget", &sliderMax)) {
 		slider->SetMaxRange(sliderMax);
 	}
 
