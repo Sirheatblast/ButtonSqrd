@@ -250,6 +250,7 @@ void BtnSqd::PropertiesMenue::ModelComp(BtnSqd::GameObject& selectedObj) {
 		}
 	}
 
+	ImGui::Separator();
 	ImGui::Text("Model Component");
 	ImGui::SameLine();
 	if (ImGui::Button("Remove ##RemoveModel")) {
@@ -423,6 +424,7 @@ void BtnSqd::PropertiesMenue::SetModel(std::string& fullPath, BtnSqd::ModelCompo
 }
 void BtnSqd::PropertiesMenue::TransformComp(BtnSqd::GameObject& selectedObj) {
 	TransformComponent& transform = currentScene->GetgameObjects()[selectedObj.GetUUID()]->GetComponent<TransformComponent>();
+	ImGui::Separator();
 	ImGui::Text("Transform Component");
 	ImGui::Indent(20.0f);
 	ImGui::Text("Position: ");
@@ -470,6 +472,7 @@ void BtnSqd::PropertiesMenue::TransformComp(BtnSqd::GameObject& selectedObj) {
 }
 void BtnSqd::PropertiesMenue::TagComp(BtnSqd::GameObject& selectedObj) {
 	TagComponenet& tag = currentScene->GetgameObjects()[selectedObj.GetUUID()]->GetComponent<TagComponenet>();
+	ImGui::Separator();
 	ImGui::Text("Tag Component");
 	ImGui::Indent(20.0f);
 	ImGui::Text("Tag: ");
@@ -487,6 +490,7 @@ void BtnSqd::PropertiesMenue::TagComp(BtnSqd::GameObject& selectedObj) {
 }
 void BtnSqd::PropertiesMenue::LightComp(BtnSqd::GameObject& selectedObj) {
 	LightComponent& light = currentScene->GetgameObjects()[selectedObj.GetUUID()]->GetComponent<LightComponent>();
+	ImGui::Separator();
 	ImGui::Text("Light Component");
 	ImGui::SameLine();
 	if (ImGui::Button("Remove ##RemoveLight")) {
@@ -528,6 +532,7 @@ void BtnSqd::PropertiesMenue::LightComp(BtnSqd::GameObject& selectedObj) {
 }
 void BtnSqd::PropertiesMenue::CameraComp(GameObject& selectedObj) {
 	CameraComponent& camera = currentScene->GetgameObjects()[selectedObj.GetUUID()]->GetComponent<CameraComponent>();
+	ImGui::Separator();
 	ImGui::Text("Camera Component");
 	ImGui::SameLine();
 	if (ImGui::Button("Remove ##RemoveCamera")) {
@@ -561,6 +566,7 @@ void BtnSqd::PropertiesMenue::CameraComp(GameObject& selectedObj) {
 	ImGui::Unindent(20.0f);
 }
 void BtnSqd::PropertiesMenue::ScriptComp(GameObject& selectedObj) {
+	ImGui::Separator();
 	ScriptComponent& scripts = currentScene->GetgameObjects()[selectedObj.GetUUID()]->GetComponent<ScriptComponent>();
 	ImGui::Text("Script Component");
 	ImGui::SameLine();
@@ -580,6 +586,7 @@ void BtnSqd::PropertiesMenue::ScriptComp(GameObject& selectedObj) {
 	AddScriptPopup(selectedObj, scripts);
 
 	for (auto& scriptEntry : scripts.scripts) {
+		ImGui::Separator();
 		std::string buttonName = "Remove Script ##" + scriptEntry.name;
 		if (ImGui::Button(buttonName.c_str())) {
 			scripts.RemoveScript(scriptEntry.name);
@@ -607,6 +614,7 @@ void BtnSqd::PropertiesMenue::ScriptComp(GameObject& selectedObj) {
 	ImGui::Unindent(20.0f);
 }
 void BtnSqd::PropertiesMenue::PhysicsComp(GameObject& selectedObj) {
+	ImGui::Separator();
 	ImGui::Text("Physics Component");
 	ImGui::SameLine();
 	if (ImGui::Button("Remove ##RemovePhysics")) {
@@ -657,6 +665,7 @@ void BtnSqd::PropertiesMenue::PhysicsComp(GameObject& selectedObj) {
 	ImGui::Unindent(20.0f);
 }
 void BtnSqd::PropertiesMenue::ColliderComp(GameObject& selectedObj) {
+	ImGui::Separator();
 	ImGui::Text("Colider Component");
 	ImGui::SameLine();
 	if (ImGui::Button("Remove ##RemoveColider")) {
@@ -805,6 +814,7 @@ void BtnSqd::PropertiesMenue::ColliderComp(GameObject& selectedObj) {
 }
 
 void BtnSqd::PropertiesMenue::ArmatureComp(GameObject& selectedObj) {
+	ImGui::Separator();
 	ImGui::Text("Armature Component");
 	ImGui::SameLine();
 	if (ImGui::Button("Remove ##RemoveArmature")) {
@@ -832,6 +842,7 @@ void BtnSqd::PropertiesMenue::ArmatureComp(GameObject& selectedObj) {
 }
 
 void BtnSqd::PropertiesMenue::AnimatorComp(GameObject& selectedObj) {
+	ImGui::Separator();
 	ImGui::Text("Animator Component");
 	ImGui::SameLine();
 	if (ImGui::Button("Remove ##RemoveAnimator")) {
@@ -882,6 +893,7 @@ void BtnSqd::PropertiesMenue::AnimatorComp(GameObject& selectedObj) {
 }
 
 void BtnSqd::PropertiesMenue::BoneComp(GameObject& selectedObj) {
+	ImGui::Separator();
 	ImGui::Text("Bone Component");
 	ImGui::SameLine();
 	if (ImGui::Button("Remove ##RemoveBoneComp")) {
@@ -947,6 +959,7 @@ void BtnSqd::PropertiesMenue::BoneComp(GameObject& selectedObj) {
 }
 
 void BtnSqd::PropertiesMenue::AudioListenerComp(GameObject& selectedObj) {
+	ImGui::Separator();
 	ImGui::Text("Audio Listner Component");
 	ImGui::SameLine();
 	if (ImGui::Button("Remove ##RemoveAudioListenerComp")) {
@@ -956,6 +969,7 @@ void BtnSqd::PropertiesMenue::AudioListenerComp(GameObject& selectedObj) {
 }
 
 void BtnSqd::PropertiesMenue::AudioSourceComp(GameObject& selectedObj) {
+	ImGui::Separator();
 	ImGui::Text("Audio Source Component");
 	ImGui::SameLine();
 	if (ImGui::Button("Remove ##RemoveAudioSourceComp")) {
@@ -1054,6 +1068,7 @@ void BtnSqd::PropertiesMenue::AudioSourceComp(GameObject& selectedObj) {
 }
 
 void BtnSqd::PropertiesMenue::ParticleEmitterComp(GameObject& selectedObj) {
+	ImGui::Separator();
 	ImGui::Text("Particle Emitter Component");
 	ImGui::SameLine();
 	if (ImGui::Button("Remove ##RemoveParticleEmitterComp")) {
@@ -1147,6 +1162,7 @@ void BtnSqd::PropertiesMenue::ParticleEmitterComp(GameObject& selectedObj) {
 }
 
 void BtnSqd::PropertiesMenue::WidgetCanvasComp(GameObject& selectedObj) {
+	ImGui::Separator();
 	ImGui::Text("Widget Canvas Component");
 	ImGui::SameLine();
 	if (ImGui::Button("Remove ##RemoveWidgetCanvasComp")) {
