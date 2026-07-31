@@ -1970,6 +1970,22 @@ void BtnSqd::PropertiesMenue::DrawBtnSliderData(std::shared_ptr<BtnWidget> widge
 		slider->SetSliderPercentage(sliderValue);
 	}
 
+	ImGui::Text("Min value: ");
+	ImGui::SameLine();
+	float sliderMin = slider->GetMinRange();
+	if (ImGui::DragFloat("##BtnSliderMinRangeDragFloatWidget",&sliderMin)) {
+		slider->SetMinRange(sliderMin);
+	}
+
+	ImGui::Text("Max value: ");
+	ImGui::SameLine();
+	float sliderMax = slider->GetMaxRange();
+	if (ImGui::DragFloat("##BtnSliderMinRangeDragFloatWidget", &sliderMax)) {
+		slider->SetMaxRange(sliderMax);
+	}
+
+	BTNLOG_INFO(slider->GetSliderValue())
+
 	ImGui::Separator();
 	ImGui::Text("Slider Head: ");
 

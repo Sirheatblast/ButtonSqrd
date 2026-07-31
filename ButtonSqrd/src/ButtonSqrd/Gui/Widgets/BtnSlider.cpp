@@ -176,10 +176,18 @@ namespace BtnSqd {
 		float nPercentage = percent;
 		if (usesSteps) {
 			float steps = static_cast<float>(numSteps - 1);
+			if (steps <= 0.0f) {
+				steps = 1.0f;
+			}
 			nPercentage = std::roundf(percent * steps) / steps;
 		}
 
 		shouldRemake = true;
 		sliderPercentage = nPercentage;
+	}
+	const float BtnSlider::GetSliderValue() {
+		float value = maxRange - minRange;
+		value *= sliderPercentage;
+		return minRange + value;
 	}
 }

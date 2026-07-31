@@ -89,6 +89,8 @@ namespace BtnSqd {
 			stepSize = 1.0f / static_cast<float>(steps);
 		}
 
+		const float GetSliderValue();
+
 	private:
 		std::vector<Vertices> GenerateBodyVerts();
 		std::vector<Vertices> GenerateSliderVerts();
