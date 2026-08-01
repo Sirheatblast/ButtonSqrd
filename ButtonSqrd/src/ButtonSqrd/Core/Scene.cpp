@@ -64,10 +64,11 @@ namespace BtnSqd {
 	GameObject& BtnScene::CreateNewGameObject() {
 		GameObject* newObject = gameReg.CreateNewGameObject();
 		std::string defName = "GameObject";
-		defName += std::to_string(newObject->GetUUID());
 		newObject->AddComponent<IDComponent>();
 		newObject->AddComponent<TagComponenet>(defName);
 		newObject->AddComponent<TransformComponent>();
+
+		defName += std::to_string(newObject->GetUUID());
 		gameObjects[newObject->GetUUID()] = std::shared_ptr<GameObject>(newObject);
 		return *gameObjects[newObject->GetUUID()].get();
 	}
@@ -187,26 +188,21 @@ namespace BtnSqd {
 	void CloneGameObject(entt::registry& r, entt::entity src, entt::entity dst) {
 		([&] {
 			if (auto* comp = r.try_get<Components>(src)) {
-				r.emplace<Components>(dst, *comp);
+				r.emplace_or_replace<Components>(dst, *comp);
 			}
 		 }(), ...);
 	}
 
 	//Duplicates game objects but doesn't copy some components like scriptig, physics, or collider components use a super gameobject for those
 	GameObject& BtnScene::DuplicateGameObject(GameObject* gameObj) {
-		GameObject* newObject = gameReg.CreateNewGameObject();
+		GameObject newObject = CreateNewGameObject();
 		std::string objectName = gameObj->GetComponent<TagComponenet>().tag;
-		for (auto& [tag] : gameReg.GetAllOf<TagComponenet>()) {
-			if (tag.tag == objectName) {
-				objectName.append(std::to_string(newObject->GetUUID()));
-			}
-		}
-		newObject->AddComponent<TagComponenet>().tag = objectName;
-		newObject->AddComponent<IDComponent>();
-		CloneGameObject<TransformComponent, ModelComponent, LightComponent, CameraComponent, ArmatureComponent, AnimatorComponent, BoneComponent, AudioSourceComponent>(gameReg.GetNative(), static_cast<entt::entity>(gameObj->GetId()), static_cast<entt::entity>(newObject->GetId()));
+		objectName.append(std::to_string(newObject.GetUUID()));
+		newObject.GetComponent<TagComponenet>().tag = objectName;
+		CloneGameObject<TransformComponent, ModelComponent, LightComponent, CameraComponent, ArmatureComponent, 
+			AnimatorComponent, BoneComponent, AudioSourceComponent>(gameReg.GetNative(), static_cast<entt::entity>(gameObj->GetId()), static_cast<entt::entity>(newObject.GetId()));
 
-		gameObjects[newObject->GetUUID()] = std::shared_ptr<GameObject>(newObject);
-		return *gameObjects[newObject->GetUUID()].get();
+		return *gameObjects[newObject.GetUUID()];
 	}
 
 	void BtnScene::DeleteGameObject(GameObject* gameObject) {
