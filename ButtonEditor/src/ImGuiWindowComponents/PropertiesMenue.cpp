@@ -2046,6 +2046,13 @@ void BtnSqd::PropertiesMenue::DrawBtnSliderData(std::shared_ptr<BtnWidget> widge
 		slider->SetPadding(sliderPadding);
 	}
 
+	ImGui::Text("Jump To Click: ");
+	ImGui::SameLine();
+	bool jmpToClk = slider->GetJumpToClick();
+	if (ImGui::Checkbox("##BtnSliderWIdgetJumpTOClickCheckBox", &jmpToClk)) {
+		slider->SetJumpToClick(jmpToClk);
+	}
+
 	ImGui::Text("Slider Direction: ");
 	ImGui::SameLine();
 	std::string sDir = (slider->GetDirection() == SliderDirection::XAxis) ? "X-Axis" : "Y-Axis";
