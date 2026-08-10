@@ -17,6 +17,7 @@ namespace BtnSqd {
 		shouldRemake = true;
 		resizeWithBody = true;
 		usesSteps = false;
+		jumpToClick = false;
 
 		padding = 0.0f;
 		sliderPercentage = 0.0f;

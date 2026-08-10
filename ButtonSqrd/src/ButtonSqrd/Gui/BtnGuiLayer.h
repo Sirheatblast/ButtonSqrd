@@ -1,4 +1,5 @@
 #pragma once
+#include"ButtonSqrd/Core/Application.h"
 #include"ButtonSqrd/Core/Layer.h"
 #include"ButtonSqrd/Core/CoreComponents.h"
 #include"ButtonSqrd/Core/Scene.h"
@@ -6,6 +7,7 @@
 #include"ButtonSqrd/Render/Shader.h"
 #include"ButtonSqrd/Render/FrameBuffer.h"
 #include"BtnWidget.h"
+#include"ButtonSqrd/Gui/Widgets/BtnSlider.h"
 
 #include"ButtonSqrd/Event/GuiEvent.h"
 
@@ -48,6 +50,11 @@ namespace BtnSqd {
 		void RenderSlider(BtnWidget* widget);
 		void RenderNormal(BtnWidget* widget);
 		void RenderText(BtnWidget* widget);
+
+		void ProcessWidgetState(std::shared_ptr<BtnWidget> widget,glm::vec2 mouse,ViewPort viewPort);
+		void ProcessSliderState(std::shared_ptr<BtnWidget> widget,glm::vec2 mouse,ViewPort viewPort);
+
+		void ProcessSliderInput(std::shared_ptr<BtnSlider> slider,glm::vec2 deltaMouse,glm::vec2 sliderPos);
 
 		std::shared_ptr<BtnScene>& currentScene;
 		std::shared_ptr<FrameBuffer> frameBuffer;

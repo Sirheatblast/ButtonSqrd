@@ -91,6 +91,14 @@ namespace BtnSqd {
 
 		const float GetSliderValue();
 
+		const bool GetSliderHover() { return isSliderHover; }
+		void SetSliderHover(bool hover) { isSliderHover = hover; }
+
+		const bool GetSliderClick() { return isSliderClick; }
+		void SetSliderClick(bool click) { isSliderClick = click; }
+
+		const bool GetJumpToClick() { return jumpToClick; }
+		void SetJumpToClick(bool shouldJump) { jumpToClick = shouldJump; }
 	private:
 		std::vector<Vertices> GenerateBodyVerts();
 		std::vector<Vertices> GenerateSliderVerts();
@@ -103,6 +111,7 @@ namespace BtnSqd {
 		bool shouldRemake;
 		bool resizeWithBody;
 		bool usesSteps;
+		bool jumpToClick;
 
 		glm::vec4 sliderColor;
 		glm::vec2 sliderDimensions;

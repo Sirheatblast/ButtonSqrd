@@ -198,7 +198,7 @@ namespace BtnSqd {
 		widgetShader->SetBool("mixTex", slider->GetMix());
 		RenderCommand::DrawMesh(slider->Draw(widgetShader));
 
-		modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(widget->GetPos(), level+0.01f)); //fix this so that it could render widgets not from fixed world positions
+		modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(widget->GetPos(), level + 0.01f)); //fix this so that it could render widgets not from fixed world positions
 		widgetShader->SetMat4("model", modelMat);
 		widgetShader->SetVec4("clearColor", slider->GetSliderColor());
 		widgetShader->SetVec2("widgetSize", slider->GetSliderDimensions());
@@ -295,28 +295,97 @@ namespace BtnSqd {
 				continue;
 			}
 
-			glm::vec2 screenWidgetPos = viewPort.offset + widget->GetPos();
-			glm::vec2 widgetHigh = screenWidgetPos + widget->GetDimensions();
+			ProcessWidgetState(widget, mouse, viewPort);
+		}
+	}
 
-			if (glm::all(glm::lessThanEqual(mouse, widgetHigh)) &&
-				glm::all(glm::greaterThanEqual(mouse, screenWidgetPos))) {
-				widget->SetHover(true);
-			}
-			else {
-				widget->SetHover(false);
+	void BtnGuiLayer::ProcessWidgetState(std::shared_ptr<BtnWidget> widget, glm::vec2 mouse, ViewPort viewPort) {
+		glm::vec2 screenWidgetPos = viewPort.offset + widget->GetPos();
+		glm::vec2 widgetHigh = screenWidgetPos + widget->GetDimensions();
+
+		if (glm::all(glm::lessThanEqual(mouse, widgetHigh)) &&
+			glm::all(glm::greaterThanEqual(mouse, screenWidgetPos))) {
+			widget->SetHover(true);
+		}
+		else {
+			widget->SetHover(false);
+		}
+
+		if (widget->GetHovered() && Input::IsMouseButtonPressed(MouseCode::Left)) {
+			widget->SetClicked(true);
+			widget->OnClick();
+		}
+		else {
+			if (widget->GetClicked() && Input::IsMouseButtonUp(MouseCode::Left)) {
+				widget->OnClickUp();
 			}
 
-			if (widget->GetHovered() && Input::IsMouseButtonPressed(MouseCode::Left)) {
-				widget->SetClicked(true);
-				widget->OnClick();
-			}
-			else {
-				if (widget->GetClicked() && Input::IsMouseButtonUp(MouseCode::Left)) {
-					widget->OnClickUp();
-				}
+			widget->SetClicked(false);
+		}
 
-				widget->SetClicked(false);
+		if (widget->GetType() == BtnWidgetType::Slider) {
+			ProcessSliderState(widget, mouse, viewPort);
+		}
+	}
+	void BtnGuiLayer::ProcessSliderState(std::shared_ptr<BtnWidget> widget, glm::vec2 mouse, ViewPort viewPort) {
+		std::shared_ptr<BtnSlider> slider = std::dynamic_pointer_cast<BtnSlider>(widget);
+		glm::vec2 sliderSize = (slider->GetResizeWithBody()) ? slider->GetDimensions() * slider->GetSliderDimensions()
+			: slider->GetSliderSize();
+		glm::vec2 bodySize = slider->GetDimensions();
+		float sliderValue = slider->GetSliderPercentage();
+		glm::vec2 deltaMouse = mouse - (viewPort.offset + slider->GetPos());
+
+		glm::vec2 sliderPos;
+		if (slider->GetDirection() == SliderDirection::XAxis) {
+			float fullBody = bodySize.x - slider->GetPadding();			
+			float fullLocation = fullBody * sliderValue;
+			sliderPos = glm::vec2(fullLocation,sliderSize.y/2.0f);
+		}
+		else {
+			float fullBody = bodySize.y - slider->GetPadding();
+			float fullLocation = fullBody * sliderValue;
+			sliderPos = glm::vec2(sliderSize.x/2.0f, fullLocation);
+		}
+
+		glm::vec2 halfSize = sliderSize / 2.0f;
+		glm::vec2 sliderBegin = glm::clamp(sliderPos - halfSize, glm::vec2(0.0f), bodySize - sliderSize);
+		glm::vec2 sliderEnd = glm::clamp(sliderPos + halfSize, sliderSize, bodySize + halfSize);
+		
+		if (glm::all(glm::lessThanEqual(deltaMouse, sliderEnd)) &&
+			glm::all(glm::greaterThanEqual(deltaMouse, sliderBegin))) {
+			slider->SetSliderHover(true);
+		}
+		else {
+			slider->SetSliderHover(false);
+		}
+
+		if (Input::IsMouseButtonPressed(MouseCode::Left)) {
+			if (slider->GetSliderHover()) {
+				slider->SetSliderClick(true);
 			}
+		}
+		else {
+			slider->SetSliderClick(false);
+		}
+
+		ProcessSliderInput(slider, deltaMouse,sliderPos);
+	}
+	void BtnGuiLayer::ProcessSliderInput(std::shared_ptr<BtnSlider> slider, glm::vec2 deltaMouse,glm::vec2 sliderPos) {
+		glm::vec2 sliderHalfSize = slider->GetSliderSize() / 2.0f;
+
+		glm::vec2 sliderSize = slider->GetDimensions() - (slider->GetPadding()*2.0f)- sliderHalfSize;
+		deltaMouse -= slider->GetPadding();
+		
+		if (sliderSize.x==0.0f||sliderSize.y==0.0f) {
+			return;
+		}
+
+		if (slider->GetSliderClick()||
+			slider->GetJumpToClick()&&slider->GetHovered()&&Input::IsMouseButtonPressed(MouseCode::Left)) {
+			glm::vec2 deltaPercent = deltaMouse / sliderSize;
+			float axisPercent = (slider->GetDirection()==SliderDirection::XAxis) ? deltaPercent.x:deltaPercent.y;
+			axisPercent = glm::clamp(axisPercent, 0.0f, 1.0f);
+			slider->SetSliderPercentage(axisPercent);
 		}
 	}
 }
