@@ -2,6 +2,11 @@
 #include"GameObject.h"
 #include"Scene.h"
 
+#include"ButtonSqrd/Gui/Widgets/BtnButton.h"
+#include"ButtonSqrd/Gui/Widgets/BtnImage.h"
+#include"ButtonSqrd/Gui/Widgets/BtnTextBox.h"
+#include"ButtonSqrd/Gui/Widgets/BtnSlider.h"
+
 namespace BtnSqd {
 	GameObjectRegister& GameObjectRegister::operator=(const GameObjectRegister& reg) {
 		if (this != &reg) {
@@ -96,7 +101,28 @@ namespace BtnSqd {
 				if (reg.gameReg.any_of<WidgetCanvasComponent>(srcEntity)) {
 					WidgetCanvasComponent wCanvas = reg.gameReg.get<WidgetCanvasComponent>(srcEntity);
 					entityMap[srcEntity].AddComponent<WidgetCanvasComponent>();
-					entityMap[srcEntity].GetComponent<WidgetCanvasComponent>() = wCanvas;
+					auto& wComp = entityMap[srcEntity].GetComponent<WidgetCanvasComponent>();
+					for (const auto widget : wCanvas.Widgets) {
+						switch (widget->GetType()) {
+						case BtnWidgetType::Button:
+							wComp.Widgets.push_back(std::make_shared<BtnButton>(*std::dynamic_pointer_cast<BtnButton>(widget)));
+							break;
+						case BtnWidgetType::Slider:
+							wComp.Widgets.push_back(std::make_shared<BtnSlider>(*std::dynamic_pointer_cast<BtnSlider>(widget)));
+							break;
+						case BtnWidgetType::Text:
+							wComp.Widgets.push_back(std::make_shared<BtnTextBox>(*std::dynamic_pointer_cast<BtnTextBox>(widget)));
+							break;
+						case BtnWidgetType::BtnImage:
+							wComp.Widgets.push_back(std::make_shared<BtnImage>(*std::dynamic_pointer_cast<BtnImage>(widget)));
+							break;
+						}
+					}
+					wComp.dimensions = wCanvas.dimensions;
+					wComp.posOffset = wCanvas.posOffset;
+					wComp.useWholeScreen = wCanvas.useWholeScreen;
+					wComp.displayInEditor = wCanvas.displayInEditor;
+					wComp.selectedWidget = nullptr;
 				}
 			}
 		}
