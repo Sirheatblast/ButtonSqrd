@@ -6,6 +6,25 @@ namespace BtnSqd {
 		Logger::GetClientConsole()->sinks().push_back(sink);
 		Logger::GetCoreConsole()->sinks().push_back(sink);
 	}
+	void BtnConsole::LogToConsole(LogData lData) {
+		lData.message += lData.levelType + lData.line.message;
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0));
+		ImGui::PushStyleColor(ImGuiCol_Text, lData.color);
+
+		std::vector<char> messageRaw(lData.message.size() + 1);
+		strcpy_s(messageRaw.data(), messageRaw.size(), lData.message.c_str());
+
+		if (condenseMessages) {
+			if (lData.message != lastMessage) {
+				ImGui::InputText(lData.uniqueId.c_str(), messageRaw.data(), messageRaw.size(), ImGuiInputTextFlags_ReadOnly);
+			}
+		}
+		else {
+			ImGui::InputText(lData.uniqueId.c_str(), messageRaw.data(), messageRaw.size(), ImGuiInputTextFlags_ReadOnly);
+		}
+		lastMessage = lData.message;
+		ImGui::PopStyleColor(2);
+	}
 	void BtnConsole::OnUpdate() {
 		ImGui::Begin("Console");
 
@@ -30,66 +49,33 @@ namespace BtnSqd {
 			const auto& line = sink->GetBuffer()[i];
 			std::string uniqueId = "##ConsoleLogLine###" + std::to_string(i);
 			std::string message = line.loggerName;
+			LogData lData(line);
+			lData.message = message;
+			lData.uniqueId = uniqueId;
+
 			switch (line.level) {
 			case spdlog::level::level_enum::info: {
-				message += " INFO: " + line.message;
-				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0));
-				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 1.0f, 0.0f, 1.0f));
-
-				std::vector<char> messageRaw(message.size() + 1);
-				strcpy_s(messageRaw.data(), messageRaw.size(), message.c_str());
-				
-				if (condenseMessages) {
-					if (message != lastMessage) {
-						ImGui::InputText(uniqueId.c_str(), messageRaw.data(), messageRaw.size(), ImGuiInputTextFlags_ReadOnly);
-					}
-				}
-				else {
-					ImGui::InputText(uniqueId.c_str(), messageRaw.data(), messageRaw.size(), ImGuiInputTextFlags_ReadOnly);
-				}
-
-				if (ImGui::IsItemFocused() && ImGui::GetIO().KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_C)) {
-					ImGui::SetClipboardText(message.c_str());
-				}
-
-				ImGui::PopStyleColor(2);
+				lData.levelType = " INFO ";
+				lData.color = ImVec4(0.0f, 1.0f, 0.0f, 1.0f);
 				break;
 			}
-			case spdlog::level::level_enum::trace:
-				message += " TRACE: " + line.message;
-				if (condenseMessages) {
-					if (message != lastMessage) {
-						ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), message.c_str());
-					}
-				}
-				else {
-					ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), message.c_str());
-				}
-				break;
-			case spdlog::level::level_enum::warn:
-				message += " WARN: " + line.message;
-				if (condenseMessages) {
-					if (message != lastMessage) {
-						ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), message.c_str());
-					}
-				}
-				else {
-					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), message.c_str());
-				}
-				break;
-			case spdlog::level::level_enum::err:
-				message += " ERROR: " + line.message;
-				if (condenseMessages) {
-					if (message != lastMessage) {
-						ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), message.c_str());
-					}
-				}
-				else {
-					ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), message.c_str());
-				}
+			case spdlog::level::level_enum::trace: {
+				lData.levelType = " TRACE ";
+				lData.color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 				break;
 			}
-			lastMessage = message;
+			case spdlog::level::level_enum::warn: {
+				lData.levelType = " WARN ";
+				lData.color = ImVec4(1.0f, 1.0f, 0.0f, 1.0f);
+				break;
+			}
+			case spdlog::level::level_enum::err: {
+				lData.levelType = " ERROR ";
+				lData.color = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
+				break;
+			}
+			}
+			LogToConsole(lData);
 		}
 		ImGui::EndChild();
 

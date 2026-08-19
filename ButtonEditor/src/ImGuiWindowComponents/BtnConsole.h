@@ -13,8 +13,10 @@ namespace BtnSqd {
 	public:
 		BtnConsole();
 
+
 		void OnUpdate();
 	private:
+
 		struct MessageInfo {
 			std::string message;
 			std::string loggerName;
@@ -51,6 +53,18 @@ namespace BtnSqd {
 			std::mutex mutex;
 			std::unique_ptr<spdlog::formatter> formatter_; 
 		};
+
+		struct LogData {
+			LogData(const BtnSqd::BtnConsole::MessageInfo& l):line(l){}
+
+			std::string message;
+			const BtnSqd::BtnConsole::MessageInfo& line;
+			std::string uniqueId;
+			std::string levelType;
+			ImVec4 color;
+		};
+
+		void LogToConsole(LogData lData);
 
 		std::shared_ptr<BtnSink>sink;
 		std::string lastMessage ="";
