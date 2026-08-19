@@ -57,8 +57,7 @@ namespace BtnSqd {
 		//Setup callbacks
 		glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height) {
 			WindData& data = *(WindData*)glfwGetWindowUserPointer(window);
-			data.width = width;
-			data.height = height;
+			data.width = width; data.height = height;
 			RenderCommand::ResizeScreen(width, height);
 									   });
 
@@ -78,17 +77,13 @@ namespace BtnSqd {
 			data.callback(new OnWindowMoveEvent(posX, posY));
 								 });
 		glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mod) {
+			ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mod);
+
 			WindData& data = *(WindData*)glfwGetWindowUserPointer(window);
 			switch (action) {
-			case GLFW_PRESS:
-				data.callback(new OnKeyDownEvent(static_cast<KeyCode>(key)));
-				break;
-			case GLFW_RELEASE:
-				data.callback(new OnKeyReleaseEvent(static_cast<KeyCode>(key)));
-				break;
-			case GLFW_REPEAT:
-				data.callback(new OnKeyHoldEvent(static_cast<KeyCode>(key)));
-				break;
+			case GLFW_PRESS: data.callback(new OnKeyDownEvent(static_cast<KeyCode>(key))); break;
+			case GLFW_RELEASE: data.callback(new OnKeyReleaseEvent(static_cast<KeyCode>(key))); break;
+			case GLFW_REPEAT: data.callback(new OnKeyHoldEvent(static_cast<KeyCode>(key))); break;
 			}
 						   });
 		glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods) {
@@ -122,6 +117,8 @@ namespace BtnSqd {
 			data.callback(new OnMouseScrollEvent(float(xoffset), float(yoffset)));
 							  });
 		glfwSetCharCallback(window, [](GLFWwindow* window, unsigned int keyCode) {
+			ImGui_ImplGlfw_CharCallback(window, keyCode);		
+
 			WindData& data = *(WindData*)glfwGetWindowUserPointer(window);
 			data.callback(new OnKeyTypedEvent(keyCode));
 							});

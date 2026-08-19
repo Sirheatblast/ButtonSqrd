@@ -2085,6 +2085,22 @@ void BtnSqd::PropertiesMenue::DrawBtnSliderData(std::shared_ptr<BtnWidget> widge
 		ImGui::Unindent(20.0f);
 	}
 
+	bool shouldSlice = slider->GetSliderNineSlice();
+	ImGui::Text("Nine-Slice: ");
+	ImGui::SameLine();
+	if (ImGui::Checkbox("##WidgetImageSetUseNineSliceCheckbox", &shouldSlice)) {
+		slider->SetSliderNineSlice(shouldSlice);
+	}
+
+	if (shouldSlice) {
+		float texScale = slider->GetSliderTexScale();
+		ImGui::Text("TextureScale: ");
+		ImGui::SameLine();
+		if (ImGui::DragFloat("##WidgetImageTextureScaleDragFloat", &texScale, 0.1f, 0.0f, FLT_MAX)) {
+			slider->SetSliderTexScale(texScale);
+		}
+	}
+
 	ImGui::Text("Use Hover Tint: ");
 	ImGui::SameLine();
 	bool useHoverColor = slider->GetUseSliderHoverColor();
@@ -2139,6 +2155,13 @@ void BtnSqd::PropertiesMenue::DrawBtnSliderData(std::shared_ptr<BtnWidget> widge
 	if (showSliderHeadColorPicker) {
 		ShowColorPicker(sliderHeadColor, "##SliderHeadClearColorPicker");
 		slider->SetSliderColor(sliderHeadColor);
+	}
+
+	ImGui::Text("Mix: ");
+	ImGui::SameLine();
+	bool mixSlider = slider->GetMixSlider();
+	if (ImGui::Checkbox("##BtnSliderWidgetSetMixSliderCheckbox",&mixSlider)) {
+		slider->SetMixSlider(mixSlider);
 	}
 
 	ImGui::Text("Resize With body: ");
@@ -2225,6 +2248,45 @@ void BtnSqd::PropertiesMenue::DrawBtnSliderData(std::shared_ptr<BtnWidget> widge
 
 	ImGui::Separator();
 	ImGui::Text("Body:");
+
+	ImGui::Text("Selected Texture:");
+	ImGui::Indent(20.0f);
+	if (slider->GetBodyTexture()) {
+		if (ImGui::ImageButton("##CurrentWidgetSliderBodyTexture", slider->GetBodyTexture()->GetId(), ImVec2(150.0f, 150.0f))) {
+
+		}
+		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
+			slider->SetBodyTexture("bin/null");
+		}
+	}
+	else {
+		ImGui::ImageButton("##CurrentWidgetSliderBodyTexture", 0, ImVec2(150.0f, 150.0f));
+	}
+
+	if (ImGui::BeginDragDropTarget()) {
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_INFO")) {
+			AssetPayloadType* pData = static_cast<AssetPayloadType*>(payload->Data);
+			slider->SetBodyTexture(pData->path);
+		}
+		ImGui::EndDragDropTarget();
+	}
+	ImGui::Unindent(20.0f);
+
+	shouldSlice = slider->GetUseNineSlice();
+	ImGui::Text("Nine-Slice: ");
+	ImGui::SameLine();
+	if (ImGui::Checkbox("##WidgeSliderBodySetUseNineSliceCheckbox", &shouldSlice)) {
+		slider->SetUseNineSlice(shouldSlice);
+	}
+
+	if (shouldSlice) {
+		float texScale = slider->GetTextureScale();
+		ImGui::Text("TextureScale: ");
+		ImGui::SameLine();
+		if (ImGui::DragFloat("##WidgetSliderBodyTextureScaleDragFloat", &texScale, 0.1f, 0.0f, FLT_MAX)) {
+			slider->SetTextureScale(texScale);
+		}
+	}
 
 	ImGui::Text("Color: ");
 	ImGui::SameLine();

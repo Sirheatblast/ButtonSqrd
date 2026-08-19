@@ -86,7 +86,7 @@ namespace BtnSqd {
 		void SetHasSliderClickTexture(bool hasTex) { hasSliderClickTexture = hasTex; }
 		void SetSliderClickTexture(std::string texturePath);
 
-		const bool GetMixSlider() { return mixSlider; }
+		const bool GetMixSlider();
 		void SetMixSlider(bool mix) { mixSlider = mix; }
 
 		const SliderType GetSliderType() { return sType; }
@@ -133,6 +133,12 @@ namespace BtnSqd {
 		const bool GetUseSliderClickTexture() { return useSliderClickTexture; }
 		void SetUseSliderClickTexture(bool use) { useSliderClickTexture = use; }
 
+		const bool GetSliderNineSlice() { return sliderNineSlice; }
+		void SetSliderNineSlice(bool slice) { sliderNineSlice = slice; }
+
+		const float GetSliderTexScale() { return sliderTexScale; }
+		void SetSliderTexScale(float nScale) { sliderTexScale = nScale; }
+
 		std::shared_ptr<Texture> GetSliderTexture() { return sliderTexture; }
 		std::shared_ptr<Texture> GetSliderHoverTexture() { return sliderHoverTexture; }
 		std::shared_ptr<Texture> GetSliderClickTexture() { return sliderClickTexture; }
@@ -158,6 +164,7 @@ namespace BtnSqd {
 		bool useSliderClickColor;
 		bool useSliderHoverTexture;
 		bool useSliderClickTexture;
+		bool sliderNineSlice;
 
 		glm::vec4 sliderColor;
 		glm::vec4 sliderHoverColor;
@@ -173,6 +180,7 @@ namespace BtnSqd {
 		float padding;
 		unsigned int numSteps;
 		float stepSize;
+		float sliderTexScale;
 
 		SliderType sType;
 		SliderDirection sDir;
@@ -185,6 +193,7 @@ namespace BtnSqd {
 		std::shared_ptr<Texture>bodyTexture;
 
 		BtnSmartRect rect;
+		BtnSmartRect sliderRect;
 
 		static inline std::vector<unsigned int> indices = { 0,2,1,2,0,3 };
 	};

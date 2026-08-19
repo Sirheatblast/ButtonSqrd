@@ -210,6 +210,7 @@ namespace BtnSqd {
 		widgetShader->SetVec4("clearColor", slider->GetSliderFinalColor());
 		widgetShader->SetVec2("widgetSize", slider->GetSliderDimensions());
 		widgetShader->SetBool("useAlbedoTexture", slider->GetHasSliderTexture());
+		widgetShader->SetBool("mixTex", slider->GetMixSlider());
 
 		RenderCommand::DrawMesh(slider->DrawSlider(widgetShader));
 		widgetShader->Detatch();

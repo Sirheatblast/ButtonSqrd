@@ -5,6 +5,7 @@ namespace BtnSqd {
 	BtnSlider::BtnSlider() {
 		lastDimensions = glm::vec2(0.0f);
 		textureScale = 1.0f;
+		sliderTexScale = 1.0f;
 		color = glm::vec4(1.0f);
 		sliderClickColor = glm::vec4(1.0f);
 		sliderHoverColor = glm::vec4(1.0f);
@@ -32,6 +33,7 @@ namespace BtnSqd {
 		hasSliderClickTexture = false;
 		useSliderHoverTexture = false;
 		useSliderClickTexture = false;
+		sliderNineSlice = false;
 		maxRange = 1.0f;
 		minRange = 0.0f;
 		numSteps = 2;
@@ -39,14 +41,14 @@ namespace BtnSqd {
 		mixSlider = false;
 		sliderColor = glm::vec4(0.9f, 0.9f, 0.9f, 1.0f);
 		sliderDimensions = glm::vec2(0.1f, 1.0f);
-		sliderSize = glm::vec2(20.0f,20.0f);
+		sliderSize = glm::vec2(20.0f, 20.0f);
 		sType = SliderType::Dot;
 		sDir = SliderDirection::XAxis;
 	}
 
 	Mesh& BtnSlider::Draw(std::shared_ptr<Shader> shader) {
-		if (width != lastDimensions.x || height != lastDimensions.y 
-			|| shouldRemake){
+		if (width != lastDimensions.x || height != lastDimensions.y
+			|| shouldRemake) {
 			shouldRemake = false;
 			UpdateMesh();
 		}
@@ -62,13 +64,14 @@ namespace BtnSqd {
 
 		RectSlicePercentages slices = rect.GetSlicePercentages();
 		RectSlicePoints slicePoints = rect.GetSlicePoints();
+
 		shader->SetVec4("sliceBounds", { slices.verticalLeft,slices.verticalRight,slices.horizUp,slices.horizDown });
 		shader->SetVec4("slicePos", { slicePoints.sliceUL,slicePoints.sliceUR,slicePoints.sliceLL,slicePoints.sliceLR });
 		shader->SetVec2("texSize", texSize);
 		shader->SetBool("useNineSlice", useNineSlice);
 		shader->SetFloat("textureScale", textureScale);
 
-		if (hasTexture&&bodyTexture) {
+		if (hasTexture && bodyTexture) {
 			bodyMesh->SetTexture(bodyTexture);
 		}
 
@@ -77,30 +80,35 @@ namespace BtnSqd {
 	Mesh& BtnSlider::DrawSlider(std::shared_ptr<Shader> shader) {
 		glm::vec2 texSize = glm::vec2(0.0f);
 
-		if (sliderTexture) {
+		if (isSliderClick && hasSliderClickTexture && sliderClickTexture) {
+			sliderMesh->SetTexture(sliderClickTexture);
+			sliderRect.SetSlicePoints(sliderClickTexture->GetSlices());
+			auto [tWidth, tHeight] = sliderClickTexture->GetResolution();
+			texSize = { (float)tWidth,(float)tHeight };
+		}
+		else if (isSliderHover && hasSliderHoverTexture && sliderHoverTexture) {
+			sliderMesh->SetTexture(sliderHoverTexture);
+			sliderRect.SetSlicePoints(sliderHoverTexture->GetSlices());
+			auto [tWidth, tHeight] = sliderHoverTexture->GetResolution();
+			texSize = { (float)tWidth,(float)tHeight };
+		}
+		else if (sliderTexture) {
 			sliderMesh->SetTexture(sliderTexture);
-			rect.SetSlicePoints(sliderTexture->GetSlices());
+			sliderRect.SetSlicePoints(sliderTexture->GetSlices());
 			auto [tWidth, tHeight] = sliderTexture->GetResolution();
 			texSize = { (float)tWidth,(float)tHeight };
 		}
 
-		RectSlicePercentages slices = rect.GetSlicePercentages();
-		RectSlicePoints slicePoints = rect.GetSlicePoints();
+		RectSlicePercentages slices = sliderRect.GetSlicePercentages();
+		RectSlicePoints slicePoints = sliderRect.GetSlicePoints();
+
+		BTNLOG_INFO("SlicePos: {},{},{},{}", slicePoints.sliceUL, slicePoints.sliceUR, slicePoints.sliceLL, slicePoints.sliceLR)
+
 		shader->SetVec4("sliceBounds", { slices.verticalLeft,slices.verticalRight,slices.horizUp,slices.horizDown });
 		shader->SetVec4("slicePos", { slicePoints.sliceUL,slicePoints.sliceUR,slicePoints.sliceLL,slicePoints.sliceLR });
 		shader->SetVec2("texSize", texSize);
-		shader->SetBool("useNineSlice", useNineSlice);
-		shader->SetFloat("textureScale", textureScale);
-
-		if (isSliderClick&&hasSliderClickTexture&&sliderClickTexture) {
-			sliderMesh->SetTexture(sliderClickTexture);
-		}
-		else if (isSliderHover&&hasSliderHoverTexture&&sliderHoverTexture) {
-			sliderMesh->SetTexture(sliderHoverTexture);
-		}
-		else if(hasSliderTexture&&sliderTexture) {
-			sliderMesh->SetTexture(sliderTexture);
-		}
+		shader->SetBool("useNineSlice", sliderNineSlice);
+		shader->SetFloat("textureScale", sliderTexScale);
 
 		return *sliderMesh;
 	}
@@ -124,13 +132,13 @@ namespace BtnSqd {
 		std::vector<Vertices> verts;
 		verts.reserve(4);
 
-		float sliderBack=0.0f;
-		float sliderWidth=0.0f;
-		float sliderHight=0.0f;
-		float sliderTop=0.0f;
+		float sliderBack = 0.0f;
+		float sliderWidth = 0.0f;
+		float sliderHight = 0.0f;
+		float sliderTop = 0.0f;
 
-		float realWidth = (resizeWithBody) ? width*sliderDimensions.x: sliderSize.x;
-		float realHeight = (resizeWithBody) ? height*sliderDimensions.y: sliderSize.y;
+		float realWidth = (resizeWithBody) ? width * sliderDimensions.x : sliderSize.x;
+		float realHeight = (resizeWithBody) ? height * sliderDimensions.y : sliderSize.y;
 
 		if (sDir == SliderDirection::XAxis) {
 			float sliderFullArea = realWidth;
@@ -149,13 +157,13 @@ namespace BtnSqd {
 				sliderWidth = glm::clamp(sliderPos, padding, sliderMax);
 			}
 
-			sliderHight = height / 2.0f + (realHeight*0.5f);
-			sliderTop = height/2.0f - (realHeight * 0.5f);			
+			sliderHight = height / 2.0f + (realHeight * 0.5f);
+			sliderTop = height / 2.0f - (realHeight * 0.5f);
 		}
 		else {
 			float sliderFullArea = realHeight;
 			float sliderMax = height - padding;
-			float sliderTopMax = sliderMax - sliderFullArea;			
+			float sliderTopMax = sliderMax - sliderFullArea;
 			float sliderPos = (height - padding) * sliderPercentage;
 
 			if (sType == SliderType::Dot) {
@@ -170,7 +178,7 @@ namespace BtnSqd {
 				sliderHight = glm::clamp(sliderPos, padding, sliderMax);
 			}
 
-			sliderWidth = width / 2.0f + (realWidth*0.5f);
+			sliderWidth = width / 2.0f + (realWidth * 0.5f);
 			sliderBack = width / 2.0f - (realWidth * 0.5f);
 
 			sliderHight = glm::clamp(sliderHight, 0.0f, sliderMax);
@@ -181,6 +189,8 @@ namespace BtnSqd {
 		verts.push_back({ glm::vec3(sliderWidth,  sliderTop,    0.0f), glm::vec2(1.0f, 0.0f) });
 		verts.push_back({ glm::vec3(sliderWidth,  sliderHight,  0.0f), glm::vec2(1.0f, 1.0f) });
 		verts.push_back({ glm::vec3(sliderBack,   sliderHight,  0.0f), glm::vec2(0.0f, 1.0f) });
+
+		sliderRect = BtnSmartRect(realWidth, realHeight);
 
 		return verts;
 	}
@@ -199,7 +209,7 @@ namespace BtnSqd {
 		if (useSliderClickColor && isSliderClick) {
 			return sliderClickColor;
 		}
-		if (useSliderHoverColor&&isSliderHover) {
+		if (useSliderHoverColor && isSliderHover) {
 			return sliderHoverColor;
 		}
 		return sliderColor;
@@ -238,7 +248,6 @@ namespace BtnSqd {
 			sliderTexture = nullptr;
 			hasSliderTexture = false;
 		}
-		rect = BtnSmartRect(width, height);
 	}
 
 	void BtnSlider::SetSliderHoverTexture(std::string texturePath) {
@@ -250,7 +259,6 @@ namespace BtnSqd {
 			sliderHoverTexture = nullptr;
 			hasSliderHoverTexture = false;
 		}
-		rect = BtnSmartRect(width, height);
 	}
 
 	void BtnSlider::SetSliderClickTexture(std::string texturePath) {
@@ -262,7 +270,15 @@ namespace BtnSqd {
 			sliderClickTexture = nullptr;
 			hasSliderClickTexture = false;
 		}
-		rect = BtnSmartRect(width, height);
+	}
+
+	const bool BtnSlider::GetMixSlider() {
+		if (useSliderClickColor && isSliderClick
+			|| useSliderHoverColor && isSliderHover) {
+			return true;
+		}
+
+		return mixSlider;
 	}
 
 
