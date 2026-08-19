@@ -1,10 +1,13 @@
 #include "BtnSlider.h"
+#include"ButtonSqrd/Core/ResourceManager.h"
 
 namespace BtnSqd {
 	BtnSlider::BtnSlider() {
 		lastDimensions = glm::vec2(0.0f);
 		textureScale = 1.0f;
 		color = glm::vec4(1.0f);
+		sliderClickColor = glm::vec4(1.0f);
+		sliderHoverColor = glm::vec4(1.0f);
 		mix = false;
 		wType = BtnWidgetType::Slider;
 		useNineSlice = false;
@@ -18,10 +21,17 @@ namespace BtnSqd {
 		resizeWithBody = true;
 		usesSteps = false;
 		jumpToClick = false;
+		useSliderHoverColor = false;
+		useSliderClickColor = false;
 
 		padding = 0.0f;
 		sliderPercentage = 0.0f;
+		hasBodyTexture = false;
 		hasSliderTexture = false;
+		hasSliderHoverTexture = false;
+		hasSliderClickTexture = false;
+		useSliderHoverTexture = false;
+		useSliderClickTexture = false;
 		maxRange = 1.0f;
 		minRange = 0.0f;
 		numSteps = 2;
@@ -58,6 +68,10 @@ namespace BtnSqd {
 		shader->SetBool("useNineSlice", useNineSlice);
 		shader->SetFloat("textureScale", textureScale);
 
+		if (hasTexture&&bodyTexture) {
+			bodyMesh->SetTexture(bodyTexture);
+		}
+
 		return *bodyMesh;
 	}
 	Mesh& BtnSlider::DrawSlider(std::shared_ptr<Shader> shader) {
@@ -78,10 +92,18 @@ namespace BtnSqd {
 		shader->SetBool("useNineSlice", useNineSlice);
 		shader->SetFloat("textureScale", textureScale);
 
+		if (isSliderClick&&hasSliderClickTexture&&sliderClickTexture) {
+			sliderMesh->SetTexture(sliderClickTexture);
+		}
+		else if (isSliderHover&&hasSliderHoverTexture&&sliderHoverTexture) {
+			sliderMesh->SetTexture(sliderHoverTexture);
+		}
+		else if(hasSliderTexture&&sliderTexture) {
+			sliderMesh->SetTexture(sliderTexture);
+		}
+
 		return *sliderMesh;
 	}
-
-	void BtnSlider::SetSliderTexture(std::shared_ptr<Texture> nSliderTex) {}
 
 	glm::vec2 BtnSlider::GetSliderDimensions() {
 		return sliderDimensions;
@@ -173,6 +195,15 @@ namespace BtnSqd {
 		std::vector<Vertices> sVerts = GenerateSliderVerts();
 		sliderMesh.reset(new Mesh(sVerts, indices, Material()));
 	}
+	const glm::vec4 BtnSlider::GetSliderFinalColor() {
+		if (useSliderClickColor && isSliderClick) {
+			return sliderClickColor;
+		}
+		if (useSliderHoverColor&&isSliderHover) {
+			return sliderHoverColor;
+		}
+		return sliderColor;
+	}
 	void BtnSlider::SetSliderPercentage(float percent) {
 		float nPercentage = percent;
 		if (usesSteps) {
@@ -186,6 +217,55 @@ namespace BtnSqd {
 		shouldRemake = true;
 		sliderPercentage = nPercentage;
 	}
+	void BtnSlider::SetBodyTexture(std::string texturePath) {
+		if (ResourceManager::GetLoadedTextures().contains(texturePath)) {
+			bodyTexture = ResourceManager::GetLoadedTextures()[texturePath];
+			hasTexture = true;
+		}
+		else {
+			bodyTexture = nullptr;
+			hasTexture = false;
+		}
+		rect = BtnSmartRect(width, height);
+	}
+
+	void BtnSlider::SetSliderTexture(std::string texturePath) {
+		if (ResourceManager::GetLoadedTextures().contains(texturePath)) {
+			sliderTexture = ResourceManager::GetLoadedTextures()[texturePath];
+			hasSliderTexture = true;
+		}
+		else {
+			sliderTexture = nullptr;
+			hasSliderTexture = false;
+		}
+		rect = BtnSmartRect(width, height);
+	}
+
+	void BtnSlider::SetSliderHoverTexture(std::string texturePath) {
+		if (ResourceManager::GetLoadedTextures().contains(texturePath)) {
+			sliderHoverTexture = ResourceManager::GetLoadedTextures()[texturePath];
+			hasSliderHoverTexture = true;
+		}
+		else {
+			sliderHoverTexture = nullptr;
+			hasSliderHoverTexture = false;
+		}
+		rect = BtnSmartRect(width, height);
+	}
+
+	void BtnSlider::SetSliderClickTexture(std::string texturePath) {
+		if (ResourceManager::GetLoadedTextures().contains(texturePath)) {
+			sliderClickTexture = ResourceManager::GetLoadedTextures()[texturePath];
+			hasSliderClickTexture = true;
+		}
+		else {
+			sliderClickTexture = nullptr;
+			hasSliderClickTexture = false;
+		}
+		rect = BtnSmartRect(width, height);
+	}
+
+
 	const float BtnSlider::GetSliderValue() {
 		float value = maxRange - minRange;
 		value *= sliderPercentage;

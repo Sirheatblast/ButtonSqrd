@@ -177,8 +177,6 @@ void BtnSqd::PropertiesMenue::ShowVariableData(EditableData& data) {
 	}
 	case DataType::GameObject: {
 		GameObject* asGameObject = static_cast<GameObject*>(data.data);
-		ImVec2 recSize{ 150.0f,25.0f };
-
 		std::string tag;
 		if (asGameObject->IsValid()) {
 			tag = asGameObject->GetComponent<TagComponenet>().tag + " ##" + std::string(data.name);
@@ -186,7 +184,7 @@ void BtnSqd::PropertiesMenue::ShowVariableData(EditableData& data) {
 		else {
 			tag = "Set GameObject ##" + std::string(data.name);
 		}
-		ImGui::Button(tag.c_str(), recSize);
+		ImGui::Button(tag.c_str());
 		if (ImGui::BeginDragDropTarget()) {
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GAMEOBJECT_INFO")) {
 
@@ -198,7 +196,6 @@ void BtnSqd::PropertiesMenue::ShowVariableData(EditableData& data) {
 		return;
 	}
 	case DataType::SuperGameObject: {
-		ImVec2 recSize{ 150.0f,25.0f };
 		SuperGameObject* asSuper = static_cast<SuperGameObject*>(data.data);
 		std::string tag;
 		if (asSuper->IsValid()) {
@@ -207,7 +204,7 @@ void BtnSqd::PropertiesMenue::ShowVariableData(EditableData& data) {
 		else {
 			tag = "Set SuperGameObject ##" + std::string(data.name);
 		}
-		ImGui::Button(tag.c_str(), recSize);
+		ImGui::Button(tag.c_str());
 		if (ImGui::BeginDragDropTarget()) {
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_INFO")) {
 				AssetPayloadType* pData = static_cast<AssetPayloadType*>(payload->Data);
@@ -1321,7 +1318,7 @@ void BtnSqd::PropertiesMenue::CreateWidgetPopup(WidgetCanvasComponent& wCanvas) 
 			wCanvas.Widgets.push_back(button);
 			auto text = std::make_shared<BtnTextBox>();
 			wCanvas.Widgets.push_back(text);
-			button->AddChild(text.get());
+			button->AddChild(text);
 		}
 		if (ImGui::Selectable("Image")) {
 			wCanvas.Widgets.push_back(std::make_shared<BtnImage>());
@@ -1912,6 +1909,7 @@ void BtnSqd::PropertiesMenue::DrawBtnButtonData(std::shared_ptr<BtnWidget> widge
 	}
 
 	ImGui::Text("Use Click Tint: ");
+	ImGui::SameLine();
 	bool useClickColor = button->GetUseClickColor();
 	if (ImGui::Checkbox("##UseClickColorButton", &useClickColor)) {
 		button->SetUseClickColor(useClickColor);
@@ -2002,6 +2000,134 @@ void BtnSqd::PropertiesMenue::DrawBtnSliderData(std::shared_ptr<BtnWidget> widge
 
 	ImGui::Separator();
 	ImGui::Text("Slider Head: ");
+
+	ImGui::Text("Selected Texture:");
+	ImGui::Indent(20.0f);
+	if (slider->GetSliderTexture()) {
+		if (ImGui::ImageButton("##CurrentWidgetButtonTexture", slider->GetSliderTexture()->GetId(), ImVec2(150.0f, 150.0f))) {
+
+		}
+		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
+			slider->SetSliderTexture("bin/null");
+		}
+	}
+	else {
+		ImGui::ImageButton("##CurrentWidgetButtonTexture", 0, ImVec2(150.0f, 150.0f));
+	}
+
+	if (ImGui::BeginDragDropTarget()) {
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_INFO")) {
+			AssetPayloadType* pData = static_cast<AssetPayloadType*>(payload->Data);
+			slider->SetSliderTexture(pData->path);
+		}
+		ImGui::EndDragDropTarget();
+	}
+	ImGui::Unindent(20.0f);
+
+	ImGui::Text("Hovered Texture:");
+	ImGui::SameLine();
+	bool useHoverTex = slider->GetUseSliderHoverTexture();
+	if (ImGui::Checkbox("##UseHoverTexButton", &useHoverTex)) {
+		slider->SetUseSliderHoverTexture(useHoverTex);
+	}
+	if (useHoverTex) {
+		ImGui::Indent(20.0f);
+		if (slider->GetSliderHoverTexture()) {
+			if (ImGui::ImageButton("##CurrentWidgetButtonHoverTexture", slider->GetSliderHoverTexture()->GetId(), ImVec2(150.0f, 150.0f))) {
+
+			}
+			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
+				slider->SetSliderHoverTexture("bin/null");
+			}
+		}
+		else {
+			ImGui::ImageButton("##CurrentWidgetButtonHoverTexture", 0, ImVec2(150.0f, 150.0f));
+		}
+
+		if (ImGui::BeginDragDropTarget()) {
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_INFO")) {
+				AssetPayloadType* pData = static_cast<AssetPayloadType*>(payload->Data);
+				slider->SetSliderHoverTexture(pData->path);
+			}
+			ImGui::EndDragDropTarget();
+		}
+		ImGui::Unindent(20.0f);
+	}
+
+	ImGui::Text("Click Texture:");
+	ImGui::SameLine();
+	bool useClickTex = slider->GetUseSliderClickTexture();
+	if (ImGui::Checkbox("##UseClickTexButton", &useClickTex)) {
+		slider->SetUseSliderClickTexture(useClickTex);
+	}
+
+	if (useClickTex) {
+		ImGui::Indent(20.0f);
+		if (slider->GetSliderClickTexture()) {
+			if (ImGui::ImageButton("##CurrentWidgetButtonClickTexture", slider->GetSliderClickTexture()->GetId(), ImVec2(150.0f, 150.0f))) {
+
+			}
+			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
+				slider->SetSliderClickTexture("bin/null");
+			}
+		}
+		else {
+			ImGui::ImageButton("##CurrentWidgetButtonClickTexture", 0, ImVec2(150.0f, 150.0f));
+		}
+
+		if (ImGui::BeginDragDropTarget()) {
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_INFO")) {
+				AssetPayloadType* pData = static_cast<AssetPayloadType*>(payload->Data);
+				slider->SetSliderClickTexture(pData->path);
+			}
+			ImGui::EndDragDropTarget();
+		}
+		ImGui::Unindent(20.0f);
+	}
+
+	ImGui::Text("Use Hover Tint: ");
+	ImGui::SameLine();
+	bool useHoverColor = slider->GetUseSliderHoverColor();
+	if (ImGui::Checkbox("##UseHoverColorButton", &useHoverColor)) {
+		slider->SetUseSliderHoverColor(useHoverColor);
+	}
+
+	if (useHoverColor) {
+		ImGui::SameLine();
+		const auto& hColor = slider->GetSliderHoverColor();
+		if (ImGui::ColorButton("##WidgetButtonHoverColor", ImVec4(hColor.x, hColor.y, hColor.z, 1.0f))) {
+			showButtonHoverColorPicker = !showButtonHoverColorPicker;
+		}
+		if (showButtonHoverColorPicker) {
+			glm::vec4 color = hColor;
+			ShowColorPicker(color, "##WidgetButtonPickHoverColor");
+			if (color != hColor) {
+				slider->SetSliderHoverColor(color);
+			}
+		}
+	}
+
+	ImGui::Text("Use Click Tint: ");
+	ImGui::SameLine();
+	bool useClickColor = slider->GetUseSliderClickColor();
+	if (ImGui::Checkbox("##UseClickColorButton", &useClickColor)) {
+		slider->SetUseSliderClickColor(useClickColor);
+	}
+
+	if (useClickColor) {
+		const auto& hColor = slider->GetSliderClickColor();
+		ImGui::SameLine();
+		if (ImGui::ColorButton("##WidgetButtonClickColor", ImVec4(hColor.x, hColor.y, hColor.z, 1.0f))) {
+			showButtonClickColorPicker = !showButtonClickColorPicker;
+		}
+		if (showButtonClickColorPicker) {
+			glm::vec4 color = hColor;
+			ShowColorPicker(color, "##WidgetButtonPickClickColor");
+			if (color != hColor) {
+				slider->SetSliderClickColor(color);
+			}
+		}
+	}
 
 	ImGui::Text("Color: ");
 	ImGui::SameLine();

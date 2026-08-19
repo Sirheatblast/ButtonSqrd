@@ -75,7 +75,7 @@ namespace BtnSqd {
 		void OnRuntimePhysicsUpdate();
 		void OnRuntimeEnd();
 
-		const std::vector<std::shared_ptr<BtnWidget>> GetWidgets();
+		const  std::vector<std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>>GetWidgets();
 
 		//Needs the gameObject id from the new camera
 		void SetActiveCamera(uint64_t cameraId);

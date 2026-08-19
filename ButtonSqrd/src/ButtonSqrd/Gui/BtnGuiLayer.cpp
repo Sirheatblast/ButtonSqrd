@@ -52,7 +52,7 @@ namespace BtnSqd {
 	std::shared_ptr<BtnWidget> BtnGuiLayer::PickWidget(glm::vec2 screenPos) {
 		glm::vec2 mousePos = screenPos - viewPortOffset;
 		std::shared_ptr<BtnWidget> selected;
-		for (const auto& widget : currentScene->GetWidgets()) {
+		for (const auto& [widget,transform] : currentScene->GetWidgets()) {
 			glm::vec2 startPos = widget->GetPos();
 			glm::vec2 endPos = startPos + widget->GetDimensions();
 
@@ -82,7 +82,7 @@ namespace BtnSqd {
 		while (!widgets.empty()) {
 			auto widget = widgets.top();
 			widgets.pop();
-			DrawChildren(widget.get());
+			DrawChildren(widget);
 		}
 		widgetShader->Detatch();
 
@@ -92,7 +92,8 @@ namespace BtnSqd {
 
 	}
 
-	void BtnGuiLayer::DrawWidget(BtnWidget* widget) {
+	void BtnGuiLayer::DrawWidget(std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>widgetPackage) {
+		auto& [widget, transfrom] = widgetPackage;
 		if (widget->GetUseScreenDim()) {
 			float max = 100.0f;
 			glm::vec2 windSize = viewPortSize;
@@ -105,31 +106,36 @@ namespace BtnSqd {
 
 		switch (widget->GetType()) {
 		case BtnWidgetType::Text:
-			RenderText(widget);
+			RenderText(widgetPackage);
 			break;
 		case BtnWidgetType::Button:
-			RenderButton(widget);
+			RenderButton(widgetPackage);
 			break;
 		case BtnWidgetType::Slider:
-			RenderSlider(widget);
+			RenderSlider(widgetPackage);
 		default:
-			RenderNormal(widget);
+			RenderNormal(widgetPackage);
 			break;
 		}
 	}
 
-	void BtnGuiLayer::DrawChildren(BtnWidget* widget) {
-		DrawWidget(widget);
+	void BtnGuiLayer::DrawChildren(std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>widgetPackage) {
+		DrawWidget(widgetPackage);
+		auto& [widget, trasform] = widgetPackage;
 		for (auto child : widget->GetChildren()) {
-			if (!child) {
+			if (!child.lock()) {
 				widget->RemoveChild(child);
 				continue;
 			}
-			DrawChildren(child);
+
+			DrawChildren({child.lock(),trasform});
 		}
 	}
 
-	void BtnGuiLayer::RenderButton(BtnWidget* widget) {
+	void BtnGuiLayer::RenderButton(std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>widgetPackage) {
+
+		auto& [widget, transform] = widgetPackage;
+
 		widgetShader->Use();
 		widgetShader->SetMat4("VP", camera.projectionMatrix * camera.viewMatrix);
 		float level = widget->GetLevel() / 10.0f;
@@ -141,7 +147,7 @@ namespace BtnSqd {
 		glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(widget->GetPos(), level)); //fix this so that it could render widgets not from fixed world positions
 		auto dimensions = widget->GetDimensions();
 
-		BtnButton* button = static_cast<BtnButton*>(widget);
+		std::shared_ptr<BtnButton> button = std::dynamic_pointer_cast<BtnButton>(widget);
 		glm::vec4 clearColor = button->GetColor();
 
 		auto buttonMesh = widget->Draw(widgetShader);
@@ -176,7 +182,8 @@ namespace BtnSqd {
 		widgetShader->Detatch();
 	}
 
-	void BtnGuiLayer::RenderSlider(BtnWidget* widget) {
+	void BtnGuiLayer::RenderSlider(std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>widgetPackage) {
+		auto& [widget, transform] = widgetPackage;
 		widgetShader->Use();
 		widgetShader->SetMat4("VP", camera.projectionMatrix * camera.viewMatrix);
 
@@ -189,7 +196,7 @@ namespace BtnSqd {
 		glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(widget->GetPos(), level)); //fix this so that it could render widgets not from fixed world positions
 		auto dimensions = widget->GetDimensions();
 
-		BtnSlider* slider = static_cast<BtnSlider*>(widget);
+		std::shared_ptr<BtnSlider>slider = std::dynamic_pointer_cast<BtnSlider>(widget);
 
 		widgetShader->SetMat4("model", modelMat);
 		widgetShader->SetVec4("clearColor", slider->GetColor());
@@ -200,7 +207,7 @@ namespace BtnSqd {
 
 		modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(widget->GetPos(), level + 0.01f)); //fix this so that it could render widgets not from fixed world positions
 		widgetShader->SetMat4("model", modelMat);
-		widgetShader->SetVec4("clearColor", slider->GetSliderColor());
+		widgetShader->SetVec4("clearColor", slider->GetSliderFinalColor());
 		widgetShader->SetVec2("widgetSize", slider->GetSliderDimensions());
 		widgetShader->SetBool("useAlbedoTexture", slider->GetHasSliderTexture());
 
@@ -208,7 +215,9 @@ namespace BtnSqd {
 		widgetShader->Detatch();
 	}
 
-	void BtnGuiLayer::RenderNormal(BtnWidget* widget) {
+	void BtnGuiLayer::RenderNormal(std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>widgetPackage) {
+		auto& [widget, transform] = widgetPackage;
+
 		widgetShader->Use();
 		widgetShader->SetMat4("VP", camera.projectionMatrix * camera.viewMatrix);
 
@@ -230,9 +239,10 @@ namespace BtnSqd {
 		widgetShader->Detatch();
 	}
 
-	void BtnGuiLayer::RenderText(BtnWidget* widget) {
-		textShader->Use();
+	void BtnGuiLayer::RenderText(std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>widgetPackage) {
+		auto& [widget, transform] = widgetPackage;
 
+		textShader->Use();
 		textShader->SetMat4("VP", camera.projectionMatrix * camera.viewMatrix);
 
 		float level = widget->GetLevel() / 10.0f;
@@ -244,7 +254,7 @@ namespace BtnSqd {
 		auto dimensions = widget->GetDimensions();
 		textShader->SetMat4("model", modelMat);
 
-		BtnTextBox* text = static_cast<BtnTextBox*>(widget);
+		std::shared_ptr<BtnTextBox>text = std::dynamic_pointer_cast<BtnTextBox>(widget);
 		textShader->SetUniform("fontAtlas", 0);
 		if (text->GetFont().GetFontTexture()) {
 			text->GetFont().GetFontTexture()->Bind();
@@ -258,12 +268,13 @@ namespace BtnSqd {
 	}
 
 	void BtnGuiLayer::GenWidgetPQ() {
-		for (const auto& widget : currentScene->GetWidgets()) {
+		for (const auto& widgetPackage : currentScene->GetWidgets()) {
+			const auto& [widget, transform] = widgetPackage;
 			if (!widget->GetIsEnabled() || widget->HasParent()) {
 				continue;
 			}
-			widget->UpdateChildrenPos(widget.get());
-			widgets.push(widget);
+			widget->UpdateChildrenPos(widget);
+			widgets.push(widgetPackage);
 		}
 	}
 	void BtnGuiLayer::SetUpCamera() {
@@ -278,7 +289,8 @@ namespace BtnSqd {
 		ViewPort viewPort = Application::GetApp()->GetCurrentViewPort();
 
 		while (!widgets.empty()) {
-			auto widget = widgets.top();
+			auto widgetPack = widgets.top();
+			auto& [widget, transfrom] = widgetPack;
 			widgets.pop();
 
 			if (widget->GetUseScreenDim()) {

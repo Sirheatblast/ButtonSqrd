@@ -56,14 +56,35 @@ namespace BtnSqd {
 			resizeWithBody = shouldResize;
 		}
 
+		const glm::vec4 GetSliderFinalColor();
+
 		const glm::vec4 GetSliderColor() { return sliderColor; }
 		void SetSliderColor(glm::vec4 nColor) { sliderColor = nColor; }
+
+		const glm::vec4 GetSliderHoverColor() { return sliderHoverColor; }
+		void SetSliderHoverColor(glm::vec4 nColor) { sliderHoverColor = nColor; }
+
+		const glm::vec4 GetSliderClickColor() { return sliderClickColor; }
+		void SetSliderClickColor(glm::vec4 nColor) { sliderClickColor = nColor; }
 
 		void SetSliderPercentage(float percent);
 		const float GetSliderPercentage() { return sliderPercentage; }
 
+		const bool GetHasBodyTexture() { return hasBodyTexture; }
+		void SetHasBodyTexture(bool hasTex) { hasBodyTexture = hasTex; }
+		void SetBodyTexture(std::string texturePath);
+
 		const bool GetHasSliderTexture() { return hasSliderTexture; }
-		void SetSliderTexture(std::shared_ptr<Texture>nSliderTex);
+		void SetHasSliderTexture(bool hasTex) { hasSliderClickTexture = hasTex; }
+		void SetSliderTexture(std::string texturePath);
+
+		const bool GetHasSliderHoverTexture() { return hasSliderHoverTexture; }
+		void SetHasSliderHoverTexture(bool hasTex) { hasSliderHoverTexture = hasTex; }
+		void SetSliderHoverTexture(std::string texturePath);
+
+		const bool GetHasSliderClickTexture() { return hasSliderHoverTexture; }
+		void SetHasSliderClickTexture(bool hasTex) { hasSliderClickTexture = hasTex; }
+		void SetSliderClickTexture(std::string texturePath);
 
 		const bool GetMixSlider() { return mixSlider; }
 		void SetMixSlider(bool mix) { mixSlider = mix; }
@@ -99,6 +120,24 @@ namespace BtnSqd {
 
 		const bool GetJumpToClick() { return jumpToClick; }
 		void SetJumpToClick(bool shouldJump) { jumpToClick = shouldJump; }
+
+		const bool GetUseSliderHoverColor() { return useSliderHoverColor; }
+		void SetUseSliderHoverColor(bool use) { useSliderHoverColor = use; }
+
+		const bool GetUseSliderClickColor() { return useSliderClickColor; }
+		void SetUseSliderClickColor(bool use) { useSliderClickColor = use; }
+
+		const bool GetUseSliderHoverTexture() { return useSliderHoverTexture; }
+		void SetUseSliderHoverTexture(bool use) { useSliderHoverTexture = use; }
+
+		const bool GetUseSliderClickTexture() { return useSliderClickTexture; }
+		void SetUseSliderClickTexture(bool use) { useSliderClickTexture = use; }
+
+		std::shared_ptr<Texture> GetSliderTexture() { return sliderTexture; }
+		std::shared_ptr<Texture> GetSliderHoverTexture() { return sliderHoverTexture; }
+		std::shared_ptr<Texture> GetSliderClickTexture() { return sliderClickTexture; }
+		std::shared_ptr<Texture> GetBodyTexture() { return bodyTexture; }
+
 	private:
 		std::vector<Vertices> GenerateBodyVerts();
 		std::vector<Vertices> GenerateSliderVerts();
@@ -106,14 +145,24 @@ namespace BtnSqd {
 
 		bool isSliderHover;
 		bool isSliderClick;
+		bool hasBodyTexture;
 		bool hasSliderTexture;
+		bool hasSliderHoverTexture;
+		bool hasSliderClickTexture;
 		bool mixSlider;
 		bool shouldRemake;
 		bool resizeWithBody;
 		bool usesSteps;
 		bool jumpToClick;
+		bool useSliderHoverColor;
+		bool useSliderClickColor;
+		bool useSliderHoverTexture;
+		bool useSliderClickTexture;
 
 		glm::vec4 sliderColor;
+		glm::vec4 sliderHoverColor;
+		glm::vec4 sliderClickColor;
+
 		glm::vec2 sliderDimensions;
 		glm::vec2 sliderSize;
 		glm::vec2 lastDimensions;
@@ -131,6 +180,8 @@ namespace BtnSqd {
 		std::shared_ptr<Mesh>sliderMesh;
 		std::shared_ptr<Mesh>bodyMesh;
 		std::shared_ptr<Texture>sliderTexture;
+		std::shared_ptr<Texture>sliderHoverTexture;
+		std::shared_ptr<Texture>sliderClickTexture;
 		std::shared_ptr<Texture>bodyTexture;
 
 		BtnSmartRect rect;

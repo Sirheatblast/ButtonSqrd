@@ -199,8 +199,10 @@ namespace BtnSqd {
 			ImGui::Indent(20.0f);
 			if (widget->GetShowChildren()) {
 				for (const auto& child : widget->GetChildren()) {
-					if (child) {
-						DisplayWidget(child, widgetComp, gameObj, i);
+					auto childStrong = child.lock();
+
+					if (childStrong) {
+						DisplayWidget(childStrong.get(), widgetComp, gameObj, i);
 					}
 					else {
 						widget->RemoveChild(child);
@@ -249,7 +251,7 @@ namespace BtnSqd {
 			ImGui::EndDragDropSource();
 		}
 	}
-	void SceneDirectory::DragWidgetSource(std::shared_ptr<BtnWidget> widget, std::shared_ptr<BtnSqd::GameObject>& gameObj) {
+	void SceneDirectory::DragWidgetSource(std::shared_ptr<BtnWidget>& widget, std::shared_ptr<BtnSqd::GameObject>& gameObj) {
 		if (ImGui::BeginDragDropSource()) {
 			WidgetPayload payload;
 			payload.gameObject = gameObj.get();
@@ -271,8 +273,7 @@ namespace BtnSqd {
 
 				GameObject* baseGameObj = data->gameObject;
 				if (baseGameObj->GetId()==gameObj->GetId()) {
-					BtnWidget* widget;
-					widget = data->widget;
+					auto widget = data->widget->shared_from_this();
 					if (widget->HasParent()) {
 						widget->GetParent()->RemoveChild(widget);
 					}

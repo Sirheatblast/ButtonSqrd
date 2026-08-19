@@ -321,12 +321,12 @@ namespace BtnSqd {
 		}
 	}
 
-	const std::vector<std::shared_ptr<BtnWidget>> BtnScene::GetWidgets() {
-		std::vector<std::shared_ptr<BtnWidget>> Widgets;
+	const std::vector<std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>> BtnScene::GetWidgets() {
+		std::vector<std::tuple<std::shared_ptr<BtnWidget>,BtnTransform>> Widgets;
 
-		for (const auto& [WidgetComp]:gameReg.GetAllOf<WidgetCanvasComponent>()) {
+		for (const auto& [WidgetComp,transform]:gameReg.GetAllOf<WidgetCanvasComponent,TransformComponent>()) {
 			for (const auto& Widget:WidgetComp.Widgets) {
-				Widgets.push_back(Widget);
+				Widgets.push_back({ Widget,transform.transform });
 			}
 		}
 

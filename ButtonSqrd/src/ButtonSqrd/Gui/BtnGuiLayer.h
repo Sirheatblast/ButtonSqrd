@@ -35,21 +35,23 @@ namespace BtnSqd {
 
 	private:
 		struct CompareWidget {
-			bool operator()(const std::shared_ptr<BtnWidget>& a, const std::shared_ptr<BtnWidget>& b) const {
+			bool operator()(std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>& tA,std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>& tB) const {
+				auto& [a, ta] = tA;
+				auto& [b, tb] = tB;
 				return a->GetLevel() > b->GetLevel();
 			}
 		};
 
 		void RenderWidgets();
-		void DrawWidget(BtnWidget* widget);
-		void DrawChildren(BtnWidget* widget);
+		void DrawWidget(std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>widgetPackage);
+		void DrawChildren(std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>widgetPackage);
 		void GenWidgetPQ();
 		void SetUpCamera();
 
-		void RenderButton(BtnWidget* widget);
-		void RenderSlider(BtnWidget* widget);
-		void RenderNormal(BtnWidget* widget);
-		void RenderText(BtnWidget* widget);
+		void RenderButton(std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>widgetPackage);
+		void RenderSlider(std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>widgetPackage);
+		void RenderNormal(std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>widgetPackage);
+		void RenderText(std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>widgetPackage);
 
 		void ProcessWidgetState(std::shared_ptr<BtnWidget> widget,glm::vec2 mouse,ViewPort viewPort);
 		void ProcessSliderState(std::shared_ptr<BtnWidget> widget,glm::vec2 mouse,ViewPort viewPort);
@@ -62,7 +64,9 @@ namespace BtnSqd {
 		std::shared_ptr<Shader> widgetShader;
 		std::shared_ptr<Shader> textShader;
 
-		std::priority_queue<std::shared_ptr<BtnWidget>,std::vector<std::shared_ptr<BtnWidget>>, CompareWidget> widgets;
+		std::priority_queue<std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>, 
+			std::vector<std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>>, CompareWidget> widgets;
+
 		CameraComponent camera;
 		glm::vec2 viewPortSize;
 		glm::vec2 viewPortOffset = glm::vec2(0.0f);

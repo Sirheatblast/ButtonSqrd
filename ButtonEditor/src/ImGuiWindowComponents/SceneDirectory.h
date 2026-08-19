@@ -17,7 +17,7 @@ namespace BtnSqd {
 	private:
 		void DropAddChild(std::shared_ptr<BtnSqd::GameObject> gameObj);
 		void DragGameObj(GameObject* gameObj);
-		void DragWidgetSource(std::shared_ptr<BtnWidget> widget, std::shared_ptr<BtnSqd::GameObject>& gameObj);
+		void DragWidgetSource(std::shared_ptr<BtnWidget>& widget, std::shared_ptr<BtnSqd::GameObject>& gameObj);
 		void DropWidgetTarget(std::shared_ptr<BtnWidget> nParent, std::shared_ptr<BtnSqd::GameObject>& gameObj);
 
 		void DestroySelected(GameObject& parent);

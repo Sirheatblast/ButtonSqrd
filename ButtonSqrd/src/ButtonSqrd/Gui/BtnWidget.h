@@ -60,20 +60,20 @@ namespace BtnSqd {
 		}
 		void SetPos(glm::vec2 nPos) {
 			pos = nPos;
-			UpdateChildrenPos(this);
+			UpdateChildrenPos(this->weak_from_this());
 		}
 
-		void AddChild(BtnWidget* widget);
-		void RemoveChild(BtnWidget* widget);
-		void UpdateChildrenPos(BtnWidget* widget);
+		void AddChild(std::weak_ptr<BtnWidget> widget);
+		void RemoveChild(std::weak_ptr<BtnWidget> widget);
+		void UpdateChildrenPos(std::weak_ptr<BtnWidget> widget);
 
-		bool HasParent()const { return parent != nullptr; }
-		BtnWidget* GetParent() { return parent; }
+		bool HasParent()const;
+		std::shared_ptr<BtnWidget> GetParent();
 
 		bool HasChildren()const { return !children.empty(); }
 		bool GetShowChildren() { return showChildren; }
 		void SetShowChildren(bool show) { showChildren = show; }
-		std::vector<BtnWidget*> GetChildren() { return children; }
+		std::vector<std::weak_ptr<BtnWidget>> GetChildren() { return children; }
 
 		bool GetIsEnabled()const { return isEnabled; }
 		bool GetClicked()const { return isClicked; }
@@ -107,7 +107,8 @@ namespace BtnSqd {
 		std::string name = "widget";
 		BtnWidgetType wType= BtnWidgetType::None;
 
-		BtnWidget* parent = nullptr;
-		std::vector<BtnWidget*>children;
+		std::weak_ptr<BtnWidget> parent;
+
+		std::vector<std::weak_ptr<BtnWidget>>children;
 	};
 }
