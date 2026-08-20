@@ -6,79 +6,121 @@ namespace BtnSqd {
 		Logger::GetClientConsole()->sinks().push_back(sink);
 		Logger::GetCoreConsole()->sinks().push_back(sink);
 	}
-	void BtnConsole::LogToConsole(LogData lData) {
-		lData.message += lData.levelType + lData.line.message;
-		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0));
-		ImGui::PushStyleColor(ImGuiCol_Text, lData.color);
 
-		std::vector<char> messageRaw(lData.message.size() + 1);
-		strcpy_s(messageRaw.data(), messageRaw.size(), lData.message.c_str());
+    void BtnConsole::OnUpdate() {
+        ImGui::Begin("Console");
 
-		if (condenseMessages) {
-			if (lData.message != lastMessage) {
-				ImGui::InputText(lData.uniqueId.c_str(), messageRaw.data(), messageRaw.size(), ImGuiInputTextFlags_ReadOnly);
-			}
-		}
-		else {
-			ImGui::InputText(lData.uniqueId.c_str(), messageRaw.data(), messageRaw.size(), ImGuiInputTextFlags_ReadOnly);
-		}
-		lastMessage = lData.message;
-		ImGui::PopStyleColor(2);
-	}
-	void BtnConsole::OnUpdate() {
-		ImGui::Begin("Console");
+        if (ImGui::IsWindowHovered(ImGuiHoveredFlags_ChildWindows) && ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !ImGui::IsAnyItemActive()) {
+            Application::GetApp()->PushEvent(new OnSelectWindowEvent(ActiveWindow::MainGUI));
+        }
 
-		if (ImGui::IsWindowHovered(ImGuiHoveredFlags_ChildWindows) && ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !ImGui::IsAnyItemActive()) {
-			Application::GetApp()->PushEvent(new OnSelectWindowEvent(ActiveWindow::MainGUI));
-		}
+        ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 150.0f);
+        if (ImGui::Button("Clear")) {
+            sink->clearBuffer();
+        }
+        ImGui::SameLine();
 
-		ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 150.0f);
-		if (ImGui::Button("Clear")) {
-			sink->clearBuffer();
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Condense")) {
-			condenseMessages = !condenseMessages;
-		}
+        std::string label = (condenseMessages) ? "Condensed" : "Un-Condensed";
+        label += "##BtnConsoleCondenseButton";
 
-		ImVec2 consoleSize = ImGui::GetContentRegionAvail();
-		lastMessage = "";
+        if (ImGui::Button(label.c_str())) {
+            condenseMessages = !condenseMessages;
+            sink->SetShouldCondense(condenseMessages);
+        }
 
-		ImGui::BeginChild("TextRegion", ImVec2(consoleSize.x, consoleSize.y), true);
-		for (size_t i = 0; i < sink->GetBuffer().size(); ++i) {
-			const auto& line = sink->GetBuffer()[i];
-			std::string uniqueId = "##ConsoleLogLine###" + std::to_string(i);
-			std::string message = line.loggerName;
-			LogData lData(line);
-			lData.message = message;
-			lData.uniqueId = uniqueId;
+        ImVec2 consoleSize = ImGui::GetContentRegionAvail();
 
-			switch (line.level) {
-			case spdlog::level::level_enum::info: {
-				lData.levelType = " INFO ";
-				lData.color = ImVec4(0.0f, 1.0f, 0.0f, 1.0f);
-				break;
-			}
-			case spdlog::level::level_enum::trace: {
-				lData.levelType = " TRACE ";
-				lData.color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-				break;
-			}
-			case spdlog::level::level_enum::warn: {
-				lData.levelType = " WARN ";
-				lData.color = ImVec4(1.0f, 1.0f, 0.0f, 1.0f);
-				break;
-			}
-			case spdlog::level::level_enum::err: {
-				lData.levelType = " ERROR ";
-				lData.color = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
-				break;
-			}
-			}
-			LogToConsole(lData);
-		}
-		ImGui::EndChild();
+        ImGui::BeginChild("TextRegion", ImVec2(0.0f, 0.0f), ImGuiChildFlags_Border, ImGuiWindowFlags_NoScrollbar);
 
-		ImGui::End();
-	}
+        const auto& buffer = sink->GetBuffer();
+        if (!buffer.empty()) {
+            std::string fullTextBuffer;
+            struct ProcessedLine {
+                std::string text;
+                ImVec4 color;
+            };
+            std::vector<ProcessedLine> linesToRender;
+            linesToRender.reserve(buffer.size());
+
+            for (size_t i = 0; i < buffer.size(); ++i) {
+                const auto& line = buffer[i];
+                std::string levelType = " INFO ";
+                ImVec4 color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+
+                switch (line.level) {
+                case spdlog::level::level_enum::info:
+                    levelType = " INFO ";
+                    color = ImVec4(0.0f, 1.0f, 0.0f, 1.0f);
+                    break;
+                case spdlog::level::level_enum::trace:
+                    levelType = " TRACE ";
+                    color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+                    break;
+                case spdlog::level::level_enum::warn:
+                    levelType = " WARN ";
+                    color = ImVec4(1.0f, 1.0f, 0.0f, 1.0f);
+                    break;
+                case spdlog::level::level_enum::err:
+                    levelType = " ERROR ";
+                    color = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
+                    break;
+                }
+
+                std::string constructedLine = line.loggerName + levelType + line.message + "\n";
+                fullTextBuffer += constructedLine;
+                linesToRender.push_back({ constructedLine, color });
+            }
+
+            ImVec2 startCursorPos = ImGui::GetCursorPos();
+
+            ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0));
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0, 0, 0, 0));
+
+            std::vector<char> rawBuffer(fullTextBuffer.begin(), fullTextBuffer.end());
+            rawBuffer.push_back('\0');
+
+            ImGui::InputTextMultiline("##HiddenSelectableConsole", rawBuffer.data(), rawBuffer.size(),
+                                      ImGui::GetContentRegionAvail(), ImGuiInputTextFlags_ReadOnly);
+            ImGui::PopStyleColor(2);
+
+            float scrollY = 0.0f;
+            if (ImGui::BeginChild("##HiddenSelectableConsole")) {
+                scrollY = ImGui::GetScrollY();
+                ImGui::EndChild();
+            }
+
+            ImVec2 endCursorPos = ImGui::GetCursorPos();
+            ImGuiStyle& style = ImGui::GetStyle();
+
+            ImVec2 alignedPos = startCursorPos;
+            alignedPos.x += style.FramePadding.x;
+
+            alignedPos.y += style.FramePadding.y - scrollY;
+            ImGui::SetCursorPos(alignedPos);
+
+            ImVec2 windowPos = ImGui::GetWindowPos();
+            ImVec2 contentAvail = ImGui::GetContentRegionAvail();
+
+            ImGui::PushClipRect(
+                ImVec2(windowPos.x + startCursorPos.x, windowPos.y + startCursorPos.y),
+                ImVec2(windowPos.x + startCursorPos.x + contentAvail.x, windowPos.y + startCursorPos.y + contentAvail.y),
+                true
+            );
+            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+            for (const auto& line : linesToRender) {
+                ImGui::SetCursorPosX(alignedPos.x);
+                ImGui::TextColored(line.color, "%s", line.text.c_str());
+            }
+            ImGui::PopStyleVar();
+
+            ImGui::PopClipRect();
+
+            ImGui::SetCursorPos(endCursorPos);
+        }
+
+        ImGui::EndChild();
+
+        ImGui::End();
+    }
+
 }
