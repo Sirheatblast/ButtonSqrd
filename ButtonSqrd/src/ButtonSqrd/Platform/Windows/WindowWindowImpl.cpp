@@ -45,14 +45,12 @@ namespace BtnSqd {
 			throw std::runtime_error("The Window wasn't created properly");
 			glfwTerminate();
 		}
-		gContext = new OpenGLContext(window);
-		gContext->Init();
 
-		glfwWindowHint(GLFW_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_VERSION_MINOR, 3);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwMakeContextCurrent(window);
 		glfwSetWindowUserPointer(window, &windData);
+
+		gContext = new OpenGLContext(window);
+		gContext->Init();
 
 		//Setup callbacks
 		glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height) {
@@ -78,6 +76,11 @@ namespace BtnSqd {
 								 });
 		glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mod) {
 			ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mod);
+
+			ImGuiIO& io = ImGui::GetIO();
+			if (io.WantCaptureKeyboard) {
+				return;
+			}
 
 			WindData& data = *(WindData*)glfwGetWindowUserPointer(window);
 			switch (action) {
@@ -117,8 +120,6 @@ namespace BtnSqd {
 			data.callback(new OnMouseScrollEvent(float(xoffset), float(yoffset)));
 							  });
 		glfwSetCharCallback(window, [](GLFWwindow* window, unsigned int keyCode) {
-			ImGui_ImplGlfw_CharCallback(window, keyCode);		
-
 			WindData& data = *(WindData*)glfwGetWindowUserPointer(window);
 			data.callback(new OnKeyTypedEvent(keyCode));
 							});

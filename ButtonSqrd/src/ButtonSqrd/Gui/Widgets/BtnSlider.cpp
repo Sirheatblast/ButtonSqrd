@@ -101,7 +101,7 @@ namespace BtnSqd {
 
 		RectSlicePercentages slices = sliderRect.GetSlicePercentages();
 		RectSlicePoints slicePoints = sliderRect.GetSlicePoints();
-
+		
 		BTNLOG_INFO("SlicePos: {},{},{},{}", slicePoints.sliceUL, slicePoints.sliceUR, slicePoints.sliceLL, slicePoints.sliceLR)
 
 		shader->SetVec4("sliceBounds", { slices.verticalLeft,slices.verticalRight,slices.horizUp,slices.horizDown });
@@ -139,6 +139,8 @@ namespace BtnSqd {
 
 		float realWidth = (resizeWithBody) ? width * sliderDimensions.x : sliderSize.x;
 		float realHeight = (resizeWithBody) ? height * sliderDimensions.y : sliderSize.y;
+
+		sliderSize = {realWidth,realHeight};
 
 		if (sDir == SliderDirection::XAxis) {
 			float sliderFullArea = realWidth;

@@ -2,15 +2,15 @@
 
 #include "OpenGLContext.h"
 
-BtnSqd::OpenGLContext::OpenGLContext(GLFWwindow* windowHandle):window(windowHandle){
+BtnSqd::OpenGLContext::OpenGLContext(GLFWwindow* windowHandle) :window(windowHandle) {
 
 }
 
-void BtnSqd::OpenGLContext::SwapBuffers(){
+void BtnSqd::OpenGLContext::SwapBuffers() {
 	glfwSwapBuffers(window);
 }
 
-void BtnSqd::OpenGLContext::Init(){
+void BtnSqd::OpenGLContext::Init() {
 	glfwMakeContextCurrent(window);
 	int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 	glEnable(GL_DEPTH_TEST);
@@ -23,8 +23,9 @@ void BtnSqd::OpenGLContext::Init(){
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;		  // Enable Docking
 
 	// Setup Platform/Renderer backends
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplGlfw_InitForOpenGL(window, false);
 	ImGui_ImplOpenGL3_Init("#version 420");
+
 }
 
 void BtnSqd::OpenGLContext::InitImgui() {
