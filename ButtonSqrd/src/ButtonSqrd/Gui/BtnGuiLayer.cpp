@@ -208,7 +208,7 @@ namespace BtnSqd {
 		modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(widget->GetPos(), level + 0.01f)); //fix this so that it could render widgets not from fixed world positions
 		widgetShader->SetMat4("model", modelMat);
 		widgetShader->SetVec4("clearColor", slider->GetSliderFinalColor());
-		widgetShader->SetVec2("widgetSize", slider->GetSliderDimensions());
+		widgetShader->SetVec2("widgetSize", slider->GetRealSliderSize());
 		widgetShader->SetBool("useAlbedoTexture", slider->GetHasSliderTexture());
 		widgetShader->SetBool("mixTex", slider->GetMixSlider());
 

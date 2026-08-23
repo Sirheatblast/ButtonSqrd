@@ -42,6 +42,7 @@ namespace BtnSqd {
 		sliderColor = glm::vec4(0.9f, 0.9f, 0.9f, 1.0f);
 		sliderDimensions = glm::vec2(0.1f, 1.0f);
 		sliderSize = glm::vec2(20.0f, 20.0f);
+		realSliderSize = glm::vec2(0.0f);
 		sType = SliderType::Dot;
 		sDir = SliderDirection::XAxis;
 	}
@@ -102,8 +103,6 @@ namespace BtnSqd {
 		RectSlicePercentages slices = sliderRect.GetSlicePercentages();
 		RectSlicePoints slicePoints = sliderRect.GetSlicePoints();
 		
-		BTNLOG_INFO("SlicePos: {},{},{},{}", slicePoints.sliceUL, slicePoints.sliceUR, slicePoints.sliceLL, slicePoints.sliceLR)
-
 		shader->SetVec4("sliceBounds", { slices.verticalLeft,slices.verticalRight,slices.horizUp,slices.horizDown });
 		shader->SetVec4("slicePos", { slicePoints.sliceUL,slicePoints.sliceUR,slicePoints.sliceLL,slicePoints.sliceLR });
 		shader->SetVec2("texSize", texSize);
@@ -134,13 +133,11 @@ namespace BtnSqd {
 
 		float sliderBack = 0.0f;
 		float sliderWidth = 0.0f;
-		float sliderHight = 0.0f;
+		float sliderHeight = 0.0f;
 		float sliderTop = 0.0f;
 
 		float realWidth = (resizeWithBody) ? width * sliderDimensions.x : sliderSize.x;
 		float realHeight = (resizeWithBody) ? height * sliderDimensions.y : sliderSize.y;
-
-		sliderSize = {realWidth,realHeight};
 
 		if (sDir == SliderDirection::XAxis) {
 			float sliderFullArea = realWidth;
@@ -159,7 +156,7 @@ namespace BtnSqd {
 				sliderWidth = glm::clamp(sliderPos, padding, sliderMax);
 			}
 
-			sliderHight = height / 2.0f + (realHeight * 0.5f);
+			sliderHeight = height / 2.0f + (realHeight * 0.5f);
 			sliderTop = height / 2.0f - (realHeight * 0.5f);
 		}
 		else {
@@ -170,36 +167,36 @@ namespace BtnSqd {
 
 			if (sType == SliderType::Dot) {
 				sliderTop = sliderPos - realHeight / 2.0f;
-				sliderHight = sliderPos + realHeight / 2.0f;
+				sliderHeight = sliderPos + realHeight / 2.0f;
 
 				sliderTop = glm::clamp(sliderTop, padding, sliderTopMax);
-				sliderHight = glm::clamp(sliderHight, realHeight + padding, sliderMax);
+				sliderHeight = glm::clamp(sliderHeight, realHeight + padding, sliderMax);
 			}
 			else {
 				sliderTop = padding;
-				sliderHight = glm::clamp(sliderPos, padding, sliderMax);
+				sliderHeight = glm::clamp(sliderPos, padding, sliderMax);
 			}
 
 			sliderWidth = width / 2.0f + (realWidth * 0.5f);
 			sliderBack = width / 2.0f - (realWidth * 0.5f);
 
-			sliderHight = glm::clamp(sliderHight, 0.0f, sliderMax);
+			sliderHeight = glm::clamp(sliderHeight, 0.0f, sliderMax);
 			sliderTop = glm::clamp(sliderTop, 0.0f, sliderTopMax);
 		}
 
 		verts.push_back({ glm::vec3(sliderBack,   sliderTop,    0.0f), glm::vec2(0.0f, 0.0f) });
 		verts.push_back({ glm::vec3(sliderWidth,  sliderTop,    0.0f), glm::vec2(1.0f, 0.0f) });
-		verts.push_back({ glm::vec3(sliderWidth,  sliderHight,  0.0f), glm::vec2(1.0f, 1.0f) });
-		verts.push_back({ glm::vec3(sliderBack,   sliderHight,  0.0f), glm::vec2(0.0f, 1.0f) });
+		verts.push_back({ glm::vec3(sliderWidth,  sliderHeight,  0.0f), glm::vec2(1.0f, 1.0f) });
+		verts.push_back({ glm::vec3(sliderBack,   sliderHeight,  0.0f), glm::vec2(0.0f, 1.0f) });
 
-		sliderRect = BtnSmartRect(realWidth, realHeight);
+
+		sliderRect = BtnSmartRect(sliderWidth-sliderBack, sliderHeight-sliderTop);
+		realSliderSize = { sliderWidth-sliderBack, sliderHeight-sliderTop };
 
 		return verts;
 	}
 	void BtnSlider::UpdateMesh() {
-		lastDimensions.x = width;
-		lastDimensions.y = height;
-		lastDimensions.y = height;
+		lastDimensions = {width,height};
 
 		std::vector<Vertices> verts = GenerateBodyVerts();
 		bodyMesh.reset(new Mesh(verts, indices, Material()));

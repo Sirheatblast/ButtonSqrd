@@ -20,6 +20,11 @@ namespace BtnSqd {
 
 		Mesh& Draw(std::shared_ptr<Shader> shader) override;
 		Mesh& DrawSlider(std::shared_ptr<Shader>shader);
+		
+		glm::vec2 GetRealSliderSize() {
+			return realSliderSize;
+		}
+
 		glm::vec2 GetSliderSize() {
 			return sliderSize;
 		}
@@ -172,6 +177,7 @@ namespace BtnSqd {
 
 		glm::vec2 sliderDimensions;
 		glm::vec2 sliderSize;
+		glm::vec2 realSliderSize;
 		glm::vec2 lastDimensions;
 
 		float sliderPercentage;
