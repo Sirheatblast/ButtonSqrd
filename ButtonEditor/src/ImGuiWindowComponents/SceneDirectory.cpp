@@ -1,4 +1,5 @@
 #include "SceneDirectory.h"
+#include"StaticPopups.h"
 
 namespace BtnSqd {
 	SceneDirectory::SceneDirectory(std::shared_ptr<BtnScene>& currentScene) :currentScene(currentScene) {
@@ -59,7 +60,7 @@ namespace BtnSqd {
 				continue;
 			}
 			if (!gameObj->IsChild()) {
-				if (selectedObj.IsValid()&&gameObj->GetUUID() == selectedObj.GetUUID()) {
+				if (selectedObj.IsValid() && gameObj->GetUUID() == selectedObj.GetUUID()) {
 					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
 				}
 				else {
@@ -150,6 +151,7 @@ namespace BtnSqd {
 
 			if (widgetComp.displayInEditor) {
 				DisplayWidgets(widgetComp, gameObj);
+				WidgetOptionsPopup(widgetComp);
 			}
 
 			ImGui::Unindent(20.0f);
@@ -169,7 +171,7 @@ namespace BtnSqd {
 	}
 	void SceneDirectory::DisplayWidget(BtnWidget* widget, BtnSqd::WidgetCanvasComponent& widgetComp, std::shared_ptr<BtnSqd::GameObject>& gameObj, unsigned int i) {
 		std::shared_ptr<BtnWidget>widgetSh = widget->shared_from_this();
-		
+
 		if (widget == widgetComp.selectedWidget.get()) {
 			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
 		}
@@ -185,6 +187,11 @@ namespace BtnSqd {
 		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
 			widget->SetShowChildren(!widget->GetShowChildren());
 		}
+		if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
+			widgetComp.selectedWidget = widgetSh;
+			ImGui::OpenPopup("##WidgetOptionsPopup");
+		}
+
 		DragWidgetSource(widgetSh, gameObj);
 		DropWidgetTarget(widgetSh, gameObj);
 
@@ -209,11 +216,12 @@ namespace BtnSqd {
 					}
 				}
 			}
-			
+
 			ImGui::Unindent(20.0f);
 		}
 		ImGui::PopStyleColor();
 	}
+	
 	void SceneDirectory::DropAddChild(std::shared_ptr<BtnSqd::GameObject> gameObj) {
 		if (ImGui::BeginDragDropTarget()) {
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GAMEOBJECT_INFO")) {
@@ -225,13 +233,13 @@ namespace BtnSqd {
 					child->GetParent()->RemoveChild(*child);
 				}
 
-					std::shared_ptr<GameObject> parentObj;
-					parentObj = gameObj;
+				std::shared_ptr<GameObject> parentObj;
+				parentObj = gameObj;
 
 				if (parentObj) {
 					parentObj->AddChild(*child);
 				}
-				
+
 			}
 			ImGui::EndDragDropTarget();
 		}
@@ -272,7 +280,7 @@ namespace BtnSqd {
 				WidgetPayload* data = static_cast<WidgetPayload*>(payload->Data);
 
 				GameObject* baseGameObj = data->gameObject;
-				if (baseGameObj->GetId()==gameObj->GetId()) {
+				if (baseGameObj->GetId() == gameObj->GetId()) {
 					auto widget = data->widget->shared_from_this();
 					if (widget->HasParent()) {
 						widget->GetParent()->RemoveChild(widget);

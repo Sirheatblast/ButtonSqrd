@@ -2,7 +2,7 @@
 
 namespace BtnSqd {
 
-	BtnTextBox::BtnTextBox():font(ResourceManager::GetLoadedFonts().begin()->second) {
+	BtnTextBox::BtnTextBox() :font(ResourceManager::GetLoadedFonts().begin()->second) {
 		name = "new TextBox";
 		text = "Basic Text";
 		width = 200.0f;
@@ -40,11 +40,11 @@ namespace BtnSqd {
 	std::vector<Vertices> BtnTextBox::UpdateTextVerts() {
 		std::vector<Vertices> textVerts;
 		indices.clear();
-		unsigned int vOffset=0;
-		glm::vec2 cursor(border,border+fontSize);
+		unsigned int vOffset = 0;
+		glm::vec2 cursor(border, border + fontSize);
 
 		for (const auto& c : text) {
-			if (c =='\n') {
+			if (c == '\n') {
 				cursor.x = border;
 				cursor.y += fontSize;
 				continue;
@@ -56,7 +56,7 @@ namespace BtnSqd {
 				float x1 = cursor.x + glyph->glyphSize.z * fontSize;
 				float y1 = cursor.y - glyph->glyphSize.w * fontSize;
 
-				if (x1>width) {
+				if (x1 > width) {
 					cursor.x = border;
 					cursor.y += fontSize;
 				}
@@ -68,13 +68,13 @@ namespace BtnSqd {
 				glm::vec2 uvMin;
 				glm::vec2 uvMax;
 
-				uvMin = glm::vec2(glyph->uvAxis.x,glyph->uvAxis.y);
-				uvMax = glm::vec2(glyph->uvAxis.z,glyph->uvAxis.w);
+				uvMin = glm::vec2(glyph->uvAxis.x, glyph->uvAxis.y);
+				uvMax = glm::vec2(glyph->uvAxis.z, glyph->uvAxis.w);
 
-				textVerts.push_back({{x0,y0,0.0f},{uvMin.x,uvMin.y}});
-				textVerts.push_back({{x1,y0,0.0f},{uvMax.x,uvMin.y}});
-				textVerts.push_back({{x1,y1,0.0f},{uvMax.x,uvMax.y}});
-				textVerts.push_back({{x0,y1,0.0f},{uvMin.x,uvMax.y}});
+				textVerts.push_back({ {x0,y0,0.0f},{uvMin.x,uvMin.y} });
+				textVerts.push_back({ {x1,y0,0.0f},{uvMax.x,uvMin.y} });
+				textVerts.push_back({ {x1,y1,0.0f},{uvMax.x,uvMax.y} });
+				textVerts.push_back({ {x0,y1,0.0f},{uvMin.x,uvMax.y} });
 
 				indices.push_back(vOffset + 0);
 				indices.push_back(vOffset + 1);
@@ -86,7 +86,7 @@ namespace BtnSqd {
 
 
 				vOffset += 4;
-				cursor.x += (glyph->advance+letterSpacing) * fontSize;
+				cursor.x += (glyph->advance + letterSpacing) * fontSize;
 			}
 			else {
 				BTNLOG_WARN("Char: {} does not exist in font", c)
@@ -108,7 +108,7 @@ namespace BtnSqd {
 		float best = fontSize;
 		float perc = (currentSize / width);
 		while (perc < maxPerc || perc > 1.0f) {
-			if (max == min || min<8.0f||max<8.0f) {
+			if (max == min || min < 8.0f || max < 8.0f) {
 				break;
 			}
 
@@ -119,7 +119,7 @@ namespace BtnSqd {
 				break;
 			}
 
-			if (currentSize<=width) {
+			if (currentSize <= width) {
 				best = mid;
 				min = mid;
 			}
@@ -128,7 +128,7 @@ namespace BtnSqd {
 			}
 			perc = (currentSize / width);
 		}
-		
+
 		return best;
 	}
 	float BtnTextBox::GetMaxWidthGivenSize(float desiredSize) {

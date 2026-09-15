@@ -1,6 +1,18 @@
 #include"BtnWidget.h"
 
 namespace BtnSqd {
+	void BtnWidget::Delete() {
+		auto par = parent.lock();
+		for (auto child : children) {
+			RemoveChild(child);
+			if (par) {
+				par->AddChild(child);
+			}
+		}
+		//par->RemoveChild(weak_from_this());
+
+	}
+
 	void BtnWidget::AddChild(std::weak_ptr<BtnWidget> widget) {
 		auto child = widget.lock();
 
@@ -22,9 +34,8 @@ namespace BtnSqd {
 			return;
 		}
 
-		auto it = std::find_if(children.begin(), children.end(),
-							   [&child](const std::weak_ptr<BtnWidget>& weakChild) {
-								   return weakChild.lock() == child;
+		auto it = std::find_if(children.begin(), children.end(), [&](const std::weak_ptr<BtnWidget>& w) {
+			return w.lock() == widget.lock();
 							   });
 
 		if (it != children.end()) {

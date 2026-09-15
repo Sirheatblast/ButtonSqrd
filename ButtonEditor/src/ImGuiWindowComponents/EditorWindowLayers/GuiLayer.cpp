@@ -1,6 +1,6 @@
 #include "GuiLayer.h"
 
-BtnSqd::GuiLayer::GuiLayer(std::tuple<CameraComponent*, TransformComponent*> camera){
+BtnSqd::GuiLayer::GuiLayer(std::tuple<std::shared_ptr<CameraComponent>, TransformComponent*> camera){
 	auto [camComp, transComp] = camera;
 	editorCam = camComp;
 	editorCamTransform = transComp;
@@ -20,8 +20,15 @@ void BtnSqd::GuiLayer::OnDetach() {
 
 void BtnSqd::GuiLayer::OnUpdate() {
 	ImGui::Begin("Editor Viewport", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+	if (showGui) {
+		DrawGui();
+		DrawGizmo();
+	}
 
-	DrawGui();
+	ImGui::End();
+}
+
+void BtnSqd::GuiLayer::DrawGizmo() {
 	if (selectedObject.IsActive()) {
 		if (Input::IsMouseButtonUp(MouseCode::Right)) {
 			if (Input::IsKeyPressed(KeyCode::G)) {
@@ -38,14 +45,15 @@ void BtnSqd::GuiLayer::OnUpdate() {
 		ImGuizmo::SetOrthographic(false);
 		ImGuizmo::SetDrawlist();
 
-		ImVec2 windowPos = ImGui::GetWindowPos();
-		ImVec2 windowSize = ImGui::GetWindowSize();
+		ImVec2 viewportMin = ImGui::GetCursorScreenPos();
+		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
 
-		ImGuizmo::SetRect(windowPos.x, windowPos.y, windowSize.x, windowSize.y);
+		ImGuizmo::SetRect(viewportMin.x, viewportMin.y, viewportSize.x, viewportSize.y);
+
 
 		glm::mat4* matrix = nullptr;
 		ImGuizmo::OPERATION operation = ImGuizmo::OPERATION::TRANSLATE;
-		
+
 		switch (gizmoMode) {
 		case GizmoMode::Transform:
 			matrix = &selectedObject.GetComponent<TransformComponent>().transform.GetTransformMat();
@@ -84,13 +92,14 @@ void BtnSqd::GuiLayer::OnUpdate() {
 			}
 		}
 	}
-	ImGui::End();
 }
 
 void BtnSqd::GuiLayer::OnEvent(Event* e) {
 	EventDispatcher dispatcher(e);
 	dispatcher.Dispatch<BtnSqd::OnSelectGameObjectEvent>(std::bind(&GuiLayer::OnSelectGameObject, this, std::placeholders::_1));
 	dispatcher.Dispatch<BtnSqd::OnDesroyGameObjectEvent>(std::bind(&GuiLayer::OnDesroyGameObject, this, std::placeholders::_1));
+	dispatcher.Dispatch<BtnSqd::OnEnableGuiEvent>(std::bind(&GuiLayer::OnEnableGui, this, std::placeholders::_1));
+	dispatcher.Dispatch<BtnSqd::OnDisableGuiEvent>(std::bind(&GuiLayer::OnDisableGui, this, std::placeholders::_1));
 }
 
 void BtnSqd::GuiLayer::DrawGui() {
@@ -121,5 +130,15 @@ bool BtnSqd::GuiLayer::OnSelectGameObject(OnSelectGameObjectEvent* e) {
 
 bool BtnSqd::GuiLayer::OnDesroyGameObject(OnDesroyGameObjectEvent* e) {
 	selectedObject = GameObject();
+	return false;
+}
+
+bool BtnSqd::GuiLayer::OnEnableGui(OnEnableGuiEvent* e) {
+	showGui = false;
+	return false;
+}
+
+bool BtnSqd::GuiLayer::OnDisableGui(OnDisableGuiEvent* e) {
+	showGui = true;
 	return false;
 }

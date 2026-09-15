@@ -52,6 +52,7 @@ namespace BtnSqd {
 
 			void clearBuffer() {
 				buffer.clear();
+				lastMessage = "";
 			}
 		private:
 			

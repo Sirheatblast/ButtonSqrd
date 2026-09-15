@@ -1,8 +1,9 @@
 #include"EditorWindow.h"
 #include<imgui_internal.h>
+#include"ButtonSqrd/Core/GameObject.h"
 
 namespace BtnSqd {
-	EditorWindow::EditorWindow(std::shared_ptr<BtnScene>& currentScene) :viewportAspectRatio(16.0f / 9.0f), editorCam(editorCamTransform), currentScene(currentScene), bGuiLayer(nullptr) {}
+	EditorWindow::EditorWindow(std::shared_ptr<BtnScene>& currentScene) :viewportAspectRatio(16.0f / 9.0f), editorCam(new CameraComponent(editorCamTransform)), currentScene(currentScene), bGuiLayer(nullptr) {}
 	void EditorWindow::Init() {
 		auto [width, height] = Application::GetApp()->GetWindow()->GetResolution();
 		editorViewport.reset(FrameBuffer::Create(FrameBufferAttatchment::ColorAttatchment, width, height));
@@ -13,13 +14,14 @@ namespace BtnSqd {
 		bGuiLayer = new BtnGuiLayer(currentScene, { width,height }, "EditorGui");
 		bGuiLayer->SetFrameBuffer(editorViewport);
 		bGuiLayer->SetEnabled(false);
+		bGuiLayer->SetCamera(editorCam.get());
 
 		editorCamTransform.transform.MoveTo(glm::vec3(0.0f, 0.0f, -3.0f));
 
 		mousePickerShader.reset(Shader::Create("./Assets/Shaders/MousePickerShader.vrt", "./Assets/Shaders/MousePickerShader.frag"));
-		renderLayers.PushLayer(new RenderLayer(currentScene, editorViewport, std::make_tuple(&editorCam, &editorCamTransform)));
+		renderLayers.PushLayer(new RenderLayer(currentScene, editorViewport, std::make_tuple(editorCam, &editorCamTransform)));
 		renderLayers.PushLayer(bGuiLayer);
-		renderLayers.PushOverlay(new GuiLayer(std::make_tuple(&editorCam, &editorCamTransform)));
+		renderLayers.PushOverlay(new GuiLayer(std::make_tuple(editorCam, &editorCamTransform)));
 	}
 	void EditorWindow::RenderEditor(GameObject& selectedObject) {
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
@@ -31,13 +33,13 @@ namespace BtnSqd {
 		bGuiLayer->SetViewPortSize({ width,height });
 		bGuiLayer->SetViewPortOffset({ offsetX,offsetY });
 
-
 		for (auto layer : renderLayers) {
 			if (layer->Enabled()) {
 				layer->OnUpdate();
 			}
 		}
 
+		DrawWidgetCanvasBorder();
 		HandleBtnGui();
 		HandleSelectedWidget();
 		ImGui::End();
@@ -70,12 +72,11 @@ namespace BtnSqd {
 				if (pitch < -89.0f)
 					pitch = -89.0f;
 
-				glm::vec3 direction;
-				direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-				direction.y = sin(glm::radians(pitch));
-				direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+				float yawRadians = glm::radians(yaw);
+				float pitchRadians = glm::radians(pitch);
 
-				editorCamTransform.transform.front = -glm::normalize(direction);
+				glm::quat cameraOrient = glm::quat(glm::vec3(-pitchRadians, -yawRadians, 0.0f));
+				editorCamTransform.transform.RotateTo(cameraOrient);
 			}
 
 			glm::vec3 nDirection = glm::vec3();
@@ -110,15 +111,47 @@ namespace BtnSqd {
 		dispatcher.Dispatch<OnSelectWidgetEvent>([this](OnSelectWidgetEvent* e)->bool {
 			selectedWidget = e->GetWidget();
 			return true;
-		});
+												 });
 		dispatcher.Dispatch<OnDisableGuiEvent>([this](OnDisableGuiEvent* e)->bool {
 			selectedWidget = nullptr;
 			return true;
-		});
+											   });
+		dispatcher.Dispatch<OnSelectGameObjectEvent>([this](OnSelectGameObjectEvent* e)->bool {
+			selectedGameObject = e->GetSelectedObject();
+			return false;
+													 });
 
-			for (auto layer : renderLayers)
-				layer->OnEvent(e);
+		for (auto layer : renderLayers)
+			layer->OnEvent(e);
 	}
+	void EditorWindow::DrawWidgetCanvasBorder() {
+		if (selectedGameObject.IsValid() && selectedGameObject.CheckObjectForComponent<WidgetCanvasComponent>()) {
+			auto& wCanvas = selectedGameObject.GetComponent<WidgetCanvasComponent>();
+			auto& transform = selectedGameObject.GetComponent<TransformComponent>();
+
+			if (wCanvas.useWholeScreen) {
+				return;
+			}
+
+			glm::vec3 canvasPos = transform.transform.GetPosition();
+
+			glm::vec2 winPos = glm::vec2(windowPos.x, windowPos.y);
+			glm::vec2 canvasScreenPos = winPos+ editorCam->WorldToScreenPos(canvasPos);
+
+			glm::vec2 halfSize = (static_cast<glm::vec2>(wCanvas.dimensions)) * 0.5f;
+			glm::vec2 startPos = canvasScreenPos - halfSize;
+			glm::vec2 endPos = canvasScreenPos + halfSize;
+
+			ImGui::GetWindowDrawList()->AddRect(
+				ImVec2(startPos.x, startPos.y),
+				ImVec2(endPos.x, endPos.y),
+				IM_COL32(50, 50, 50, 255), 0.0f, 0, 3.0f);
+		}
+	}
+
+
+
+
 	void EditorWindow::EditorWindowHotKeys() {
 		if (Input::IsKeyPressed(KeyCode::LeftShift) && Input::IsKeyPressed(KeyCode::A)) {
 			Application::GetApp()->PushEvent(new OnCreateGameObjectEvent());
@@ -135,7 +168,7 @@ namespace BtnSqd {
 			glm::vec2 mousePos = Input::GetMousePosition();
 			selectedWidget = bGuiLayer->PickWidget(mousePos);
 			if (selectedWidget) {
-				if (Input::IsMouseButtonDoubleClicked(MouseCode::Left)&&selectedWidget->GetParent()) {
+				if (Input::IsMouseButtonDoubleClicked(MouseCode::Left) && selectedWidget->GetParent()) {
 					selectedWidget = std::shared_ptr<BtnWidget>(selectedWidget->GetParent());
 				}
 				Application::GetApp()->PushEvent(new OnGetWidgetEvent(selectedWidget));
@@ -158,7 +191,7 @@ namespace BtnSqd {
 					canDrag = true;
 				}
 				if (canDrag) {
-					glm::vec2 currentPos = (!selectedWidget->HasParent())? selectedWidget->GetPos():selectedWidget->GetLocalPos();
+					glm::vec2 currentPos = (!selectedWidget->HasParent()) ? selectedWidget->GetPos() : selectedWidget->GetLocalPos();
 					glm::vec2 offset = glm::vec2(xOffset, yOffset);
 					glm::vec2 nPos = currentPos + offset;
 					glm::vec2 winSize = glm::vec2(windowSize.x, windowSize.y);
@@ -183,14 +216,30 @@ namespace BtnSqd {
 	}
 
 	void EditorWindow::HandleSelectedWidget() {
-		if (!selectedWidget) return;
+		if (!selectedWidget||!selectedGameObject.IsValid() || !selectedGameObject.CheckObjectForComponent<WidgetCanvasComponent>()) 
+			return;
+		
+		WidgetCanvasComponent& wCanvas = selectedGameObject.GetComponent<WidgetCanvasComponent>();
+		glm::vec2 canvasPos = glm::vec2(0.0f);
+		if (!wCanvas.useWholeScreen) {
+			glm::vec2 canvasSize = wCanvas.dimensions;
+
+			canvasPos = editorCam->WorldToScreenPos(
+				selectedGameObject.GetComponent<TransformComponent>().transform.GetPosition());
+			canvasPos -= canvasSize / 2.0f;
+		}
+
 		glm::vec2 winPos = glm::vec2(windowPos.x, windowPos.y);
 		glm::vec2 pos = selectedWidget->GetPos();
 		glm::vec2 size = selectedWidget->GetDimensions();
-		glm::vec2 handlePos = winPos + pos + size;
+		
+		
+		glm::vec2 startPos = pos+winPos+canvasPos;
+		glm::vec2 handlePos = winPos + pos + size+canvasPos;
+
 
 		ImGui::GetWindowDrawList()->AddRect(
-			ImVec2(pos.x + windowPos.x, pos.y + windowPos.y),
+			ImVec2(startPos.x,startPos.y),
 			ImVec2(handlePos.x, handlePos.y),
 			IM_COL32(50, 50, 50, 255), 0.0f, 0, 3.0f);
 

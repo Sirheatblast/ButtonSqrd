@@ -1,6 +1,6 @@
 #include "RenderLayer.h"
 namespace BtnSqd {
-	BtnSqd::RenderLayer::RenderLayer(std::shared_ptr<BtnScene>& scene, std::shared_ptr<FrameBuffer> editorViewport, std::tuple<CameraComponent*, TransformComponent*> camera) :currentScene(scene), editorViewport(editorViewport) {
+	BtnSqd::RenderLayer::RenderLayer(std::shared_ptr<BtnScene>& scene, std::shared_ptr<FrameBuffer> editorViewport, std::tuple<std::shared_ptr<CameraComponent>, TransformComponent*> camera) :currentScene(scene), editorViewport(editorViewport) {
 		auto& [camComp, transComp] = camera;
 		editorCam = camComp;
 		editorCamTransform = transComp;
@@ -29,14 +29,8 @@ namespace BtnSqd {
 	}
 
 	void BtnSqd::RenderLayer::OnUpdate() {
-		BtnSqd::RenderCommand::SetCurrentCamera(std::make_tuple(editorCam,editorCamTransform));
-		editorCam->viewMatrix = glm::lookAt(editorCamTransform->transform.GetPosition(), editorCamTransform->transform.GetPosition() + -editorCamTransform->transform.front, editorCamTransform->transform.up);
-
-		if (!guiLayer) {
-			auto res = editorViewport->GetResolution();
-			glm::vec2 viewPortSize = glm::vec2(res.first, res.second);
-			guiLayer.reset(new BtnGuiLayer(currentScene, viewPortSize));
-		}
+		BtnSqd::RenderCommand::SetCurrentCamera(std::make_tuple(editorCam.get(), editorCamTransform));		
+		editorCam->UpdateView(editorCamTransform->transform);
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 		ImGui::Begin("Editor Viewport", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);

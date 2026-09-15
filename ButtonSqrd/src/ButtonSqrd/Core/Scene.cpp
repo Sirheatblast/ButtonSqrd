@@ -132,13 +132,14 @@ namespace BtnSqd {
 	}
 	GameObject& BtnScene::CreateNewGameObject(std::string objectName) {
 		GameObject* newObject = gameReg.CreateNewGameObject();
+		newObject->AddComponent<IDComponent>();
+
 		for (auto& [tag] : gameReg.GetAllOf<TagComponenet>()) {
 			if (tag.tag == objectName) {
 				objectName.append(std::to_string(newObject->GetUUID()));
 			}
 		}
 
-		newObject->AddComponent<IDComponent>();
 		newObject->AddComponent<TagComponenet>(objectName);
 		newObject->AddComponent<TransformComponent>();
 
@@ -199,7 +200,7 @@ namespace BtnSqd {
 		std::string objectName = gameObj->GetComponent<TagComponenet>().tag;
 		objectName.append(std::to_string(newObject.GetUUID()));
 		newObject.GetComponent<TagComponenet>().tag = objectName;
-		CloneGameObject<TransformComponent, ModelComponent, LightComponent, CameraComponent, ArmatureComponent, 
+		CloneGameObject<TransformComponent, ModelComponent, LightComponent, CameraComponent, ArmatureComponent,
 			AnimatorComponent, BoneComponent, AudioSourceComponent>(gameReg.GetNative(), static_cast<entt::entity>(gameObj->GetId()), static_cast<entt::entity>(newObject.GetId()));
 
 		return *gameObjects[newObject.GetUUID()];
@@ -321,12 +322,23 @@ namespace BtnSqd {
 		}
 	}
 
-	const std::vector<std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>> BtnScene::GetWidgets() {
-		std::vector<std::tuple<std::shared_ptr<BtnWidget>,BtnTransform>> Widgets;
+	const std::vector<std::tuple<std::shared_ptr<BtnWidget>, glm::mat4, glm::vec2>> BtnScene::GetWidgets() {
+		std::vector<std::tuple<std::shared_ptr<BtnWidget>, glm::mat4, glm::vec2>> Widgets;
 
-		for (const auto& [WidgetComp,transform]:gameReg.GetAllOf<WidgetCanvasComponent,TransformComponent>()) {
-			for (const auto& Widget:WidgetComp.Widgets) {
-				Widgets.push_back({ Widget,transform.transform });
+		for (auto& [widgetComp, transform] : gameReg.GetAllOf<WidgetCanvasComponent, TransformComponent>()) {
+			glm::mat4 widgetTransform;
+			glm::vec2 wCanvasSize;
+			if (widgetComp.useWholeScreen) {
+				widgetTransform = glm::mat4(1.0f);
+				wCanvasSize = glm::vec2(0.0f);
+			}
+			else {
+				widgetTransform = transform.transform.GetMatrix();
+				wCanvasSize = static_cast<glm::vec2>(widgetComp.dimensions);
+			}
+
+			for (const auto& Widget : widgetComp.Widgets) {
+				Widgets.push_back({ Widget,widgetTransform,wCanvasSize });
 			}
 		}
 
@@ -339,7 +351,7 @@ namespace BtnSqd {
 				activeCameraId = cameraId;
 				gameObjects[activeCameraId]->GetComponent<CameraComponent>().isMainCamera = true;
 			}
-			for (auto& [id, cam] : gameReg.GetAllOf<IDComponent,CameraComponent>()) {
+			for (auto& [id, cam] : gameReg.GetAllOf<IDComponent, CameraComponent>()) {
 				if (id.uuid != activeCameraId) {
 					cam.isMainCamera = false;
 				}

@@ -67,7 +67,11 @@ namespace BtnSqd {
 		float nearPlain;
 		float farPlain;
 
-		glm::vec3 ScreenToWorldPos(glm::vec2 screenPos);
+		glm::vec3 ScreenToWorldPos(glm::vec2 screenPos,float depth = 1.0f);
+		glm::vec2 WorldToScreenPos(glm::vec3 worldPos);
+		glm::vec2 WorldToScreenPos(glm::vec3 worldPos,glm::vec2 viewSize);
+
+		void UpdateView(BtnTransform transform);
 
 		CameraComponent(TransformComponent& transform):fov(80.0f),aspectRatio(16.0f/9.0f),nearPlain(0.1f),farPlain(1000.0f),isMainCamera(false) {
 			viewMatrix = glm::lookAt(transform.transform.GetPosition(), glm::normalize(transform.transform.GetPosition() - glm::vec3()), transform.transform.up);

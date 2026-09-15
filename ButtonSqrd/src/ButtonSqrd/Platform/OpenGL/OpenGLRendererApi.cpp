@@ -122,8 +122,10 @@ namespace BtnSqd {
 	void OpenGLRenderApi::DisableDepth() {
 		glDepthMask(GL_FALSE);
 		glDepthFunc(GL_LEQUAL);
+		glDisable(GL_DEPTH_TEST);
 	}
 	void OpenGLRenderApi::EnableDepth() {
+		glEnable(GL_DEPTH_TEST);
 		glDepthMask(GL_TRUE);
 		glDepthFunc(GL_LESS);
 	}

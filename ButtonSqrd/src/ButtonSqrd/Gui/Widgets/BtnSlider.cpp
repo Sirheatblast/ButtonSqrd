@@ -47,7 +47,7 @@ namespace BtnSqd {
 		sDir = SliderDirection::XAxis;
 	}
 
-	Mesh& BtnSlider::Draw(std::shared_ptr<Shader> shader) {
+	Mesh& BtnSlider::Draw(std::shared_ptr<Shader> shader ) {
 		if (width != lastDimensions.x || height != lastDimensions.y
 			|| shouldRemake) {
 			shouldRemake = false;

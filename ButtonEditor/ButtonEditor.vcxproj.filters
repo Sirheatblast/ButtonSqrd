@@ -69,6 +69,7 @@
     </ClInclude>
     <ClInclude Include="src\ImGuiWindowComponents\AssetResourceTree.h" />
     <ClInclude Include="src\ImGuiWindowComponents\EditorTools\BtnTextureViewer.h" />
+    <ClInclude Include="src\ImGuiWindowComponents\StaticPopups.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\EditorEvents.cpp">

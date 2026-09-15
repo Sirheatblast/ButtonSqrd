@@ -138,24 +138,49 @@ namespace BtnSqd{
 		physx::PxVec3 vel = static_cast<physx::PxRigidDynamic*>(rigidBody)->getLinearVelocity();
 		return glm::vec3(vel.x,vel.y,vel.z);
 	}
-	glm::vec3 CameraComponent::ScreenToWorldPos(glm::vec2 screenPos) {
-		ViewPort viewP = Application::GetApp()->GetCurrentViewPort();
-		screenPos -= viewP.offset;
+	glm::vec3 CameraComponent::ScreenToWorldPos(glm::vec2 screenPos,float depth) {
+		glm::vec2 viewSize = Application::GetApp()->GetCurrentViewPort().size;
 
-		float depth = 0.0f;
-
-		float x = (2.0f * screenPos.x) / viewP.size.x - 1.0f;
-		float y = 1.0f - (2.0 * screenPos.y) / viewP.size.y;
-		float z = 2.0f * depth - 1.0f;
-
-		glm::vec4 clipCoords(x, y, z, 1.0f);
-		glm::vec4 eyeCoords = glm::inverse(projectionMatrix) * clipCoords;
-		eyeCoords.z = -1.0f;
-		eyeCoords.w = 0.0f;
-
-		glm::vec4 worldCoords = glm::inverse(viewMatrix) * eyeCoords;
-		return glm::normalize(glm::vec3(worldCoords));
+		float windowY = viewSize.y - screenPos.y;
+		glm::vec3 windCoords = glm::vec3(screenPos.x,windowY,depth);
+		glm::vec4 viewp = glm::vec4(0.0f, 0.0f, viewSize);
+		return glm::unProject(windCoords,viewMatrix,projectionMatrix,viewp);
 	}
+
+	glm::vec2 CameraComponent::WorldToScreenPos(glm::vec3 worldPos) {
+		glm::vec4 clipSpace = projectionMatrix * viewMatrix * glm::vec4(worldPos, 1.0f);
+		if (clipSpace.w <nearPlain || clipSpace.w>farPlain)  {
+			return glm::vec2(std::numeric_limits<float>::quiet_NaN());
+		}
+
+		glm::vec2 viewSize = Application::GetApp()->GetCurrentViewPort().size;
+		glm::vec4 viewPort = glm::vec4(glm::vec2(0.0f), viewSize);
+		glm::vec2 rawPos = glm::project(worldPos, viewMatrix, projectionMatrix, viewPort);
+		return glm::vec2(rawPos.x, viewSize.y - rawPos.y);
+	}
+
+	glm::vec2 CameraComponent::WorldToScreenPos(glm::vec3 worldPos,glm::vec2 viewSize) {
+		glm::vec4 clipSpace = projectionMatrix * viewMatrix * glm::vec4(worldPos, 1.0f);
+		if (clipSpace.w <nearPlain || clipSpace.w>farPlain) {
+			return glm::vec2(std::numeric_limits<float>::quiet_NaN());
+		}
+
+		glm::vec4 viewPort = glm::vec4(glm::vec2(0.0f), viewSize);
+		glm::vec2 rawPos = glm::project(worldPos, viewMatrix, projectionMatrix, viewPort);
+		return glm::vec2(rawPos.x, viewSize.y - rawPos.y);
+	}
+
+	void CameraComponent::UpdateView(BtnTransform transform) {
+		glm::vec3 cameraForward = glm::normalize(-transform.front);
+		glm::vec3 rawUp = glm::normalize(transform.up);
+
+		glm::vec3 cameraRight = glm::normalize(glm::cross(cameraForward, rawUp));
+		glm::vec3 trueUp = glm::normalize(glm::cross(cameraRight, cameraForward));
+
+		glm::vec3 cameraPos = transform.GetPosition();
+		viewMatrix = glm::lookAt(cameraPos, cameraPos + cameraForward, trueUp);
+	}
+
 	void AnimatorComponent::StartAnimation(std::string aniName, bool immediate) {
 		if (immediate) {
 			currentAnimation.isPlaying = false;

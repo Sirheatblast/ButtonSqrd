@@ -18,7 +18,7 @@
 namespace BtnSqd {
 	class BtnGuiLayer : public Layer {
 	public:
-		BtnGuiLayer(std::shared_ptr<BtnScene>& currentScene,glm::vec2 viewPortSize,std::string name = "def");
+		BtnGuiLayer(std::shared_ptr<BtnScene>& currentScene, glm::vec2 viewPortSize, std::string name = "def");
 		~BtnGuiLayer() override;
 		void OnAttach() override;
 		void OnDetach() override;
@@ -32,31 +32,37 @@ namespace BtnSqd {
 
 		std::shared_ptr<BtnWidget> PickWidget(glm::vec2 screenPos);
 
+		void SetCamera(CameraComponent* cam) {
+			perspectiveCam = cam;
+		}
+
+		void UpdateCamera();
 
 	private:
 		struct CompareWidget {
-			bool operator()(std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>& tA,std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>& tB) const {
-				auto& [a, ta] = tA;
-				auto& [b, tb] = tB;
+			bool operator()(std::tuple<std::shared_ptr<BtnWidget>, glm::mat4, glm::vec2>& tA, std::tuple<std::shared_ptr<BtnWidget>, glm::mat4, glm::vec2>& tB) const {
+				auto& [a, ta, tab] = tA;
+				auto& [b, tb, tbb] = tB;
 				return a->GetLevel() > b->GetLevel();
 			}
 		};
 
 		void RenderWidgets();
-		void DrawWidget(std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>widgetPackage);
-		void DrawChildren(std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>widgetPackage);
+		void DrawWidget(std::tuple<std::shared_ptr<BtnWidget>, glm::mat4, glm::vec2>widgetPackage);
+		void DrawChildren(std::tuple<std::shared_ptr<BtnWidget>, glm::mat4, glm::vec2>widgetPackage);
 		void GenWidgetPQ();
-		void SetUpCamera();
 
-		void RenderButton(std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>widgetPackage);
-		void RenderSlider(std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>widgetPackage);
-		void RenderNormal(std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>widgetPackage);
-		void RenderText(std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>widgetPackage);
+		glm::mat4 CalculateModelMatrix(std::tuple<std::shared_ptr<BtnWidget>, glm::mat4, glm::vec2>widgetPackage);
 
-		void ProcessWidgetState(std::shared_ptr<BtnWidget> widget,glm::vec2 mouse,ViewPort viewPort);
-		void ProcessSliderState(std::shared_ptr<BtnWidget> widget,glm::vec2 mouse,ViewPort viewPort);
+		void RenderButton(std::tuple<std::shared_ptr<BtnWidget>, glm::mat4, glm::vec2>widgetPackage);
+		void RenderSlider(std::tuple<std::shared_ptr<BtnWidget>, glm::mat4, glm::vec2>widgetPackage);
+		void RenderNormal(std::tuple<std::shared_ptr<BtnWidget>, glm::mat4, glm::vec2>widgetPackage);
+		void RenderText(std::tuple<std::shared_ptr<BtnWidget>, glm::mat4, glm::vec2>widgetPackage);
 
-		void ProcessSliderInput(std::shared_ptr<BtnSlider> slider,glm::vec2 deltaMouse,glm::vec2 sliderPos);
+		void ProcessWidgetState(std::shared_ptr<BtnWidget> widget, glm::vec2 mouse,glm::vec2 canvasScreen, ViewPort viewPort);
+		void ProcessSliderState(std::shared_ptr<BtnWidget> widget, glm::vec2 mouse,glm::vec2 canvasScreen, ViewPort viewPort);
+
+		void ProcessSliderInput(std::shared_ptr<BtnSlider> slider, glm::vec2 deltaMouse, glm::vec2 sliderPos);
 
 		std::shared_ptr<BtnScene>& currentScene;
 		std::shared_ptr<FrameBuffer> frameBuffer;
@@ -64,10 +70,13 @@ namespace BtnSqd {
 		std::shared_ptr<Shader> widgetShader;
 		std::shared_ptr<Shader> textShader;
 
-		std::priority_queue<std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>, 
-			std::vector<std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>>, CompareWidget> widgets;
+		std::priority_queue<std::tuple<std::shared_ptr<BtnWidget>, glm::mat4, glm::vec2>,
+			std::vector<std::tuple<std::shared_ptr<BtnWidget>, glm::mat4, glm::vec2>>, CompareWidget> widgets;
+
+		CameraComponent* perspectiveCam = nullptr;
 
 		CameraComponent camera;
+
 		glm::vec2 viewPortSize;
 		glm::vec2 viewPortOffset = glm::vec2(0.0f);
 		std::string name;

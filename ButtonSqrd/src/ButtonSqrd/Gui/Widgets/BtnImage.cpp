@@ -21,14 +21,15 @@ namespace BtnSqd {
 		if (imageTexture) {
 			imageMesh->SetTexture(imageTexture);
 			rect.SetSlicePoints(imageTexture->GetSlices());
-			auto [tWidth,tHeight] = imageTexture->GetResolution();
+			auto [tWidth, tHeight] = imageTexture->GetResolution();
 			texSize = { (float)tWidth,(float)tHeight };
 		}
 		RectSlicePercentages slices = rect.GetSlicePercentages();
 		RectSlicePoints slicePoints = rect.GetSlicePoints();
-		shader->SetVec4("sliceBounds", {slices.verticalLeft,slices.verticalRight,slices.horizUp,slices.horizDown});
-		shader->SetVec4("slicePos", { slicePoints.sliceUL,slicePoints.sliceUR,slicePoints.sliceLL,slicePoints.sliceLR});
-		shader->SetVec2("texSize",texSize);
+		shader->SetVec4("sliceBounds", { slices.verticalLeft,slices.verticalRight,slices.horizUp,slices.horizDown });
+		shader->SetVec4("slicePos", { slicePoints.sliceUL,slicePoints.sliceUR,slicePoints.sliceLL,slicePoints.sliceLR });
+		shader->SetVec2("texSize", texSize);
+		shader->SetVec2("widgetSize", GetDimensions());
 		shader->SetBool("useNineSlice", useNineSlice);
 		shader->SetFloat("textureScale", textureScale);
 

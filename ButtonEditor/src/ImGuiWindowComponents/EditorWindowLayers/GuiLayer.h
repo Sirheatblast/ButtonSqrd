@@ -10,6 +10,7 @@
 #include <glm/gtx/matrix_decompose.hpp>
 
 #include"../../EditorEvents.h"
+#include"ButtonSqrd/Event/GuiEvent.h"
 #include"ButtonSqrd/Core/ResourceManager.h"
 
 namespace BtnSqd {
@@ -20,7 +21,7 @@ namespace BtnSqd {
 			Scale
 		};
 	public:
-		GuiLayer(std::tuple<CameraComponent*, TransformComponent*> camera);
+		GuiLayer(std::tuple<std::shared_ptr<CameraComponent>, TransformComponent*> camera);
 		~GuiLayer()  override;
 		void OnAttach() override;
 		void OnDetach() override;
@@ -28,16 +29,20 @@ namespace BtnSqd {
 		void OnEvent(Event* e) override;
 	private:
 		void DrawGui();
+		void DrawGizmo();
 
 		bool OnSelectGameObject(OnSelectGameObjectEvent* e);
 		bool OnDesroyGameObject(OnDesroyGameObjectEvent* e);
+		bool OnEnableGui(OnEnableGuiEvent* e);
+		bool OnDisableGui(OnDisableGuiEvent* e);
 
 		bool showColliders = false;
+		bool showGui = true;
 
 		GizmoMode gizmoMode = GizmoMode::Transform;
 		GameObject selectedObject;
 
-		CameraComponent* editorCam;
+		std::shared_ptr<CameraComponent> editorCam;
 		TransformComponent* editorCamTransform;
 	};
 }

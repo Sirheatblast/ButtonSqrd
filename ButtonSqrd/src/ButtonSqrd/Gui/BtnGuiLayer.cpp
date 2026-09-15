@@ -7,13 +7,13 @@
 namespace BtnSqd {
 	BtnGuiLayer::BtnGuiLayer(std::shared_ptr<BtnScene>& currentScene, glm::vec2 viewPortSize, std::string name) :currentScene(currentScene), viewPortSize(viewPortSize), name(name) {
 		camera.fov = 80.0f;
-		camera.nearPlain = -1.0f;
-		camera.farPlain = 1.0f;
+		camera.nearPlain = -100.0f;
+		camera.farPlain = 100.0f;
 		camera.isMainCamera = false;
 
-		SetUpCamera();
-
+		UpdateCamera();
 	}
+
 	BtnGuiLayer::~BtnGuiLayer() {
 
 	}
@@ -24,9 +24,12 @@ namespace BtnSqd {
 
 	}
 	void BtnGuiLayer::OnUpdate() {
+		RenderCommand::DisableDepth();
 		GenWidgetPQ();
 		RenderWidgets();
+		RenderCommand::EnableDepth();
 	}
+
 	void BtnGuiLayer::OnEvent(Event* e) {
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<OnEnableGuiEvent>([this](OnEnableGuiEvent* e)->bool {
@@ -44,16 +47,23 @@ namespace BtnSqd {
 	}
 	void BtnGuiLayer::SetViewPortSize(glm::vec2 nViewPortSize) {
 		viewPortSize = nViewPortSize;
-		SetUpCamera();
+		UpdateCamera();
 	}
 	void BtnGuiLayer::SetFrameBuffer(std::shared_ptr<FrameBuffer> currentViewport) {
 		frameBuffer = currentViewport;
 	}
+
 	std::shared_ptr<BtnWidget> BtnGuiLayer::PickWidget(glm::vec2 screenPos) {
 		glm::vec2 mousePos = screenPos - viewPortOffset;
 		std::shared_ptr<BtnWidget> selected;
-		for (const auto& [widget,transform] : currentScene->GetWidgets()) {
-			glm::vec2 startPos = widget->GetPos();
+		for (const auto& [widget, transform, wCanvasSize] : currentScene->GetWidgets()) {
+			glm::vec2 canvasPos = glm::vec2(0.0f);
+			if (wCanvasSize != glm::vec2(0.0f)) {
+				canvasPos = perspectiveCam->WorldToScreenPos(transform[3]);
+				canvasPos -= wCanvasSize / 2.0f;
+			}
+
+			glm::vec2 startPos = widget->GetPos()+canvasPos;
 			glm::vec2 endPos = startPos + widget->GetDimensions();
 
 			if (glm::all(glm::lessThanEqual(mousePos, endPos)) &&
@@ -67,6 +77,12 @@ namespace BtnSqd {
 		}
 		return selected;
 	}
+
+	void BtnGuiLayer::UpdateCamera() {
+		camera.viewMatrix = glm::mat4(1.0f);
+		camera.projectionMatrix = glm::ortho(0.0f, viewPortSize.x, viewPortSize.y, 0.0f, camera.nearPlain, camera.farPlain);
+	}
+
 	void BtnGuiLayer::RenderWidgets() {
 		if (!widgetShader) {
 			widgetShader = ResourceManager::GetLoadedShaders()["WidgetShader"];
@@ -92,8 +108,8 @@ namespace BtnSqd {
 
 	}
 
-	void BtnGuiLayer::DrawWidget(std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>widgetPackage) {
-		auto& [widget, transfrom] = widgetPackage;
+	void BtnGuiLayer::DrawWidget(std::tuple<std::shared_ptr<BtnWidget>, glm::mat4, glm::vec2>widgetPackage) {
+		auto& [widget, transfrom, wCanvasPos] = widgetPackage;
 		if (widget->GetUseScreenDim()) {
 			float max = 100.0f;
 			glm::vec2 windSize = viewPortSize;
@@ -113,38 +129,34 @@ namespace BtnSqd {
 			break;
 		case BtnWidgetType::Slider:
 			RenderSlider(widgetPackage);
+			break;
 		default:
 			RenderNormal(widgetPackage);
 			break;
 		}
 	}
 
-	void BtnGuiLayer::DrawChildren(std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>widgetPackage) {
+	void BtnGuiLayer::DrawChildren(std::tuple<std::shared_ptr<BtnWidget>, glm::mat4, glm::vec2>widgetPackage) {
 		DrawWidget(widgetPackage);
-		auto& [widget, trasform] = widgetPackage;
+		auto& [widget, trasform, wCanvasPos] = widgetPackage;
 		for (auto child : widget->GetChildren()) {
 			if (!child.lock()) {
 				widget->RemoveChild(child);
 				continue;
 			}
 
-			DrawChildren({child.lock(),trasform});
+			DrawChildren({ child.lock(),trasform,wCanvasPos });
 		}
 	}
 
-	void BtnGuiLayer::RenderButton(std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>widgetPackage) {
+	void BtnGuiLayer::RenderButton(std::tuple<std::shared_ptr<BtnWidget>, glm::mat4, glm::vec2>widgetPackage) {
 
-		auto& [widget, transform] = widgetPackage;
+		auto& [widget, transform, wCanvas] = widgetPackage;
 
 		widgetShader->Use();
 		widgetShader->SetMat4("VP", camera.projectionMatrix * camera.viewMatrix);
-		float level = widget->GetLevel() / 10.0f;
 
-		if (widget->HasParent()) {
-			level += widget->GetParent()->GetLevel() + 0.01f;
-		}
-
-		glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(widget->GetPos(), level)); //fix this so that it could render widgets not from fixed world positions
+		glm::mat4 modelMat = CalculateModelMatrix(widgetPackage);
 		auto dimensions = widget->GetDimensions();
 
 		std::shared_ptr<BtnButton> button = std::dynamic_pointer_cast<BtnButton>(widget);
@@ -182,31 +194,27 @@ namespace BtnSqd {
 		widgetShader->Detatch();
 	}
 
-	void BtnGuiLayer::RenderSlider(std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>widgetPackage) {
-		auto& [widget, transform] = widgetPackage;
+	void BtnGuiLayer::RenderSlider(std::tuple<std::shared_ptr<BtnWidget>, glm::mat4, glm::vec2>widgetPackage) {
+		auto& [widget, transform, wCanvas] = widgetPackage;
+
 		widgetShader->Use();
 		widgetShader->SetMat4("VP", camera.projectionMatrix * camera.viewMatrix);
 
-		float level = widget->GetLevel() / 10.0f;
-
-		if (widget->HasParent()) {
-			level += widget->GetParent()->GetLevel() + 0.01f;
-		}
-
-		glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(widget->GetPos(), level)); //fix this so that it could render widgets not from fixed world positions
 		auto dimensions = widget->GetDimensions();
 
 		std::shared_ptr<BtnSlider>slider = std::dynamic_pointer_cast<BtnSlider>(widget);
+		glm::mat4 model = CalculateModelMatrix(widgetPackage);
 
-		widgetShader->SetMat4("model", modelMat);
+		widgetShader->SetMat4("model", model);
 		widgetShader->SetVec4("clearColor", slider->GetColor());
 		widgetShader->SetVec2("widgetSize", slider->GetDimensions());
 		widgetShader->SetBool("useAlbedoTexture", slider->GetHasTexture());
 		widgetShader->SetBool("mixTex", slider->GetMix());
 		RenderCommand::DrawMesh(slider->Draw(widgetShader));
 
-		modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(widget->GetPos(), level + 0.01f)); //fix this so that it could render widgets not from fixed world positions
-		widgetShader->SetMat4("model", modelMat);
+		model = CalculateModelMatrix(widgetPackage);
+
+		widgetShader->SetMat4("model", model);
 		widgetShader->SetVec4("clearColor", slider->GetSliderFinalColor());
 		widgetShader->SetVec2("widgetSize", slider->GetRealSliderSize());
 		widgetShader->SetBool("useAlbedoTexture", slider->GetHasSliderTexture());
@@ -216,32 +224,26 @@ namespace BtnSqd {
 		widgetShader->Detatch();
 	}
 
-	void BtnGuiLayer::RenderNormal(std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>widgetPackage) {
-		auto& [widget, transform] = widgetPackage;
+	void BtnGuiLayer::RenderNormal(std::tuple<std::shared_ptr<BtnWidget>, glm::mat4, glm::vec2>widgetPackage) {
+		auto& [widget, transform, wCanvas] = widgetPackage;
 
 		widgetShader->Use();
-		widgetShader->SetMat4("VP", camera.projectionMatrix * camera.viewMatrix);
+		glm::mat4 vp = camera.projectionMatrix * camera.viewMatrix;
+		widgetShader->SetMat4("VP", vp);
 
-		float level = widget->GetLevel() / 10.0f;
+		glm::mat4 model = CalculateModelMatrix(widgetPackage);
 
-		if (widget->HasParent()) {
-			level += widget->GetParent()->GetLevel() + 0.01f;
-		}
-
-		glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(widget->GetPos(), level)); //fix this so that it could render widgets not from fixed world positions
-		auto dimensions = widget->GetDimensions();
-
-		widgetShader->SetMat4("model", modelMat);
+		widgetShader->SetMat4("model", model);
 		widgetShader->SetVec4("clearColor", widget->GetColor());
-		widgetShader->SetVec2("widgetSize", widget->GetDimensions());
 		widgetShader->SetBool("useAlbedoTexture", widget->GetHasTexture());
 		widgetShader->SetBool("mixTex", widget->GetMix());
+
 		RenderCommand::DrawMesh(widget->Draw(widgetShader));
 		widgetShader->Detatch();
 	}
 
-	void BtnGuiLayer::RenderText(std::tuple<std::shared_ptr<BtnWidget>, BtnTransform>widgetPackage) {
-		auto& [widget, transform] = widgetPackage;
+	void BtnGuiLayer::RenderText(std::tuple<std::shared_ptr<BtnWidget>, glm::mat4, glm::vec2>widgetPackage) {
+		auto& [widget, transform, wCanvas] = widgetPackage;
 
 		textShader->Use();
 		textShader->SetMat4("VP", camera.projectionMatrix * camera.viewMatrix);
@@ -251,7 +253,8 @@ namespace BtnSqd {
 			level += widget->GetParent()->GetLevel() + 0.01f;
 		}
 
-		glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(widget->GetPos(), level)); //fix this so that it could render widgets not from fixed world positions
+		glm::mat4 modelMat = CalculateModelMatrix(widgetPackage);
+
 		auto dimensions = widget->GetDimensions();
 		textShader->SetMat4("model", modelMat);
 
@@ -270,7 +273,7 @@ namespace BtnSqd {
 
 	void BtnGuiLayer::GenWidgetPQ() {
 		for (const auto& widgetPackage : currentScene->GetWidgets()) {
-			const auto& [widget, transform] = widgetPackage;
+			const auto& [widget, transform, wCanvasPos] = widgetPackage;
 			if (!widget->GetIsEnabled() || widget->HasParent()) {
 				continue;
 			}
@@ -278,9 +281,26 @@ namespace BtnSqd {
 			widgets.push(widgetPackage);
 		}
 	}
-	void BtnGuiLayer::SetUpCamera() {
-		camera.viewMatrix = glm::mat4(1.0f);
-		camera.projectionMatrix = glm::ortho(0.0f, viewPortSize.x, viewPortSize.y, 0.0f, camera.nearPlain, camera.farPlain);
+
+	glm::mat4 BtnGuiLayer::CalculateModelMatrix(std::tuple<std::shared_ptr<BtnWidget>, glm::mat4, glm::vec2> widgetPackage) {		
+		auto& [widget, transform, wCanvasSize] = widgetPackage;
+		float level = widget->GetLevel() / 10.0f;
+		if (widget->HasParent()) {
+			level += widget->GetParent()->GetLevel() + 0.01f;
+		}
+
+		if (wCanvasSize == glm::vec2(0.0f)) {
+			return glm::translate(glm::mat4(1.0f), glm::vec3(widget->GetPos(), level));
+		}
+
+		glm::vec3 canvasWorld = transform[3];
+		glm::vec2 canvasCam = perspectiveCam->WorldToScreenPos(canvasWorld);
+
+		glm::vec2 canvasStart = canvasCam - wCanvasSize / 2.0f;
+
+		glm::mat4 widgetMat = glm::translate(glm::mat4(1.0f), glm::vec3(widget->GetPos()+ canvasStart, level));
+
+		return widgetMat;
 	}
 
 	void BtnGuiLayer::PullInput() {
@@ -291,7 +311,7 @@ namespace BtnSqd {
 
 		while (!widgets.empty()) {
 			auto widgetPack = widgets.top();
-			auto& [widget, transfrom] = widgetPack;
+			auto& [widget, transfrom, wCanvasSize] = widgetPack;
 			widgets.pop();
 
 			if (widget->GetUseScreenDim()) {
@@ -308,12 +328,18 @@ namespace BtnSqd {
 				continue;
 			}
 
-			ProcessWidgetState(widget, mouse, viewPort);
+			glm::vec2 canvasScreen = glm::vec2(0.0f);
+			if (wCanvasSize != glm::vec2(0.0f)) {
+				canvasScreen = perspectiveCam->WorldToScreenPos(transfrom[3]);
+				canvasScreen -= wCanvasSize / 2.0f;
+			}
+
+			ProcessWidgetState(widget, mouse, canvasScreen,viewPort);
 		}
 	}
 
-	void BtnGuiLayer::ProcessWidgetState(std::shared_ptr<BtnWidget> widget, glm::vec2 mouse, ViewPort viewPort) {
-		glm::vec2 screenWidgetPos = viewPort.offset + widget->GetPos();
+	void BtnGuiLayer::ProcessWidgetState(std::shared_ptr<BtnWidget> widget, glm::vec2 mouse,glm::vec2 canvasScreen, ViewPort viewPort) {
+		glm::vec2 screenWidgetPos = viewPort.offset + widget->GetPos()+canvasScreen;
 		glm::vec2 widgetHigh = screenWidgetPos + widget->GetDimensions();
 
 		if (glm::all(glm::lessThanEqual(mouse, widgetHigh)) &&
@@ -337,10 +363,10 @@ namespace BtnSqd {
 		}
 
 		if (widget->GetType() == BtnWidgetType::Slider) {
-			ProcessSliderState(widget, mouse, viewPort);
+			ProcessSliderState(widget, mouse,canvasScreen, viewPort);
 		}
 	}
-	void BtnGuiLayer::ProcessSliderState(std::shared_ptr<BtnWidget> widget, glm::vec2 mouse, ViewPort viewPort) {
+	void BtnGuiLayer::ProcessSliderState(std::shared_ptr<BtnWidget> widget, glm::vec2 mouse,glm::vec2 canvasScreen, ViewPort viewPort) {
 		std::shared_ptr<BtnSlider> slider = std::dynamic_pointer_cast<BtnSlider>(widget);
 		glm::vec2 sliderSize = (slider->GetResizeWithBody()) ? slider->GetDimensions() * slider->GetSliderDimensions()
 			: slider->GetSliderSize();
@@ -350,20 +376,20 @@ namespace BtnSqd {
 
 		glm::vec2 sliderPos;
 		if (slider->GetDirection() == SliderDirection::XAxis) {
-			float fullBody = bodySize.x - slider->GetPadding();			
+			float fullBody = bodySize.x - slider->GetPadding();
 			float fullLocation = fullBody * sliderValue;
-			sliderPos = glm::vec2(fullLocation,sliderSize.y/2.0f);
+			sliderPos = glm::vec2(fullLocation, sliderSize.y / 2.0f);
 		}
 		else {
 			float fullBody = bodySize.y - slider->GetPadding();
 			float fullLocation = fullBody * sliderValue;
-			sliderPos = glm::vec2(sliderSize.x/2.0f, fullLocation);
+			sliderPos = glm::vec2(sliderSize.x / 2.0f, fullLocation);
 		}
 
 		glm::vec2 halfSize = sliderSize / 2.0f;
 		glm::vec2 sliderBegin = glm::clamp(sliderPos - halfSize, glm::vec2(0.0f), bodySize - sliderSize);
 		glm::vec2 sliderEnd = glm::clamp(sliderPos + halfSize, sliderSize, bodySize + halfSize);
-		
+
 		if (glm::all(glm::lessThanEqual(deltaMouse, sliderEnd)) &&
 			glm::all(glm::greaterThanEqual(deltaMouse, sliderBegin))) {
 			slider->SetSliderHover(true);
@@ -381,22 +407,22 @@ namespace BtnSqd {
 			slider->SetSliderClick(false);
 		}
 
-		ProcessSliderInput(slider, deltaMouse,sliderPos);
+		ProcessSliderInput(slider, deltaMouse, sliderPos);
 	}
-	void BtnGuiLayer::ProcessSliderInput(std::shared_ptr<BtnSlider> slider, glm::vec2 deltaMouse,glm::vec2 sliderPos) {
+	void BtnGuiLayer::ProcessSliderInput(std::shared_ptr<BtnSlider> slider, glm::vec2 deltaMouse, glm::vec2 sliderPos) {
 		glm::vec2 sliderHalfSize = slider->GetSliderSize() / 2.0f;
 
-		glm::vec2 sliderSize = slider->GetDimensions() - (slider->GetPadding()*2.0f)- sliderHalfSize;
+		glm::vec2 sliderSize = slider->GetDimensions() - (slider->GetPadding() * 2.0f) - sliderHalfSize;
 		deltaMouse -= slider->GetPadding();
-		
-		if (sliderSize.x==0.0f||sliderSize.y==0.0f) {
+
+		if (sliderSize.x == 0.0f || sliderSize.y == 0.0f) {
 			return;
 		}
 
-		if (slider->GetSliderClick()||
-			slider->GetJumpToClick()&&slider->GetHovered()&&Input::IsMouseButtonPressed(MouseCode::Left)) {
+		if (slider->GetSliderClick() ||
+			slider->GetJumpToClick() && slider->GetHovered() && Input::IsMouseButtonPressed(MouseCode::Left)) {
 			glm::vec2 deltaPercent = deltaMouse / sliderSize;
-			float axisPercent = (slider->GetDirection()==SliderDirection::XAxis) ? deltaPercent.x:deltaPercent.y;
+			float axisPercent = (slider->GetDirection() == SliderDirection::XAxis) ? deltaPercent.x : deltaPercent.y;
 			axisPercent = glm::clamp(axisPercent, 0.0f, 1.0f);
 			slider->SetSliderPercentage(axisPercent);
 		}

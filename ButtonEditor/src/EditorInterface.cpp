@@ -200,48 +200,54 @@ namespace BtnSqd {
 
 		if (ImGui::BeginPopup("Create A new GameObject", ImGuiPopupFlags_MouseButtonRight)) {
 			ImGui::Text("Create GameObject");
+			bool hasCreated = false;
 
 			if (ImGui::Selectable("Widget Canvas")) {
 				selectedObject = currentScene->CreateNewGameObject("New Widget Canvas");
 				auto& wCanvas = selectedObject.AddComponent<WidgetCanvasComponent>();
 				wCanvas.useWholeScreen = true;
+				hasCreated = true;
 			}
 
 			if (ImGui::Selectable("Empty")) {
 				selectedObject = currentScene->CreateNewGameObject("Empty GameObject");
+				hasCreated = true;
 			}
 			if (ImGui::Selectable("Cube")) {
 				GameObject nGobj = currentScene->CreateNewGameObject("New Cube");
 				auto& modelComp = nGobj.AddComponent<ModelComponent>();
 				modelComp.currentModel = ResourceManager::GetLoadedModels()["./Assets/Models/Cube.fbx"];
-				auto& transformComp = nGobj.GetComponent<TransformComponent>();
-				transformComp.transform.MoveTo(spawnPos);
 				selectedObject = nGobj;
+				hasCreated = true;
 			}
 			if (ImGui::Selectable("Sphere")) {
 				GameObject nGobj = currentScene->CreateNewGameObject("New Sphere");
 				auto& modelComp = nGobj.AddComponent<ModelComponent>();
 				modelComp.currentModel = ResourceManager::GetLoadedModels()["./Assets/Models/Sphere.fbx"];
-				auto& transformComp = nGobj.GetComponent<TransformComponent>();
-				transformComp.transform.MoveTo(spawnPos);
 				selectedObject = nGobj;
+				hasCreated = true;
 			}
 			if (ImGui::Selectable("Capsule")) {
 				GameObject nGobj = currentScene->CreateNewGameObject("New Capsule");
 				auto& modelComp = nGobj.AddComponent<ModelComponent>();
 				modelComp.currentModel = ResourceManager::GetLoadedModels()["./Assets/Models/Capsule.fbx"];
-				auto& transformComp = nGobj.GetComponent<TransformComponent>();
-				transformComp.transform.MoveTo(spawnPos);
 				selectedObject = nGobj;
+				hasCreated = true;
 			}
 			if (ImGui::Selectable("Plane")) {
 				GameObject nGobj = currentScene->CreateNewGameObject("New Plane");
 				auto& modelComp = nGobj.AddComponent<ModelComponent>();
 				modelComp.currentModel = ResourceManager::GetLoadedModels()["./Assets/Models/Plane.fbx"];
-				auto& transformComp = nGobj.GetComponent<TransformComponent>();
-				transformComp.transform.MoveTo(spawnPos);
 				selectedObject = nGobj;
+				hasCreated = true;
 			}
+			if (hasCreated&&selectedObject.IsValid()) {
+				auto& objTransform = selectedObject.GetComponent<TransformComponent>();
+				objTransform.transform.MoveTo(spawnPos);
+			}
+
+			Application::GetApp()->PushEvent(new OnSelectGameObjectEvent(selectedObject));
+
 			ImGui::EndPopup();
 		}
 	}

@@ -63,6 +63,8 @@ namespace BtnSqd {
 			UpdateChildrenPos(this->weak_from_this());
 		}
 
+		void Delete();
+
 		void AddChild(std::weak_ptr<BtnWidget> widget);
 		void RemoveChild(std::weak_ptr<BtnWidget> widget);
 		void UpdateChildrenPos(std::weak_ptr<BtnWidget> widget);

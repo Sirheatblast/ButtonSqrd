@@ -28,24 +28,27 @@ namespace BtnSqd {
 
 		void SendEvent(Event* e);
 
-		std::tuple<CameraComponent, TransformComponent> GetEditorCamera() { return std::make_tuple(editorCam, editorCamTransform); }
+		std::tuple<std::shared_ptr<CameraComponent>, TransformComponent> GetEditorCamera() { return std::make_tuple(editorCam, editorCamTransform); }
 	private:
+		void DrawWidgetCanvasBorder();
 		void EditorWindowHotKeys();
 		void HandleBtnGui();
 		void DragWidget();
 		void HandleSelectedWidget();
+
 		bool mousePickRender = false;
 		bool firstClick = true;
 		bool canDrag = false;
 		bool isResizeWidget = false;
 		
+		GameObject selectedGameObject;
 		std::shared_ptr<BtnWidget> selectedWidget;
 
 		std::shared_ptr<FrameBuffer> editorViewport;
 		std::shared_ptr<FrameBuffer> mousePickerBuffer;
 		std::shared_ptr<Shader> mousePickerShader;
 
-		CameraComponent editorCam;
+		std::shared_ptr<CameraComponent>editorCam;
 		TransformComponent editorCamTransform;
 
 		std::shared_ptr<BtnScene>& currentScene;

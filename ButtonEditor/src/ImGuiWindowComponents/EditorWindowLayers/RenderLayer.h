@@ -10,7 +10,7 @@
 namespace BtnSqd {
 	class RenderLayer : public Layer {
 	public:
-		RenderLayer(std::shared_ptr<BtnScene>& scene, std::shared_ptr<FrameBuffer> editorViewport,std::tuple<CameraComponent*,TransformComponent*> camera);
+		RenderLayer(std::shared_ptr<BtnScene>& scene, std::shared_ptr<FrameBuffer> editorViewport,std::tuple<std::shared_ptr<CameraComponent>,TransformComponent*> camera);
 		~RenderLayer()  override;
 		void OnAttach() override;
 		void OnDetach() override;
@@ -22,14 +22,14 @@ namespace BtnSqd {
 		void SelectObject();
 		bool OnSelectWindow(OnSelectWindowEvent* e);
 
-		CameraComponent* editorCam;
+		std::shared_ptr<CameraComponent> editorCam;
 		TransformComponent* editorCamTransform;
 
 		std::shared_ptr<BtnScene>& currentScene;
 		std::shared_ptr<FrameBuffer> editorViewport;
 		std::shared_ptr<FrameBuffer> mousePickerBuffer;
 		std::shared_ptr<Shader> mousePickerShader;
-		std::shared_ptr<BtnGuiLayer> guiLayer;
+		//std::shared_ptr<BtnGuiLayer> guiLayer;
 
 		bool windowSelected = false;
 		bool canMousePick = true;

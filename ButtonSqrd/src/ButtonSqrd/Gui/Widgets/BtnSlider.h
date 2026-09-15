@@ -18,7 +18,7 @@ namespace BtnSqd {
 	public:
 		BtnSlider();
 
-		Mesh& Draw(std::shared_ptr<Shader> shader) override;
+		Mesh& Draw(std::shared_ptr<Shader> shader ) override;
 		Mesh& DrawSlider(std::shared_ptr<Shader>shader);
 		
 		glm::vec2 GetRealSliderSize() {

@@ -203,6 +203,7 @@ IF EXIST ..\$(ProjectName)\imgui.ini\ (xcopy /Q /E /Y /I ..\$(ProjectName)\imgui
     <ClInclude Include="src\ImGuiWindowComponents\GameWindowLayers\GameLayer.h" />
     <ClInclude Include="src\ImGuiWindowComponents\PropertiesMenue.h" />
     <ClInclude Include="src\ImGuiWindowComponents\SceneDirectory.h" />
+    <ClInclude Include="src\ImGuiWindowComponents\StaticPopups.h" />
     <ClInclude Include="src\Scripting\ScriptManager.h" />
   </ItemGroup>
   <ItemGroup>

@@ -31,7 +31,7 @@ namespace BtnSqd {
 			}
 
 
-			auto [windowWidth, windowHeight] = ImGui::GetContentRegionAvail();
+			auto [windowWidth, windowHeight] = ImGui::GetWindowSize();
 			gameViewport->SetResolution((int)windowWidth, (int)windowHeight);
 			if (windowWidth != lastWindowX || windowHeight != lastWindowY) {
 				lastWindowX = windowWidth;
@@ -43,7 +43,9 @@ namespace BtnSqd {
 			if (!guiLayer) {
 				guiLayer.reset(new BtnGuiLayer(currentScene,{windowWidth,windowHeight}));
 			}
+
 			guiLayer->SetViewPortSize({ windowWidth,windowHeight });
+			guiLayer->SetCamera(&gameCam);
 
 			auto [windowPosX, windowPosY] = ImGui::GetWindowPos();
 			Application::GetApp()->SetViewPort({glm::vec2(windowWidth,windowHeight),glm::vec2(windowPosX,windowPosY+imageOffset)});

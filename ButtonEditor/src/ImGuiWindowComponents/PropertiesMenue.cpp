@@ -1,4 +1,5 @@
 #include "PropertiesMenue.h"
+#include"StaticPopups.h"
 
 BtnSqd::PropertiesMenue::PropertiesMenue(std::shared_ptr<BtnScene>& scene, BtnPhysics& physics) :currentScene(scene), btnPhysics(physics) {
 	widgetTypeDrawCallbacks[BtnWidgetType::Text] = [this](std::shared_ptr<BtnWidget> widget) {
@@ -475,7 +476,11 @@ void BtnSqd::PropertiesMenue::TagComp(BtnSqd::GameObject& selectedObj) {
 	ImGui::Text("Tag: ");
 	ImGui::SameLine();
 
-	char buffer[26];
+	if (tag.tag.size() > 256) {
+		tag.tag.resize(256);
+	}
+
+	char buffer[256];
 	strcpy_s(buffer, tag.tag.c_str());
 
 	ImGui::InputText("##TagInput", buffer, IM_ARRAYSIZE(buffer));
@@ -1204,8 +1209,14 @@ void BtnSqd::PropertiesMenue::WidgetCanvasComp(GameObject& selectedObj) {
 		if (ImGui::Selectable((widget->GetName() + "##Widget" + std::to_string(idx)).c_str())) {
 			wCanvas.selectedWidget = widget;
 		}
+		if (ImGui::IsItemHovered()&&Input::IsMouseButtonPressed(MouseCode::Right)) {
+			wCanvas.selectedWidget = widget;
+			ImGui::OpenPopup("##WidgetOptionsPopup");
+		}
 		idx++;
 	}
+
+	WidgetOptionsPopup(wCanvas);
 
 	ImGui::EndChild();
 
