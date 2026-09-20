@@ -279,6 +279,7 @@ namespace BtnSqd {
 
 		glm::ivec2 dimensions = glm::ivec2(150,100);
 		glm::ivec2 posOffset = glm::ivec2(0);
+		bool isEnabled = true;
 		bool useWholeScreen = false;
 		bool displayInEditor = false;
 		std::shared_ptr<BtnWidget>selectedWidget;

@@ -124,8 +124,6 @@ namespace BtnSqd {
 		void AudioSourceComp(GameObject& selectedObj);
 		void ParticleEmitterComp(GameObject& selectedObj);
 		void WidgetCanvasComp(GameObject& selectedObj);
-
-		void CreateWidgetPopup(WidgetCanvasComponent& wCanvas);
 		
 		void DrawParticleGUI(BtnSqd::ParticleEmitterComponent& partic, BtnSqd::GameObject& selectedObj);
 		void RenderCurveConfig(unsigned int idx, BtnSqd::GameObject& selectedObj, bool show, bool& useCurve, std::vector<glm::vec2>& curvePoints, std::string curveLabel, BtnCurve& curve);

@@ -1301,6 +1301,11 @@ void BtnSqd::PropertiesMenue::WidgetCanvasComp(GameObject& selectedObj) {
 	ImGui::Text("Canvas Settings:");
 	ImGui::BeginChild("##WidgetCanvasSettingsWindow", ImVec2(0.0f, 0.0f), ImGuiChildFlags_AlwaysAutoResize | ImGuiChildFlags_AutoResizeY | ImGuiChildFlags_Border);
 
+	ImGui::Text("Is Enabled: ");
+	ImGui::SameLine();
+	ImGui::Checkbox("##WidgetCanvasEnableCanvasCheckbox", &wCanvas.isEnabled);
+
+
 	ImGui::Text("Use Full screen: ");
 	ImGui::SameLine();
 	ImGui::Checkbox("##WidgetCanvasUseWholeScreenCheck", &wCanvas.useWholeScreen);
@@ -1319,28 +1324,6 @@ void BtnSqd::PropertiesMenue::WidgetCanvasComp(GameObject& selectedObj) {
 	ImGui::Unindent(20.0f);
 }
 
-void BtnSqd::PropertiesMenue::CreateWidgetPopup(WidgetCanvasComponent& wCanvas) {
-	if (ImGui::BeginPopup("##AddWidgetPopup")) {
-		if (ImGui::Selectable("Text Box")) {
-			wCanvas.Widgets.push_back(std::make_shared<BtnTextBox>());
-		}
-		if (ImGui::Selectable("Button")) {
-			auto button = std::make_shared<BtnButton>();
-			wCanvas.Widgets.push_back(button);
-			auto text = std::make_shared<BtnTextBox>();
-			wCanvas.Widgets.push_back(text);
-			button->AddChild(text);
-		}
-		if (ImGui::Selectable("Image")) {
-			wCanvas.Widgets.push_back(std::make_shared<BtnImage>());
-		}
-		if (ImGui::Selectable("Slider")) {
-			wCanvas.Widgets.push_back(std::make_shared<BtnSlider>());
-		}
-		ImGui::EndPopup();
-	}
-}
-
 void BtnSqd::PropertiesMenue::DrawParticleGUI(BtnSqd::ParticleEmitterComponent& partic, BtnSqd::GameObject& selectedObj) {
 	unsigned int idx = 0;
 	std::hash<std::string> labelHasher;
@@ -1350,7 +1333,9 @@ void BtnSqd::PropertiesMenue::DrawParticleGUI(BtnSqd::ParticleEmitterComponent& 
 
 		std::string pName = "##DisplayParticle_";
 		pName += idx;
-		ImGui::BeginChild(pName.c_str(), ImVec2(0.0f, 0.0f), ImGuiChildFlags_Border | ImGuiChildFlags_AlwaysAutoResize | ImGuiChildFlags_AutoResizeY, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+		ImGui::BeginChild(pName.c_str(), ImVec2(0.0f, 0.0f), 
+						  ImGuiChildFlags_Border | ImGuiChildFlags_AlwaysAutoResize | ImGuiChildFlags_AutoResizeY,
+						  ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 		std::string disPName = "Particle: " + std::to_string(idx);
 		ImGui::Text(disPName.c_str());

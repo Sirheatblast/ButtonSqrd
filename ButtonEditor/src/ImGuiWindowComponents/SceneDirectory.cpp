@@ -139,6 +139,10 @@ namespace BtnSqd {
 			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
 				widgetComp.displayInEditor = !widgetComp.displayInEditor;
 			}
+			if (ImGui::IsItemHovered()&&ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
+				widgetComp.displayInEditor = true;
+				ImGui::OpenPopup("##AddWidgetPopup");
+			}
 			DropWidgetTarget(nullptr, gameObj);
 
 			if (!widgetComp.Widgets.empty()) {
@@ -152,6 +156,7 @@ namespace BtnSqd {
 			if (widgetComp.displayInEditor) {
 				DisplayWidgets(widgetComp, gameObj);
 				WidgetOptionsPopup(widgetComp);
+				CreateWidgetPopup(widgetComp);
 			}
 
 			ImGui::Unindent(20.0f);

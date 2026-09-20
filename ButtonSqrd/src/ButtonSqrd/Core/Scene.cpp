@@ -326,6 +326,10 @@ namespace BtnSqd {
 		std::vector<std::tuple<std::shared_ptr<BtnWidget>, glm::mat4, glm::vec2>> Widgets;
 
 		for (auto& [widgetComp, transform] : gameReg.GetAllOf<WidgetCanvasComponent, TransformComponent>()) {
+			if (!widgetComp.isEnabled) {
+				continue;
+			}
+			
 			glm::mat4 widgetTransform;
 			glm::vec2 wCanvasSize;
 			if (widgetComp.useWholeScreen) {
