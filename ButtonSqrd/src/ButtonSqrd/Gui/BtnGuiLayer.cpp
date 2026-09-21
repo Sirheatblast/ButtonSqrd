@@ -274,6 +274,7 @@ namespace BtnSqd {
 	void BtnGuiLayer::GenWidgetPQ() {
 		for (const auto& widgetPackage : currentScene->GetWidgets()) {
 			const auto& [widget, transform, wCanvasPos] = widgetPackage;
+			
 			if (!widget->GetIsEnabled() || widget->HasParent()) {
 				continue;
 			}

@@ -26,7 +26,7 @@ namespace BtnSqd {
 		glm::vec4& GetBackgroundColor() { return backgroundColor; }
 		glm::vec4& GetColorRef() { return color; }
 
-	private:
+	protected:
 		std::vector<Vertices> UpdateTextVerts();
 		float UpdateFontSize();
 		float GetMaxWidthGivenSize(float desiredSize);

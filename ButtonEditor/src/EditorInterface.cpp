@@ -131,7 +131,7 @@ namespace BtnSqd {
 		colors[ImGuiCol_HeaderHovered] = accentWithAlpha(0.4f);
 		colors[ImGuiCol_HeaderActive] = accentPrimary;
 
-		colors[ImGuiCol_FrameBg] = surfaceDark;
+		colors[ImGuiCol_FrameBg] = baseDark;
 		colors[ImGuiCol_FrameBgHovered] = surfaceLight;
 		colors[ImGuiCol_FrameBgActive] = accentWithAlpha(0.3f);
 
