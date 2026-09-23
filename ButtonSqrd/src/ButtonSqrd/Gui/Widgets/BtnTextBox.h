@@ -12,10 +12,14 @@ namespace BtnSqd {
 		~BtnTextBox() override;
 
 		Mesh& Draw(std::shared_ptr<Shader> shader ) override;
+		void OnUpdate()override;
+		void OnClick()override;
+		void OnClickUp()override;
 
 		void SetVerts();
 
 		bool& GetAutoSize() { return autoFontSize; }
+		bool& GetIsInputTextbox() { return isInputTextBox; }
 		std::string GetText()const {return text;}
 		void SetText(std::string nText);
 
@@ -26,7 +30,7 @@ namespace BtnSqd {
 		glm::vec4& GetBackgroundColor() { return backgroundColor; }
 		glm::vec4& GetColorRef() { return color; }
 
-	protected:
+	private:
 		std::vector<Vertices> UpdateTextVerts();
 		float UpdateFontSize();
 		float GetMaxWidthGivenSize(float desiredSize);
@@ -45,5 +49,8 @@ namespace BtnSqd {
 		std::shared_ptr<Mesh> textMesh;
 		BtnFont font;
 
+		bool isInputTextBox = false;
+		bool focusInput = false;
+		unsigned int cursorPos = 0;
 	};
 }

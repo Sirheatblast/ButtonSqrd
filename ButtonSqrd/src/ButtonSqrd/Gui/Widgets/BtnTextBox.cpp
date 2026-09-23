@@ -27,6 +27,22 @@ namespace BtnSqd {
 		}
 		return *textMesh;
 	}
+	void BtnTextBox::OnUpdate() {
+
+	}
+
+	void BtnTextBox::OnClick() {
+		if (isInputTextBox) {
+			focusInput = true;
+		}
+	}
+
+	void BtnTextBox::OnClickUp() {
+		if (isInputTextBox) {
+			focusInput = false;
+		}
+	}
+
 	void BtnTextBox::SetVerts() {
 		verts = UpdateTextVerts();
 		lastWidth = width;

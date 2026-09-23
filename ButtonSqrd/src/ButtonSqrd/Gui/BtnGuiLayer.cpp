@@ -109,15 +109,16 @@ namespace BtnSqd {
 	}
 
 	void BtnGuiLayer::DrawWidget(std::tuple<std::shared_ptr<BtnWidget>, glm::mat4, glm::vec2>widgetPackage) {
-		auto& [widget, transfrom, wCanvasPos] = widgetPackage;
+		auto& [widget, transfrom, wCanvasSize] = widgetPackage;
 		if (widget->GetUseScreenDim()) {
 			float max = 100.0f;
-			glm::vec2 windSize = viewPortSize;
+			glm::vec2 windSize = (wCanvasSize==glm::vec2(0.0f))?viewPortSize:wCanvasSize;
 			glm::vec2 wPos = widget->GetPercentPos();
 			glm::vec2 wPercent = wPos / max;
 
 			glm::vec2 newScreenPos = (wPercent * (windSize - widget->GetDimensions()));
 			widget->SetPos(newScreenPos);
+
 		}
 
 		switch (widget->GetType()) {
@@ -362,6 +363,8 @@ namespace BtnSqd {
 
 			widget->SetClicked(false);
 		}
+
+		widget->OnUpdate();
 
 		if (widget->GetType() == BtnWidgetType::Slider) {
 			ProcessSliderState(widget, mouse,canvasScreen, viewPort);
